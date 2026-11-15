@@ -1,1 +1,1 @@
-# Minecraft-Merlin-Client
+# MMerlins-Client
