@@ -1,0 +1,174 @@
+# M8 Grafiktest (docs/33 §3): bedienbares Inventar über dieselben Maus-/Tastenmethoden wie die echte Eingabe.
+# Platzhalter ${CONSOLE}, ${OUT}, ${NAME} setzt m6-run.sh. Abgleich: inv-dump <n> (Client) + "say CHECK <n>" + data get (Server),
+# ausgewertet mit m8-gfx-compare.sh.
+server-console ${CONSOLE}
+wait-play
+mark joined
+console gamemode survival ${NAME}
+console forceload add -32 -48 47 31
+console fill -2 99 -34 8 99 -24 minecraft:stone
+console fill -2 100 -34 8 104 -24 minecraft:air
+console setblock 0 100 -30 minecraft:chest[facing=south]{Items:[{Slot:0b,id:"minecraft:diamond",count:5}]}
+console setblock 3 100 -30 minecraft:crafting_table
+console setblock 6 100 -30 minecraft:dirt
+console kill @e[type=item]
+console clear ${NAME}
+console item replace entity ${NAME} hotbar.0 with minecraft:oak_planks 16
+console item replace entity ${NAME} inventory.0 with minecraft:cobblestone 32
+console item replace entity ${NAME} hotbar.2 with minecraft:iron_chestplate
+console item replace entity ${NAME} hotbar.3 with minecraft:stick 4
+console tp ${NAME} 6.5 100 -27.5 180 0
+wait 3
+wait-meshes
+slot 9
+# --- Weltsteuerung gesperrt, solange das Inventar offen ist: Linksklick halten darf die Erde nicht abbauen
+look-at 6.5 100.5 -29.5
+inventory open
+wait 0.5
+attack-start
+wait 1.5
+attack-stop
+console say CHECK gfx_world_locked
+console execute if block 6 100 -30 minecraft:dirt
+screenshot ${OUT}/30-inventory.png
+# --- Aufnehmen und Ablegen
+gui-click 36 left
+wait-inv
+screenshot ${OUT}/31-cursor.png
+gui-click 20 left
+wait-inv
+inv-dump g1-pickup-place
+console say CHECK g1-pickup-place
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+gui-click 20 right
+wait-inv
+gui-drag left 21 22 23 24
+wait-inv
+inv-dump g2-split-drag
+console say CHECK g2-split-drag
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+gui-dbl 21
+wait-inv
+gui-click 25 left
+wait-inv
+inv-dump g3-doubleclick
+console say CHECK g3-doubleclick
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+gui-click 38 left shift
+wait-inv
+gui-key 39 f
+wait-inv
+gui-key 25 q
+wait-inv
+inv-dump g4-equip-swap-throw
+console say CHECK g4-equip-swap-throw
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+gui-key 25 1
+wait-inv
+gui-key 36 1
+wait-inv
+inv-dump g4b-number-keys
+console say CHECK g4b-number-keys
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+gui-click 25 left
+wait-inv
+gui-click 1 right
+wait-inv
+gui-click 2 right
+wait-inv
+gui-click 3 right
+wait-inv
+gui-click 4 right
+wait-inv
+screenshot ${OUT}/33-craft2x2.png
+gui-click 25 left
+wait-inv
+gui-click 0 left shift
+wait-inv
+inv-dump g5-craft2x2
+console say CHECK g5-craft2x2
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+inventory close
+wait 1
+inv-dump g5b-closed
+console say CHECK g5b-closed
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+# --- Truhe: der Server öffnet das Fenster (open_screen), Shift-Klick in beide Richtungen
+console tp ${NAME} 0.5 100 -27.5 180 0
+wait 1.5
+look-at 0.5 100.5 -29.5
+use
+wait 1.5
+screenshot ${OUT}/34-chest.png
+gui-click 0 left shift
+wait-inv
+gui-click 27 left shift
+wait-inv
+console say CHECK g6-chest-items
+console data get block 0 100 -30 Items
+wait 2
+inv-dump g6-chest
+console say CHECK g6-chest
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+inventory close
+wait 1
+# --- Werkbank 3×3: Holzspitzhacke
+console clear ${NAME}
+console item replace entity ${NAME} hotbar.0 with minecraft:oak_planks 8
+console item replace entity ${NAME} hotbar.1 with minecraft:stick 4
+console tp ${NAME} 3.5 100 -27.5 180 0
+wait 2
+look-at 3.5 100.5 -29.5
+use
+wait 1.5
+gui-click 37 left
+wait-inv
+gui-click 1 right
+wait-inv
+gui-click 2 right
+wait-inv
+gui-click 3 right
+wait-inv
+gui-click 37 left
+wait-inv
+gui-click 38 left
+wait-inv
+gui-click 5 right
+wait-inv
+gui-click 8 right
+wait-inv
+gui-click 38 left
+wait-inv
+screenshot ${OUT}/35-craft3x3.png
+gui-click 0 left shift
+wait-inv
+inv-dump g7-craft3x3
+console say CHECK g7-craft3x3
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+inventory close
+wait 1.5
+inv-dump g8-final
+console say CHECK g8-final
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 2.5
+mark end
+wait 2

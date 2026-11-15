@@ -1,0 +1,59 @@
+# M12 Funktionstest (docs/49 §6): Himmel/Zeit/Wetter vom Server, Lightmap, Biomtönung, Animation, Partikel, Abbau-Overlay,
+# Umbruch der Hilfezeile, GL-Ressourcen. Aufruf: M6_SERVER_XMX=1G bash analysis/tools/m6-run.sh analysis/tools/m12-func.txt <label> "--render-distance 4"
+server-console ${CONSOLE}
+wait-play
+console gamemode creative ${NAME}
+hide-gui on
+console gamerule advance_time false
+console gamerule advance_weather false
+console time set 6000
+console weather clear
+console tp ${NAME} 7.5 64 9.5 45 10
+wait 3
+wait-meshes
+wait 2
+env-dump noon
+screenshot ${OUT}/f01-noon.png
+console time set 12500
+wait 3
+env-dump sunset
+look 90 -5
+wait 1
+screenshot ${OUT}/f02-sunset-west.png
+console time set 18000
+wait 3
+env-dump midnight
+look 0 -40
+wait 1
+screenshot ${OUT}/f03-night-sky.png
+console time set 6000
+console weather rain
+wait 7
+env-dump rain
+look 45 10
+wait 1
+screenshot ${OUT}/f04-rain.png
+console weather thunder
+wait 7
+env-dump thunder
+screenshot ${OUT}/f05-thunder.png
+console weather clear
+wait 7
+env-dump clear-again
+console particle minecraft:flame 9.5 66 12.5 0.3 0.3 0.3 0.01 40 force
+console particle minecraft:block{block_state:"minecraft:stone"} 9.5 66 12.5 0.3 0.3 0.3 0 30 force
+console particle minecraft:smoke 9.5 66 12.5 0.3 0.3 0.3 0.01 30 force
+console particle minecraft:heart 9.5 66 12.5 0.3 0.3 0.3 0.01 5 force
+wait 0.5
+env-dump particles
+screenshot ${OUT}/f06-particles.png
+mark animation-before
+wait 3
+env-dump animation-after
+hide-gui off
+wait 1
+screenshot ${OUT}/f07-hud-1280.png
+mark hud
+console gamerule advance_time true
+console gamerule advance_weather true
+console time set 6000

@@ -1,0 +1,64 @@
+# MinecraftResearch – Root-.gitignore
+# (research/.gitignore deckt zusätzlich Gradle-/IDE-/Fabric-Laufzeitdaten des Mod-Projekts ab)
+
+# --- Analyseartefakte -------------------------------------------------------
+# REA-Evidence-Bundles (je ~80 MB) und sonstige große Analyseausgaben
+analysis/rea/
+*.evidence.json
+*-evidence.json
+# Entpackte, von Loom generierte Minecraft-Quellen (abgeleitetes Mojang-Material, jederzeit reproduzierbar)
+analysis/mc-src/
+# Paketmitschnitte / Laufzeit-Logs von Tests
+analysis/captures/
+analysis/runtime-logs/
+*.pcap
+*.pcapng
+
+# --- Lokaler Vanilla-Testserver --------------------------------------------
+# Server-JAR (Kopie aus dem Loom-Cache) und vom Bundler entpackte Bibliotheken
+server/server.jar
+server/libraries/
+server/versions/
+# Welt, Logs und Laufzeitdaten
+server/world/
+server/logs/
+server/crash-reports/
+server/debug/
+server/*.json
+# Persönliche EULA-Zustimmung des Nutzers und Konfiguration mit generiertem
+# management-server-secret – bewusst nicht versioniert
+server/eula.txt
+server/server.properties
+
+# Serverkonsolen-Eingabe des Testkoordinators
+server/console.in
+# Vom Vanilla-Datengenerator erzeugte Reports (reproduzierbar, siehe docs/10)
+server/generated/
+
+# --- Fabric-Client-Laufzeit -------------------------------------------------
+research/run/
+# Eigenes Laufverzeichnis des Laufzeittests (gradlew runLocalTest)
+research/run-localtest/
+research/run-physicsref/
+# M12-Bildreferenz (Vergleichsbilder des Vanilla-Clients, nur lokal)
+research/run-shotref/
+
+# --- Eigenständiger Protokollclient (client/) -------------------------------
+client/build/
+client/.gradle/
+client/logs/
+client/out/
+# .run/ (IntelliJ-Startkonfigurationen) bleibt versioniert
+
+# --- Allgemein --------------------------------------------------------------
+.gradle/
+build/
+.idea/
+*.log
+hs_err_*.log
+*.hprof
+*.jfr
+
+# Weitere Laufverzeichnisse der Fabric-Referenzläufe (M7/M10) und Wurzel-Logs
+research/run-*/
+/logs/

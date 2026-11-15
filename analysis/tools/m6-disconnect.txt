@@ -1,0 +1,13 @@
+# M6 Disconnect-Anzeige (docs/26): Server wird während des Spiels gestoppt; das Fenster muss die Trennung anzeigen.
+server-console ${CONSOLE}
+wait-play
+console tp ${NAME} -20.5 100 -22.5 -30 20
+wait 3
+wait-meshes
+mark before-stop
+console stop
+wait-disconnect
+wait 1
+mark after-disconnect
+screenshot ${OUT}/20-disconnected.png
+wait 3

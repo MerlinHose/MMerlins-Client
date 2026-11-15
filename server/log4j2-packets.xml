@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MinecraftResearch: Logkonfiguration für den lokalen Laufzeittest.
+  Basis: log4j2.xml aus libraries/com/mojang/logging/1.7.12/logging-1.7.12.jar (unverändert dort).
+  Unterschied: Paket-Logs (Marker NETWORK_PACKETS) der vorhandenen Klassen
+  net.minecraft.network.PacketDecoder/PacketEncoder werden auf DEBUG in logs/packets.log geschrieben.
+  Aktivierung: java -Dlog4j.configurationFile=log4j2-packets.xml -jar server.jar nogui
+-->
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="SysOut" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg{nolookups}%n" />
+        </Console>
+        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg{nolookups}%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy />
+            </Policies>
+        </RollingRandomAccessFile>
+        <File name="Packets" fileName="logs/packets.log" append="false">
+            <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t] %marker %msg{nolookups}%n" />
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="net.minecraft.network.PacketDecoder" level="debug" additivity="false">
+            <AppenderRef ref="Packets"/>
+        </Logger>
+        <Logger name="net.minecraft.network.PacketEncoder" level="debug" additivity="false">
+            <AppenderRef ref="Packets"/>
+        </Logger>
+        <Logger name="net.minecraft.network.Connection" level="debug" additivity="false">
+            <AppenderRef ref="Packets"/>
+            <AppenderRef ref="File" level="info"/>
+            <AppenderRef ref="SysOut" level="info"/>
+        </Logger>
+        <Root level="info">
+            <filters>
+                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
+            </filters>
+            <AppenderRef ref="SysOut"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>

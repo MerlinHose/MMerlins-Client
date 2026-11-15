@@ -1,0 +1,14 @@
+# M12 Kurztest Niederschlag (Diagnose)
+server-console ${CONSOLE}
+wait-play
+console gamerule advance_weather false
+console weather rain
+console tp ${NAME} 7.5 64 9.5 45 10
+wait 3
+wait-meshes
+wait 7
+env-dump rain
+screenshot ${OUT}/rain.png
+console weather clear
+console gamerule advance_weather true
+wait 1

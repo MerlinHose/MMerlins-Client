@@ -1,0 +1,1677 @@
+# M12 tint sources (TintExtractor, BlockColors#createDefault of the unmodified 26.3 game jar)
+T	8	0	grass	# minecraft:grass_block
+T	9	0	grass	# minecraft:grass_block
+T	89	0	none	# minecraft:water
+T	90	0	none	# minecraft:water
+T	91	0	none	# minecraft:water
+T	92	0	none	# minecraft:water
+T	93	0	none	# minecraft:water
+T	94	0	none	# minecraft:water
+T	95	0	none	# minecraft:water
+T	96	0	none	# minecraft:water
+T	97	0	none	# minecraft:water
+T	98	0	none	# minecraft:water
+T	99	0	none	# minecraft:water
+T	100	0	none	# minecraft:water
+T	101	0	none	# minecraft:water
+T	102	0	none	# minecraft:water
+T	103	0	none	# minecraft:water
+T	104	0	none	# minecraft:water
+T	267	0	foliage	# minecraft:oak_leaves
+T	268	0	foliage	# minecraft:oak_leaves
+T	269	0	foliage	# minecraft:oak_leaves
+T	270	0	foliage	# minecraft:oak_leaves
+T	271	0	foliage	# minecraft:oak_leaves
+T	272	0	foliage	# minecraft:oak_leaves
+T	273	0	foliage	# minecraft:oak_leaves
+T	274	0	foliage	# minecraft:oak_leaves
+T	275	0	foliage	# minecraft:oak_leaves
+T	276	0	foliage	# minecraft:oak_leaves
+T	277	0	foliage	# minecraft:oak_leaves
+T	278	0	foliage	# minecraft:oak_leaves
+T	279	0	foliage	# minecraft:oak_leaves
+T	280	0	foliage	# minecraft:oak_leaves
+T	281	0	foliage	# minecraft:oak_leaves
+T	282	0	foliage	# minecraft:oak_leaves
+T	283	0	foliage	# minecraft:oak_leaves
+T	284	0	foliage	# minecraft:oak_leaves
+T	285	0	foliage	# minecraft:oak_leaves
+T	286	0	foliage	# minecraft:oak_leaves
+T	287	0	foliage	# minecraft:oak_leaves
+T	288	0	foliage	# minecraft:oak_leaves
+T	289	0	foliage	# minecraft:oak_leaves
+T	290	0	foliage	# minecraft:oak_leaves
+T	291	0	foliage	# minecraft:oak_leaves
+T	292	0	foliage	# minecraft:oak_leaves
+T	293	0	foliage	# minecraft:oak_leaves
+T	294	0	foliage	# minecraft:oak_leaves
+T	295	0	constant	619961	# minecraft:spruce_leaves
+T	296	0	constant	619961	# minecraft:spruce_leaves
+T	297	0	constant	619961	# minecraft:spruce_leaves
+T	298	0	constant	619961	# minecraft:spruce_leaves
+T	299	0	constant	619961	# minecraft:spruce_leaves
+T	300	0	constant	619961	# minecraft:spruce_leaves
+T	301	0	constant	619961	# minecraft:spruce_leaves
+T	302	0	constant	619961	# minecraft:spruce_leaves
+T	303	0	constant	619961	# minecraft:spruce_leaves
+T	304	0	constant	619961	# minecraft:spruce_leaves
+T	305	0	constant	619961	# minecraft:spruce_leaves
+T	306	0	constant	619961	# minecraft:spruce_leaves
+T	307	0	constant	619961	# minecraft:spruce_leaves
+T	308	0	constant	619961	# minecraft:spruce_leaves
+T	309	0	constant	619961	# minecraft:spruce_leaves
+T	310	0	constant	619961	# minecraft:spruce_leaves
+T	311	0	constant	619961	# minecraft:spruce_leaves
+T	312	0	constant	619961	# minecraft:spruce_leaves
+T	313	0	constant	619961	# minecraft:spruce_leaves
+T	314	0	constant	619961	# minecraft:spruce_leaves
+T	315	0	constant	619961	# minecraft:spruce_leaves
+T	316	0	constant	619961	# minecraft:spruce_leaves
+T	317	0	constant	619961	# minecraft:spruce_leaves
+T	318	0	constant	619961	# minecraft:spruce_leaves
+T	319	0	constant	619961	# minecraft:spruce_leaves
+T	320	0	constant	619961	# minecraft:spruce_leaves
+T	321	0	constant	619961	# minecraft:spruce_leaves
+T	322	0	constant	619961	# minecraft:spruce_leaves
+T	323	0	constant	80a755	# minecraft:birch_leaves
+T	324	0	constant	80a755	# minecraft:birch_leaves
+T	325	0	constant	80a755	# minecraft:birch_leaves
+T	326	0	constant	80a755	# minecraft:birch_leaves
+T	327	0	constant	80a755	# minecraft:birch_leaves
+T	328	0	constant	80a755	# minecraft:birch_leaves
+T	329	0	constant	80a755	# minecraft:birch_leaves
+T	330	0	constant	80a755	# minecraft:birch_leaves
+T	331	0	constant	80a755	# minecraft:birch_leaves
+T	332	0	constant	80a755	# minecraft:birch_leaves
+T	333	0	constant	80a755	# minecraft:birch_leaves
+T	334	0	constant	80a755	# minecraft:birch_leaves
+T	335	0	constant	80a755	# minecraft:birch_leaves
+T	336	0	constant	80a755	# minecraft:birch_leaves
+T	337	0	constant	80a755	# minecraft:birch_leaves
+T	338	0	constant	80a755	# minecraft:birch_leaves
+T	339	0	constant	80a755	# minecraft:birch_leaves
+T	340	0	constant	80a755	# minecraft:birch_leaves
+T	341	0	constant	80a755	# minecraft:birch_leaves
+T	342	0	constant	80a755	# minecraft:birch_leaves
+T	343	0	constant	80a755	# minecraft:birch_leaves
+T	344	0	constant	80a755	# minecraft:birch_leaves
+T	345	0	constant	80a755	# minecraft:birch_leaves
+T	346	0	constant	80a755	# minecraft:birch_leaves
+T	347	0	constant	80a755	# minecraft:birch_leaves
+T	348	0	constant	80a755	# minecraft:birch_leaves
+T	349	0	constant	80a755	# minecraft:birch_leaves
+T	350	0	constant	80a755	# minecraft:birch_leaves
+T	351	0	foliage	# minecraft:jungle_leaves
+T	352	0	foliage	# minecraft:jungle_leaves
+T	353	0	foliage	# minecraft:jungle_leaves
+T	354	0	foliage	# minecraft:jungle_leaves
+T	355	0	foliage	# minecraft:jungle_leaves
+T	356	0	foliage	# minecraft:jungle_leaves
+T	357	0	foliage	# minecraft:jungle_leaves
+T	358	0	foliage	# minecraft:jungle_leaves
+T	359	0	foliage	# minecraft:jungle_leaves
+T	360	0	foliage	# minecraft:jungle_leaves
+T	361	0	foliage	# minecraft:jungle_leaves
+T	362	0	foliage	# minecraft:jungle_leaves
+T	363	0	foliage	# minecraft:jungle_leaves
+T	364	0	foliage	# minecraft:jungle_leaves
+T	365	0	foliage	# minecraft:jungle_leaves
+T	366	0	foliage	# minecraft:jungle_leaves
+T	367	0	foliage	# minecraft:jungle_leaves
+T	368	0	foliage	# minecraft:jungle_leaves
+T	369	0	foliage	# minecraft:jungle_leaves
+T	370	0	foliage	# minecraft:jungle_leaves
+T	371	0	foliage	# minecraft:jungle_leaves
+T	372	0	foliage	# minecraft:jungle_leaves
+T	373	0	foliage	# minecraft:jungle_leaves
+T	374	0	foliage	# minecraft:jungle_leaves
+T	375	0	foliage	# minecraft:jungle_leaves
+T	376	0	foliage	# minecraft:jungle_leaves
+T	377	0	foliage	# minecraft:jungle_leaves
+T	378	0	foliage	# minecraft:jungle_leaves
+T	379	0	foliage	# minecraft:acacia_leaves
+T	380	0	foliage	# minecraft:acacia_leaves
+T	381	0	foliage	# minecraft:acacia_leaves
+T	382	0	foliage	# minecraft:acacia_leaves
+T	383	0	foliage	# minecraft:acacia_leaves
+T	384	0	foliage	# minecraft:acacia_leaves
+T	385	0	foliage	# minecraft:acacia_leaves
+T	386	0	foliage	# minecraft:acacia_leaves
+T	387	0	foliage	# minecraft:acacia_leaves
+T	388	0	foliage	# minecraft:acacia_leaves
+T	389	0	foliage	# minecraft:acacia_leaves
+T	390	0	foliage	# minecraft:acacia_leaves
+T	391	0	foliage	# minecraft:acacia_leaves
+T	392	0	foliage	# minecraft:acacia_leaves
+T	393	0	foliage	# minecraft:acacia_leaves
+T	394	0	foliage	# minecraft:acacia_leaves
+T	395	0	foliage	# minecraft:acacia_leaves
+T	396	0	foliage	# minecraft:acacia_leaves
+T	397	0	foliage	# minecraft:acacia_leaves
+T	398	0	foliage	# minecraft:acacia_leaves
+T	399	0	foliage	# minecraft:acacia_leaves
+T	400	0	foliage	# minecraft:acacia_leaves
+T	401	0	foliage	# minecraft:acacia_leaves
+T	402	0	foliage	# minecraft:acacia_leaves
+T	403	0	foliage	# minecraft:acacia_leaves
+T	404	0	foliage	# minecraft:acacia_leaves
+T	405	0	foliage	# minecraft:acacia_leaves
+T	406	0	foliage	# minecraft:acacia_leaves
+T	435	0	foliage	# minecraft:dark_oak_leaves
+T	436	0	foliage	# minecraft:dark_oak_leaves
+T	437	0	foliage	# minecraft:dark_oak_leaves
+T	438	0	foliage	# minecraft:dark_oak_leaves
+T	439	0	foliage	# minecraft:dark_oak_leaves
+T	440	0	foliage	# minecraft:dark_oak_leaves
+T	441	0	foliage	# minecraft:dark_oak_leaves
+T	442	0	foliage	# minecraft:dark_oak_leaves
+T	443	0	foliage	# minecraft:dark_oak_leaves
+T	444	0	foliage	# minecraft:dark_oak_leaves
+T	445	0	foliage	# minecraft:dark_oak_leaves
+T	446	0	foliage	# minecraft:dark_oak_leaves
+T	447	0	foliage	# minecraft:dark_oak_leaves
+T	448	0	foliage	# minecraft:dark_oak_leaves
+T	449	0	foliage	# minecraft:dark_oak_leaves
+T	450	0	foliage	# minecraft:dark_oak_leaves
+T	451	0	foliage	# minecraft:dark_oak_leaves
+T	452	0	foliage	# minecraft:dark_oak_leaves
+T	453	0	foliage	# minecraft:dark_oak_leaves
+T	454	0	foliage	# minecraft:dark_oak_leaves
+T	455	0	foliage	# minecraft:dark_oak_leaves
+T	456	0	foliage	# minecraft:dark_oak_leaves
+T	457	0	foliage	# minecraft:dark_oak_leaves
+T	458	0	foliage	# minecraft:dark_oak_leaves
+T	459	0	foliage	# minecraft:dark_oak_leaves
+T	460	0	foliage	# minecraft:dark_oak_leaves
+T	461	0	foliage	# minecraft:dark_oak_leaves
+T	462	0	foliage	# minecraft:dark_oak_leaves
+T	491	0	foliage	# minecraft:mangrove_leaves
+T	492	0	foliage	# minecraft:mangrove_leaves
+T	493	0	foliage	# minecraft:mangrove_leaves
+T	494	0	foliage	# minecraft:mangrove_leaves
+T	495	0	foliage	# minecraft:mangrove_leaves
+T	496	0	foliage	# minecraft:mangrove_leaves
+T	497	0	foliage	# minecraft:mangrove_leaves
+T	498	0	foliage	# minecraft:mangrove_leaves
+T	499	0	foliage	# minecraft:mangrove_leaves
+T	500	0	foliage	# minecraft:mangrove_leaves
+T	501	0	foliage	# minecraft:mangrove_leaves
+T	502	0	foliage	# minecraft:mangrove_leaves
+T	503	0	foliage	# minecraft:mangrove_leaves
+T	504	0	foliage	# minecraft:mangrove_leaves
+T	505	0	foliage	# minecraft:mangrove_leaves
+T	506	0	foliage	# minecraft:mangrove_leaves
+T	507	0	foliage	# minecraft:mangrove_leaves
+T	508	0	foliage	# minecraft:mangrove_leaves
+T	509	0	foliage	# minecraft:mangrove_leaves
+T	510	0	foliage	# minecraft:mangrove_leaves
+T	511	0	foliage	# minecraft:mangrove_leaves
+T	512	0	foliage	# minecraft:mangrove_leaves
+T	513	0	foliage	# minecraft:mangrove_leaves
+T	514	0	foliage	# minecraft:mangrove_leaves
+T	515	0	foliage	# minecraft:mangrove_leaves
+T	516	0	foliage	# minecraft:mangrove_leaves
+T	517	0	foliage	# minecraft:mangrove_leaves
+T	518	0	foliage	# minecraft:mangrove_leaves
+T	2363	0	grass	# minecraft:short_grass
+T	2364	0	grass	# minecraft:fern
+T	2366	0	grass	# minecraft:bush
+T	5567	0	constant	4c0000	# minecraft:redstone_wire
+T	5568	0	constant	4c0000	# minecraft:redstone_wire
+T	5569	0	constant	4c0000	# minecraft:redstone_wire
+T	5570	0	constant	4c0000	# minecraft:redstone_wire
+T	5571	0	constant	4c0000	# minecraft:redstone_wire
+T	5572	0	constant	4c0000	# minecraft:redstone_wire
+T	5573	0	constant	4c0000	# minecraft:redstone_wire
+T	5574	0	constant	4c0000	# minecraft:redstone_wire
+T	5575	0	constant	4c0000	# minecraft:redstone_wire
+T	5576	0	constant	700000	# minecraft:redstone_wire
+T	5577	0	constant	700000	# minecraft:redstone_wire
+T	5578	0	constant	700000	# minecraft:redstone_wire
+T	5579	0	constant	700000	# minecraft:redstone_wire
+T	5580	0	constant	700000	# minecraft:redstone_wire
+T	5581	0	constant	700000	# minecraft:redstone_wire
+T	5582	0	constant	700000	# minecraft:redstone_wire
+T	5583	0	constant	700000	# minecraft:redstone_wire
+T	5584	0	constant	700000	# minecraft:redstone_wire
+T	5585	0	constant	7a0000	# minecraft:redstone_wire
+T	5586	0	constant	7a0000	# minecraft:redstone_wire
+T	5587	0	constant	7a0000	# minecraft:redstone_wire
+T	5588	0	constant	7a0000	# minecraft:redstone_wire
+T	5589	0	constant	7a0000	# minecraft:redstone_wire
+T	5590	0	constant	7a0000	# minecraft:redstone_wire
+T	5591	0	constant	7a0000	# minecraft:redstone_wire
+T	5592	0	constant	7a0000	# minecraft:redstone_wire
+T	5593	0	constant	7a0000	# minecraft:redstone_wire
+T	5594	0	constant	840000	# minecraft:redstone_wire
+T	5595	0	constant	840000	# minecraft:redstone_wire
+T	5596	0	constant	840000	# minecraft:redstone_wire
+T	5597	0	constant	840000	# minecraft:redstone_wire
+T	5598	0	constant	840000	# minecraft:redstone_wire
+T	5599	0	constant	840000	# minecraft:redstone_wire
+T	5600	0	constant	840000	# minecraft:redstone_wire
+T	5601	0	constant	840000	# minecraft:redstone_wire
+T	5602	0	constant	840000	# minecraft:redstone_wire
+T	5603	0	constant	8e0000	# minecraft:redstone_wire
+T	5604	0	constant	8e0000	# minecraft:redstone_wire
+T	5605	0	constant	8e0000	# minecraft:redstone_wire
+T	5606	0	constant	8e0000	# minecraft:redstone_wire
+T	5607	0	constant	8e0000	# minecraft:redstone_wire
+T	5608	0	constant	8e0000	# minecraft:redstone_wire
+T	5609	0	constant	8e0000	# minecraft:redstone_wire
+T	5610	0	constant	8e0000	# minecraft:redstone_wire
+T	5611	0	constant	8e0000	# minecraft:redstone_wire
+T	5612	0	constant	990000	# minecraft:redstone_wire
+T	5613	0	constant	990000	# minecraft:redstone_wire
+T	5614	0	constant	990000	# minecraft:redstone_wire
+T	5615	0	constant	990000	# minecraft:redstone_wire
+T	5616	0	constant	990000	# minecraft:redstone_wire
+T	5617	0	constant	990000	# minecraft:redstone_wire
+T	5618	0	constant	990000	# minecraft:redstone_wire
+T	5619	0	constant	990000	# minecraft:redstone_wire
+T	5620	0	constant	990000	# minecraft:redstone_wire
+T	5621	0	constant	a30000	# minecraft:redstone_wire
+T	5622	0	constant	a30000	# minecraft:redstone_wire
+T	5623	0	constant	a30000	# minecraft:redstone_wire
+T	5624	0	constant	a30000	# minecraft:redstone_wire
+T	5625	0	constant	a30000	# minecraft:redstone_wire
+T	5626	0	constant	a30000	# minecraft:redstone_wire
+T	5627	0	constant	a30000	# minecraft:redstone_wire
+T	5628	0	constant	a30000	# minecraft:redstone_wire
+T	5629	0	constant	a30000	# minecraft:redstone_wire
+T	5630	0	constant	ad0000	# minecraft:redstone_wire
+T	5631	0	constant	ad0000	# minecraft:redstone_wire
+T	5632	0	constant	ad0000	# minecraft:redstone_wire
+T	5633	0	constant	ad0000	# minecraft:redstone_wire
+T	5634	0	constant	ad0000	# minecraft:redstone_wire
+T	5635	0	constant	ad0000	# minecraft:redstone_wire
+T	5636	0	constant	ad0000	# minecraft:redstone_wire
+T	5637	0	constant	ad0000	# minecraft:redstone_wire
+T	5638	0	constant	ad0000	# minecraft:redstone_wire
+T	5639	0	constant	b70000	# minecraft:redstone_wire
+T	5640	0	constant	b70000	# minecraft:redstone_wire
+T	5641	0	constant	b70000	# minecraft:redstone_wire
+T	5642	0	constant	b70000	# minecraft:redstone_wire
+T	5643	0	constant	b70000	# minecraft:redstone_wire
+T	5644	0	constant	b70000	# minecraft:redstone_wire
+T	5645	0	constant	b70000	# minecraft:redstone_wire
+T	5646	0	constant	b70000	# minecraft:redstone_wire
+T	5647	0	constant	b70000	# minecraft:redstone_wire
+T	5648	0	constant	c10000	# minecraft:redstone_wire
+T	5649	0	constant	c10000	# minecraft:redstone_wire
+T	5650	0	constant	c10000	# minecraft:redstone_wire
+T	5651	0	constant	c10000	# minecraft:redstone_wire
+T	5652	0	constant	c10000	# minecraft:redstone_wire
+T	5653	0	constant	c10000	# minecraft:redstone_wire
+T	5654	0	constant	c10000	# minecraft:redstone_wire
+T	5655	0	constant	c10000	# minecraft:redstone_wire
+T	5656	0	constant	c10000	# minecraft:redstone_wire
+T	5657	0	constant	cc0000	# minecraft:redstone_wire
+T	5658	0	constant	cc0000	# minecraft:redstone_wire
+T	5659	0	constant	cc0000	# minecraft:redstone_wire
+T	5660	0	constant	cc0000	# minecraft:redstone_wire
+T	5661	0	constant	cc0000	# minecraft:redstone_wire
+T	5662	0	constant	cc0000	# minecraft:redstone_wire
+T	5663	0	constant	cc0000	# minecraft:redstone_wire
+T	5664	0	constant	cc0000	# minecraft:redstone_wire
+T	5665	0	constant	cc0000	# minecraft:redstone_wire
+T	5666	0	constant	d60000	# minecraft:redstone_wire
+T	5667	0	constant	d60000	# minecraft:redstone_wire
+T	5668	0	constant	d60000	# minecraft:redstone_wire
+T	5669	0	constant	d60000	# minecraft:redstone_wire
+T	5670	0	constant	d60000	# minecraft:redstone_wire
+T	5671	0	constant	d60000	# minecraft:redstone_wire
+T	5672	0	constant	d60000	# minecraft:redstone_wire
+T	5673	0	constant	d60000	# minecraft:redstone_wire
+T	5674	0	constant	d60000	# minecraft:redstone_wire
+T	5675	0	constant	e00000	# minecraft:redstone_wire
+T	5676	0	constant	e00000	# minecraft:redstone_wire
+T	5677	0	constant	e00000	# minecraft:redstone_wire
+T	5678	0	constant	e00000	# minecraft:redstone_wire
+T	5679	0	constant	e00000	# minecraft:redstone_wire
+T	5680	0	constant	e00000	# minecraft:redstone_wire
+T	5681	0	constant	e00000	# minecraft:redstone_wire
+T	5682	0	constant	e00000	# minecraft:redstone_wire
+T	5683	0	constant	e00000	# minecraft:redstone_wire
+T	5684	0	constant	ea0600	# minecraft:redstone_wire
+T	5685	0	constant	ea0600	# minecraft:redstone_wire
+T	5686	0	constant	ea0600	# minecraft:redstone_wire
+T	5687	0	constant	ea0600	# minecraft:redstone_wire
+T	5688	0	constant	ea0600	# minecraft:redstone_wire
+T	5689	0	constant	ea0600	# minecraft:redstone_wire
+T	5690	0	constant	ea0600	# minecraft:redstone_wire
+T	5691	0	constant	ea0600	# minecraft:redstone_wire
+T	5692	0	constant	ea0600	# minecraft:redstone_wire
+T	5693	0	constant	f41b00	# minecraft:redstone_wire
+T	5694	0	constant	f41b00	# minecraft:redstone_wire
+T	5695	0	constant	f41b00	# minecraft:redstone_wire
+T	5696	0	constant	f41b00	# minecraft:redstone_wire
+T	5697	0	constant	f41b00	# minecraft:redstone_wire
+T	5698	0	constant	f41b00	# minecraft:redstone_wire
+T	5699	0	constant	f41b00	# minecraft:redstone_wire
+T	5700	0	constant	f41b00	# minecraft:redstone_wire
+T	5701	0	constant	f41b00	# minecraft:redstone_wire
+T	5702	0	constant	ff3200	# minecraft:redstone_wire
+T	5703	0	constant	ff3200	# minecraft:redstone_wire
+T	5704	0	constant	ff3200	# minecraft:redstone_wire
+T	5705	0	constant	ff3200	# minecraft:redstone_wire
+T	5706	0	constant	ff3200	# minecraft:redstone_wire
+T	5707	0	constant	ff3200	# minecraft:redstone_wire
+T	5708	0	constant	ff3200	# minecraft:redstone_wire
+T	5709	0	constant	ff3200	# minecraft:redstone_wire
+T	5710	0	constant	ff3200	# minecraft:redstone_wire
+T	5711	0	constant	4c0000	# minecraft:redstone_wire
+T	5712	0	constant	4c0000	# minecraft:redstone_wire
+T	5713	0	constant	4c0000	# minecraft:redstone_wire
+T	5714	0	constant	4c0000	# minecraft:redstone_wire
+T	5715	0	constant	4c0000	# minecraft:redstone_wire
+T	5716	0	constant	4c0000	# minecraft:redstone_wire
+T	5717	0	constant	4c0000	# minecraft:redstone_wire
+T	5718	0	constant	4c0000	# minecraft:redstone_wire
+T	5719	0	constant	4c0000	# minecraft:redstone_wire
+T	5720	0	constant	700000	# minecraft:redstone_wire
+T	5721	0	constant	700000	# minecraft:redstone_wire
+T	5722	0	constant	700000	# minecraft:redstone_wire
+T	5723	0	constant	700000	# minecraft:redstone_wire
+T	5724	0	constant	700000	# minecraft:redstone_wire
+T	5725	0	constant	700000	# minecraft:redstone_wire
+T	5726	0	constant	700000	# minecraft:redstone_wire
+T	5727	0	constant	700000	# minecraft:redstone_wire
+T	5728	0	constant	700000	# minecraft:redstone_wire
+T	5729	0	constant	7a0000	# minecraft:redstone_wire
+T	5730	0	constant	7a0000	# minecraft:redstone_wire
+T	5731	0	constant	7a0000	# minecraft:redstone_wire
+T	5732	0	constant	7a0000	# minecraft:redstone_wire
+T	5733	0	constant	7a0000	# minecraft:redstone_wire
+T	5734	0	constant	7a0000	# minecraft:redstone_wire
+T	5735	0	constant	7a0000	# minecraft:redstone_wire
+T	5736	0	constant	7a0000	# minecraft:redstone_wire
+T	5737	0	constant	7a0000	# minecraft:redstone_wire
+T	5738	0	constant	840000	# minecraft:redstone_wire
+T	5739	0	constant	840000	# minecraft:redstone_wire
+T	5740	0	constant	840000	# minecraft:redstone_wire
+T	5741	0	constant	840000	# minecraft:redstone_wire
+T	5742	0	constant	840000	# minecraft:redstone_wire
+T	5743	0	constant	840000	# minecraft:redstone_wire
+T	5744	0	constant	840000	# minecraft:redstone_wire
+T	5745	0	constant	840000	# minecraft:redstone_wire
+T	5746	0	constant	840000	# minecraft:redstone_wire
+T	5747	0	constant	8e0000	# minecraft:redstone_wire
+T	5748	0	constant	8e0000	# minecraft:redstone_wire
+T	5749	0	constant	8e0000	# minecraft:redstone_wire
+T	5750	0	constant	8e0000	# minecraft:redstone_wire
+T	5751	0	constant	8e0000	# minecraft:redstone_wire
+T	5752	0	constant	8e0000	# minecraft:redstone_wire
+T	5753	0	constant	8e0000	# minecraft:redstone_wire
+T	5754	0	constant	8e0000	# minecraft:redstone_wire
+T	5755	0	constant	8e0000	# minecraft:redstone_wire
+T	5756	0	constant	990000	# minecraft:redstone_wire
+T	5757	0	constant	990000	# minecraft:redstone_wire
+T	5758	0	constant	990000	# minecraft:redstone_wire
+T	5759	0	constant	990000	# minecraft:redstone_wire
+T	5760	0	constant	990000	# minecraft:redstone_wire
+T	5761	0	constant	990000	# minecraft:redstone_wire
+T	5762	0	constant	990000	# minecraft:redstone_wire
+T	5763	0	constant	990000	# minecraft:redstone_wire
+T	5764	0	constant	990000	# minecraft:redstone_wire
+T	5765	0	constant	a30000	# minecraft:redstone_wire
+T	5766	0	constant	a30000	# minecraft:redstone_wire
+T	5767	0	constant	a30000	# minecraft:redstone_wire
+T	5768	0	constant	a30000	# minecraft:redstone_wire
+T	5769	0	constant	a30000	# minecraft:redstone_wire
+T	5770	0	constant	a30000	# minecraft:redstone_wire
+T	5771	0	constant	a30000	# minecraft:redstone_wire
+T	5772	0	constant	a30000	# minecraft:redstone_wire
+T	5773	0	constant	a30000	# minecraft:redstone_wire
+T	5774	0	constant	ad0000	# minecraft:redstone_wire
+T	5775	0	constant	ad0000	# minecraft:redstone_wire
+T	5776	0	constant	ad0000	# minecraft:redstone_wire
+T	5777	0	constant	ad0000	# minecraft:redstone_wire
+T	5778	0	constant	ad0000	# minecraft:redstone_wire
+T	5779	0	constant	ad0000	# minecraft:redstone_wire
+T	5780	0	constant	ad0000	# minecraft:redstone_wire
+T	5781	0	constant	ad0000	# minecraft:redstone_wire
+T	5782	0	constant	ad0000	# minecraft:redstone_wire
+T	5783	0	constant	b70000	# minecraft:redstone_wire
+T	5784	0	constant	b70000	# minecraft:redstone_wire
+T	5785	0	constant	b70000	# minecraft:redstone_wire
+T	5786	0	constant	b70000	# minecraft:redstone_wire
+T	5787	0	constant	b70000	# minecraft:redstone_wire
+T	5788	0	constant	b70000	# minecraft:redstone_wire
+T	5789	0	constant	b70000	# minecraft:redstone_wire
+T	5790	0	constant	b70000	# minecraft:redstone_wire
+T	5791	0	constant	b70000	# minecraft:redstone_wire
+T	5792	0	constant	c10000	# minecraft:redstone_wire
+T	5793	0	constant	c10000	# minecraft:redstone_wire
+T	5794	0	constant	c10000	# minecraft:redstone_wire
+T	5795	0	constant	c10000	# minecraft:redstone_wire
+T	5796	0	constant	c10000	# minecraft:redstone_wire
+T	5797	0	constant	c10000	# minecraft:redstone_wire
+T	5798	0	constant	c10000	# minecraft:redstone_wire
+T	5799	0	constant	c10000	# minecraft:redstone_wire
+T	5800	0	constant	c10000	# minecraft:redstone_wire
+T	5801	0	constant	cc0000	# minecraft:redstone_wire
+T	5802	0	constant	cc0000	# minecraft:redstone_wire
+T	5803	0	constant	cc0000	# minecraft:redstone_wire
+T	5804	0	constant	cc0000	# minecraft:redstone_wire
+T	5805	0	constant	cc0000	# minecraft:redstone_wire
+T	5806	0	constant	cc0000	# minecraft:redstone_wire
+T	5807	0	constant	cc0000	# minecraft:redstone_wire
+T	5808	0	constant	cc0000	# minecraft:redstone_wire
+T	5809	0	constant	cc0000	# minecraft:redstone_wire
+T	5810	0	constant	d60000	# minecraft:redstone_wire
+T	5811	0	constant	d60000	# minecraft:redstone_wire
+T	5812	0	constant	d60000	# minecraft:redstone_wire
+T	5813	0	constant	d60000	# minecraft:redstone_wire
+T	5814	0	constant	d60000	# minecraft:redstone_wire
+T	5815	0	constant	d60000	# minecraft:redstone_wire
+T	5816	0	constant	d60000	# minecraft:redstone_wire
+T	5817	0	constant	d60000	# minecraft:redstone_wire
+T	5818	0	constant	d60000	# minecraft:redstone_wire
+T	5819	0	constant	e00000	# minecraft:redstone_wire
+T	5820	0	constant	e00000	# minecraft:redstone_wire
+T	5821	0	constant	e00000	# minecraft:redstone_wire
+T	5822	0	constant	e00000	# minecraft:redstone_wire
+T	5823	0	constant	e00000	# minecraft:redstone_wire
+T	5824	0	constant	e00000	# minecraft:redstone_wire
+T	5825	0	constant	e00000	# minecraft:redstone_wire
+T	5826	0	constant	e00000	# minecraft:redstone_wire
+T	5827	0	constant	e00000	# minecraft:redstone_wire
+T	5828	0	constant	ea0600	# minecraft:redstone_wire
+T	5829	0	constant	ea0600	# minecraft:redstone_wire
+T	5830	0	constant	ea0600	# minecraft:redstone_wire
+T	5831	0	constant	ea0600	# minecraft:redstone_wire
+T	5832	0	constant	ea0600	# minecraft:redstone_wire
+T	5833	0	constant	ea0600	# minecraft:redstone_wire
+T	5834	0	constant	ea0600	# minecraft:redstone_wire
+T	5835	0	constant	ea0600	# minecraft:redstone_wire
+T	5836	0	constant	ea0600	# minecraft:redstone_wire
+T	5837	0	constant	f41b00	# minecraft:redstone_wire
+T	5838	0	constant	f41b00	# minecraft:redstone_wire
+T	5839	0	constant	f41b00	# minecraft:redstone_wire
+T	5840	0	constant	f41b00	# minecraft:redstone_wire
+T	5841	0	constant	f41b00	# minecraft:redstone_wire
+T	5842	0	constant	f41b00	# minecraft:redstone_wire
+T	5843	0	constant	f41b00	# minecraft:redstone_wire
+T	5844	0	constant	f41b00	# minecraft:redstone_wire
+T	5845	0	constant	f41b00	# minecraft:redstone_wire
+T	5846	0	constant	ff3200	# minecraft:redstone_wire
+T	5847	0	constant	ff3200	# minecraft:redstone_wire
+T	5848	0	constant	ff3200	# minecraft:redstone_wire
+T	5849	0	constant	ff3200	# minecraft:redstone_wire
+T	5850	0	constant	ff3200	# minecraft:redstone_wire
+T	5851	0	constant	ff3200	# minecraft:redstone_wire
+T	5852	0	constant	ff3200	# minecraft:redstone_wire
+T	5853	0	constant	ff3200	# minecraft:redstone_wire
+T	5854	0	constant	ff3200	# minecraft:redstone_wire
+T	5855	0	constant	4c0000	# minecraft:redstone_wire
+T	5856	0	constant	4c0000	# minecraft:redstone_wire
+T	5857	0	constant	4c0000	# minecraft:redstone_wire
+T	5858	0	constant	4c0000	# minecraft:redstone_wire
+T	5859	0	constant	4c0000	# minecraft:redstone_wire
+T	5860	0	constant	4c0000	# minecraft:redstone_wire
+T	5861	0	constant	4c0000	# minecraft:redstone_wire
+T	5862	0	constant	4c0000	# minecraft:redstone_wire
+T	5863	0	constant	4c0000	# minecraft:redstone_wire
+T	5864	0	constant	700000	# minecraft:redstone_wire
+T	5865	0	constant	700000	# minecraft:redstone_wire
+T	5866	0	constant	700000	# minecraft:redstone_wire
+T	5867	0	constant	700000	# minecraft:redstone_wire
+T	5868	0	constant	700000	# minecraft:redstone_wire
+T	5869	0	constant	700000	# minecraft:redstone_wire
+T	5870	0	constant	700000	# minecraft:redstone_wire
+T	5871	0	constant	700000	# minecraft:redstone_wire
+T	5872	0	constant	700000	# minecraft:redstone_wire
+T	5873	0	constant	7a0000	# minecraft:redstone_wire
+T	5874	0	constant	7a0000	# minecraft:redstone_wire
+T	5875	0	constant	7a0000	# minecraft:redstone_wire
+T	5876	0	constant	7a0000	# minecraft:redstone_wire
+T	5877	0	constant	7a0000	# minecraft:redstone_wire
+T	5878	0	constant	7a0000	# minecraft:redstone_wire
+T	5879	0	constant	7a0000	# minecraft:redstone_wire
+T	5880	0	constant	7a0000	# minecraft:redstone_wire
+T	5881	0	constant	7a0000	# minecraft:redstone_wire
+T	5882	0	constant	840000	# minecraft:redstone_wire
+T	5883	0	constant	840000	# minecraft:redstone_wire
+T	5884	0	constant	840000	# minecraft:redstone_wire
+T	5885	0	constant	840000	# minecraft:redstone_wire
+T	5886	0	constant	840000	# minecraft:redstone_wire
+T	5887	0	constant	840000	# minecraft:redstone_wire
+T	5888	0	constant	840000	# minecraft:redstone_wire
+T	5889	0	constant	840000	# minecraft:redstone_wire
+T	5890	0	constant	840000	# minecraft:redstone_wire
+T	5891	0	constant	8e0000	# minecraft:redstone_wire
+T	5892	0	constant	8e0000	# minecraft:redstone_wire
+T	5893	0	constant	8e0000	# minecraft:redstone_wire
+T	5894	0	constant	8e0000	# minecraft:redstone_wire
+T	5895	0	constant	8e0000	# minecraft:redstone_wire
+T	5896	0	constant	8e0000	# minecraft:redstone_wire
+T	5897	0	constant	8e0000	# minecraft:redstone_wire
+T	5898	0	constant	8e0000	# minecraft:redstone_wire
+T	5899	0	constant	8e0000	# minecraft:redstone_wire
+T	5900	0	constant	990000	# minecraft:redstone_wire
+T	5901	0	constant	990000	# minecraft:redstone_wire
+T	5902	0	constant	990000	# minecraft:redstone_wire
+T	5903	0	constant	990000	# minecraft:redstone_wire
+T	5904	0	constant	990000	# minecraft:redstone_wire
+T	5905	0	constant	990000	# minecraft:redstone_wire
+T	5906	0	constant	990000	# minecraft:redstone_wire
+T	5907	0	constant	990000	# minecraft:redstone_wire
+T	5908	0	constant	990000	# minecraft:redstone_wire
+T	5909	0	constant	a30000	# minecraft:redstone_wire
+T	5910	0	constant	a30000	# minecraft:redstone_wire
+T	5911	0	constant	a30000	# minecraft:redstone_wire
+T	5912	0	constant	a30000	# minecraft:redstone_wire
+T	5913	0	constant	a30000	# minecraft:redstone_wire
+T	5914	0	constant	a30000	# minecraft:redstone_wire
+T	5915	0	constant	a30000	# minecraft:redstone_wire
+T	5916	0	constant	a30000	# minecraft:redstone_wire
+T	5917	0	constant	a30000	# minecraft:redstone_wire
+T	5918	0	constant	ad0000	# minecraft:redstone_wire
+T	5919	0	constant	ad0000	# minecraft:redstone_wire
+T	5920	0	constant	ad0000	# minecraft:redstone_wire
+T	5921	0	constant	ad0000	# minecraft:redstone_wire
+T	5922	0	constant	ad0000	# minecraft:redstone_wire
+T	5923	0	constant	ad0000	# minecraft:redstone_wire
+T	5924	0	constant	ad0000	# minecraft:redstone_wire
+T	5925	0	constant	ad0000	# minecraft:redstone_wire
+T	5926	0	constant	ad0000	# minecraft:redstone_wire
+T	5927	0	constant	b70000	# minecraft:redstone_wire
+T	5928	0	constant	b70000	# minecraft:redstone_wire
+T	5929	0	constant	b70000	# minecraft:redstone_wire
+T	5930	0	constant	b70000	# minecraft:redstone_wire
+T	5931	0	constant	b70000	# minecraft:redstone_wire
+T	5932	0	constant	b70000	# minecraft:redstone_wire
+T	5933	0	constant	b70000	# minecraft:redstone_wire
+T	5934	0	constant	b70000	# minecraft:redstone_wire
+T	5935	0	constant	b70000	# minecraft:redstone_wire
+T	5936	0	constant	c10000	# minecraft:redstone_wire
+T	5937	0	constant	c10000	# minecraft:redstone_wire
+T	5938	0	constant	c10000	# minecraft:redstone_wire
+T	5939	0	constant	c10000	# minecraft:redstone_wire
+T	5940	0	constant	c10000	# minecraft:redstone_wire
+T	5941	0	constant	c10000	# minecraft:redstone_wire
+T	5942	0	constant	c10000	# minecraft:redstone_wire
+T	5943	0	constant	c10000	# minecraft:redstone_wire
+T	5944	0	constant	c10000	# minecraft:redstone_wire
+T	5945	0	constant	cc0000	# minecraft:redstone_wire
+T	5946	0	constant	cc0000	# minecraft:redstone_wire
+T	5947	0	constant	cc0000	# minecraft:redstone_wire
+T	5948	0	constant	cc0000	# minecraft:redstone_wire
+T	5949	0	constant	cc0000	# minecraft:redstone_wire
+T	5950	0	constant	cc0000	# minecraft:redstone_wire
+T	5951	0	constant	cc0000	# minecraft:redstone_wire
+T	5952	0	constant	cc0000	# minecraft:redstone_wire
+T	5953	0	constant	cc0000	# minecraft:redstone_wire
+T	5954	0	constant	d60000	# minecraft:redstone_wire
+T	5955	0	constant	d60000	# minecraft:redstone_wire
+T	5956	0	constant	d60000	# minecraft:redstone_wire
+T	5957	0	constant	d60000	# minecraft:redstone_wire
+T	5958	0	constant	d60000	# minecraft:redstone_wire
+T	5959	0	constant	d60000	# minecraft:redstone_wire
+T	5960	0	constant	d60000	# minecraft:redstone_wire
+T	5961	0	constant	d60000	# minecraft:redstone_wire
+T	5962	0	constant	d60000	# minecraft:redstone_wire
+T	5963	0	constant	e00000	# minecraft:redstone_wire
+T	5964	0	constant	e00000	# minecraft:redstone_wire
+T	5965	0	constant	e00000	# minecraft:redstone_wire
+T	5966	0	constant	e00000	# minecraft:redstone_wire
+T	5967	0	constant	e00000	# minecraft:redstone_wire
+T	5968	0	constant	e00000	# minecraft:redstone_wire
+T	5969	0	constant	e00000	# minecraft:redstone_wire
+T	5970	0	constant	e00000	# minecraft:redstone_wire
+T	5971	0	constant	e00000	# minecraft:redstone_wire
+T	5972	0	constant	ea0600	# minecraft:redstone_wire
+T	5973	0	constant	ea0600	# minecraft:redstone_wire
+T	5974	0	constant	ea0600	# minecraft:redstone_wire
+T	5975	0	constant	ea0600	# minecraft:redstone_wire
+T	5976	0	constant	ea0600	# minecraft:redstone_wire
+T	5977	0	constant	ea0600	# minecraft:redstone_wire
+T	5978	0	constant	ea0600	# minecraft:redstone_wire
+T	5979	0	constant	ea0600	# minecraft:redstone_wire
+T	5980	0	constant	ea0600	# minecraft:redstone_wire
+T	5981	0	constant	f41b00	# minecraft:redstone_wire
+T	5982	0	constant	f41b00	# minecraft:redstone_wire
+T	5983	0	constant	f41b00	# minecraft:redstone_wire
+T	5984	0	constant	f41b00	# minecraft:redstone_wire
+T	5985	0	constant	f41b00	# minecraft:redstone_wire
+T	5986	0	constant	f41b00	# minecraft:redstone_wire
+T	5987	0	constant	f41b00	# minecraft:redstone_wire
+T	5988	0	constant	f41b00	# minecraft:redstone_wire
+T	5989	0	constant	f41b00	# minecraft:redstone_wire
+T	5990	0	constant	ff3200	# minecraft:redstone_wire
+T	5991	0	constant	ff3200	# minecraft:redstone_wire
+T	5992	0	constant	ff3200	# minecraft:redstone_wire
+T	5993	0	constant	ff3200	# minecraft:redstone_wire
+T	5994	0	constant	ff3200	# minecraft:redstone_wire
+T	5995	0	constant	ff3200	# minecraft:redstone_wire
+T	5996	0	constant	ff3200	# minecraft:redstone_wire
+T	5997	0	constant	ff3200	# minecraft:redstone_wire
+T	5998	0	constant	ff3200	# minecraft:redstone_wire
+T	5999	0	constant	4c0000	# minecraft:redstone_wire
+T	6000	0	constant	4c0000	# minecraft:redstone_wire
+T	6001	0	constant	4c0000	# minecraft:redstone_wire
+T	6002	0	constant	4c0000	# minecraft:redstone_wire
+T	6003	0	constant	4c0000	# minecraft:redstone_wire
+T	6004	0	constant	4c0000	# minecraft:redstone_wire
+T	6005	0	constant	4c0000	# minecraft:redstone_wire
+T	6006	0	constant	4c0000	# minecraft:redstone_wire
+T	6007	0	constant	4c0000	# minecraft:redstone_wire
+T	6008	0	constant	700000	# minecraft:redstone_wire
+T	6009	0	constant	700000	# minecraft:redstone_wire
+T	6010	0	constant	700000	# minecraft:redstone_wire
+T	6011	0	constant	700000	# minecraft:redstone_wire
+T	6012	0	constant	700000	# minecraft:redstone_wire
+T	6013	0	constant	700000	# minecraft:redstone_wire
+T	6014	0	constant	700000	# minecraft:redstone_wire
+T	6015	0	constant	700000	# minecraft:redstone_wire
+T	6016	0	constant	700000	# minecraft:redstone_wire
+T	6017	0	constant	7a0000	# minecraft:redstone_wire
+T	6018	0	constant	7a0000	# minecraft:redstone_wire
+T	6019	0	constant	7a0000	# minecraft:redstone_wire
+T	6020	0	constant	7a0000	# minecraft:redstone_wire
+T	6021	0	constant	7a0000	# minecraft:redstone_wire
+T	6022	0	constant	7a0000	# minecraft:redstone_wire
+T	6023	0	constant	7a0000	# minecraft:redstone_wire
+T	6024	0	constant	7a0000	# minecraft:redstone_wire
+T	6025	0	constant	7a0000	# minecraft:redstone_wire
+T	6026	0	constant	840000	# minecraft:redstone_wire
+T	6027	0	constant	840000	# minecraft:redstone_wire
+T	6028	0	constant	840000	# minecraft:redstone_wire
+T	6029	0	constant	840000	# minecraft:redstone_wire
+T	6030	0	constant	840000	# minecraft:redstone_wire
+T	6031	0	constant	840000	# minecraft:redstone_wire
+T	6032	0	constant	840000	# minecraft:redstone_wire
+T	6033	0	constant	840000	# minecraft:redstone_wire
+T	6034	0	constant	840000	# minecraft:redstone_wire
+T	6035	0	constant	8e0000	# minecraft:redstone_wire
+T	6036	0	constant	8e0000	# minecraft:redstone_wire
+T	6037	0	constant	8e0000	# minecraft:redstone_wire
+T	6038	0	constant	8e0000	# minecraft:redstone_wire
+T	6039	0	constant	8e0000	# minecraft:redstone_wire
+T	6040	0	constant	8e0000	# minecraft:redstone_wire
+T	6041	0	constant	8e0000	# minecraft:redstone_wire
+T	6042	0	constant	8e0000	# minecraft:redstone_wire
+T	6043	0	constant	8e0000	# minecraft:redstone_wire
+T	6044	0	constant	990000	# minecraft:redstone_wire
+T	6045	0	constant	990000	# minecraft:redstone_wire
+T	6046	0	constant	990000	# minecraft:redstone_wire
+T	6047	0	constant	990000	# minecraft:redstone_wire
+T	6048	0	constant	990000	# minecraft:redstone_wire
+T	6049	0	constant	990000	# minecraft:redstone_wire
+T	6050	0	constant	990000	# minecraft:redstone_wire
+T	6051	0	constant	990000	# minecraft:redstone_wire
+T	6052	0	constant	990000	# minecraft:redstone_wire
+T	6053	0	constant	a30000	# minecraft:redstone_wire
+T	6054	0	constant	a30000	# minecraft:redstone_wire
+T	6055	0	constant	a30000	# minecraft:redstone_wire
+T	6056	0	constant	a30000	# minecraft:redstone_wire
+T	6057	0	constant	a30000	# minecraft:redstone_wire
+T	6058	0	constant	a30000	# minecraft:redstone_wire
+T	6059	0	constant	a30000	# minecraft:redstone_wire
+T	6060	0	constant	a30000	# minecraft:redstone_wire
+T	6061	0	constant	a30000	# minecraft:redstone_wire
+T	6062	0	constant	ad0000	# minecraft:redstone_wire
+T	6063	0	constant	ad0000	# minecraft:redstone_wire
+T	6064	0	constant	ad0000	# minecraft:redstone_wire
+T	6065	0	constant	ad0000	# minecraft:redstone_wire
+T	6066	0	constant	ad0000	# minecraft:redstone_wire
+T	6067	0	constant	ad0000	# minecraft:redstone_wire
+T	6068	0	constant	ad0000	# minecraft:redstone_wire
+T	6069	0	constant	ad0000	# minecraft:redstone_wire
+T	6070	0	constant	ad0000	# minecraft:redstone_wire
+T	6071	0	constant	b70000	# minecraft:redstone_wire
+T	6072	0	constant	b70000	# minecraft:redstone_wire
+T	6073	0	constant	b70000	# minecraft:redstone_wire
+T	6074	0	constant	b70000	# minecraft:redstone_wire
+T	6075	0	constant	b70000	# minecraft:redstone_wire
+T	6076	0	constant	b70000	# minecraft:redstone_wire
+T	6077	0	constant	b70000	# minecraft:redstone_wire
+T	6078	0	constant	b70000	# minecraft:redstone_wire
+T	6079	0	constant	b70000	# minecraft:redstone_wire
+T	6080	0	constant	c10000	# minecraft:redstone_wire
+T	6081	0	constant	c10000	# minecraft:redstone_wire
+T	6082	0	constant	c10000	# minecraft:redstone_wire
+T	6083	0	constant	c10000	# minecraft:redstone_wire
+T	6084	0	constant	c10000	# minecraft:redstone_wire
+T	6085	0	constant	c10000	# minecraft:redstone_wire
+T	6086	0	constant	c10000	# minecraft:redstone_wire
+T	6087	0	constant	c10000	# minecraft:redstone_wire
+T	6088	0	constant	c10000	# minecraft:redstone_wire
+T	6089	0	constant	cc0000	# minecraft:redstone_wire
+T	6090	0	constant	cc0000	# minecraft:redstone_wire
+T	6091	0	constant	cc0000	# minecraft:redstone_wire
+T	6092	0	constant	cc0000	# minecraft:redstone_wire
+T	6093	0	constant	cc0000	# minecraft:redstone_wire
+T	6094	0	constant	cc0000	# minecraft:redstone_wire
+T	6095	0	constant	cc0000	# minecraft:redstone_wire
+T	6096	0	constant	cc0000	# minecraft:redstone_wire
+T	6097	0	constant	cc0000	# minecraft:redstone_wire
+T	6098	0	constant	d60000	# minecraft:redstone_wire
+T	6099	0	constant	d60000	# minecraft:redstone_wire
+T	6100	0	constant	d60000	# minecraft:redstone_wire
+T	6101	0	constant	d60000	# minecraft:redstone_wire
+T	6102	0	constant	d60000	# minecraft:redstone_wire
+T	6103	0	constant	d60000	# minecraft:redstone_wire
+T	6104	0	constant	d60000	# minecraft:redstone_wire
+T	6105	0	constant	d60000	# minecraft:redstone_wire
+T	6106	0	constant	d60000	# minecraft:redstone_wire
+T	6107	0	constant	e00000	# minecraft:redstone_wire
+T	6108	0	constant	e00000	# minecraft:redstone_wire
+T	6109	0	constant	e00000	# minecraft:redstone_wire
+T	6110	0	constant	e00000	# minecraft:redstone_wire
+T	6111	0	constant	e00000	# minecraft:redstone_wire
+T	6112	0	constant	e00000	# minecraft:redstone_wire
+T	6113	0	constant	e00000	# minecraft:redstone_wire
+T	6114	0	constant	e00000	# minecraft:redstone_wire
+T	6115	0	constant	e00000	# minecraft:redstone_wire
+T	6116	0	constant	ea0600	# minecraft:redstone_wire
+T	6117	0	constant	ea0600	# minecraft:redstone_wire
+T	6118	0	constant	ea0600	# minecraft:redstone_wire
+T	6119	0	constant	ea0600	# minecraft:redstone_wire
+T	6120	0	constant	ea0600	# minecraft:redstone_wire
+T	6121	0	constant	ea0600	# minecraft:redstone_wire
+T	6122	0	constant	ea0600	# minecraft:redstone_wire
+T	6123	0	constant	ea0600	# minecraft:redstone_wire
+T	6124	0	constant	ea0600	# minecraft:redstone_wire
+T	6125	0	constant	f41b00	# minecraft:redstone_wire
+T	6126	0	constant	f41b00	# minecraft:redstone_wire
+T	6127	0	constant	f41b00	# minecraft:redstone_wire
+T	6128	0	constant	f41b00	# minecraft:redstone_wire
+T	6129	0	constant	f41b00	# minecraft:redstone_wire
+T	6130	0	constant	f41b00	# minecraft:redstone_wire
+T	6131	0	constant	f41b00	# minecraft:redstone_wire
+T	6132	0	constant	f41b00	# minecraft:redstone_wire
+T	6133	0	constant	f41b00	# minecraft:redstone_wire
+T	6134	0	constant	ff3200	# minecraft:redstone_wire
+T	6135	0	constant	ff3200	# minecraft:redstone_wire
+T	6136	0	constant	ff3200	# minecraft:redstone_wire
+T	6137	0	constant	ff3200	# minecraft:redstone_wire
+T	6138	0	constant	ff3200	# minecraft:redstone_wire
+T	6139	0	constant	ff3200	# minecraft:redstone_wire
+T	6140	0	constant	ff3200	# minecraft:redstone_wire
+T	6141	0	constant	ff3200	# minecraft:redstone_wire
+T	6142	0	constant	ff3200	# minecraft:redstone_wire
+T	6143	0	constant	4c0000	# minecraft:redstone_wire
+T	6144	0	constant	4c0000	# minecraft:redstone_wire
+T	6145	0	constant	4c0000	# minecraft:redstone_wire
+T	6146	0	constant	4c0000	# minecraft:redstone_wire
+T	6147	0	constant	4c0000	# minecraft:redstone_wire
+T	6148	0	constant	4c0000	# minecraft:redstone_wire
+T	6149	0	constant	4c0000	# minecraft:redstone_wire
+T	6150	0	constant	4c0000	# minecraft:redstone_wire
+T	6151	0	constant	4c0000	# minecraft:redstone_wire
+T	6152	0	constant	700000	# minecraft:redstone_wire
+T	6153	0	constant	700000	# minecraft:redstone_wire
+T	6154	0	constant	700000	# minecraft:redstone_wire
+T	6155	0	constant	700000	# minecraft:redstone_wire
+T	6156	0	constant	700000	# minecraft:redstone_wire
+T	6157	0	constant	700000	# minecraft:redstone_wire
+T	6158	0	constant	700000	# minecraft:redstone_wire
+T	6159	0	constant	700000	# minecraft:redstone_wire
+T	6160	0	constant	700000	# minecraft:redstone_wire
+T	6161	0	constant	7a0000	# minecraft:redstone_wire
+T	6162	0	constant	7a0000	# minecraft:redstone_wire
+T	6163	0	constant	7a0000	# minecraft:redstone_wire
+T	6164	0	constant	7a0000	# minecraft:redstone_wire
+T	6165	0	constant	7a0000	# minecraft:redstone_wire
+T	6166	0	constant	7a0000	# minecraft:redstone_wire
+T	6167	0	constant	7a0000	# minecraft:redstone_wire
+T	6168	0	constant	7a0000	# minecraft:redstone_wire
+T	6169	0	constant	7a0000	# minecraft:redstone_wire
+T	6170	0	constant	840000	# minecraft:redstone_wire
+T	6171	0	constant	840000	# minecraft:redstone_wire
+T	6172	0	constant	840000	# minecraft:redstone_wire
+T	6173	0	constant	840000	# minecraft:redstone_wire
+T	6174	0	constant	840000	# minecraft:redstone_wire
+T	6175	0	constant	840000	# minecraft:redstone_wire
+T	6176	0	constant	840000	# minecraft:redstone_wire
+T	6177	0	constant	840000	# minecraft:redstone_wire
+T	6178	0	constant	840000	# minecraft:redstone_wire
+T	6179	0	constant	8e0000	# minecraft:redstone_wire
+T	6180	0	constant	8e0000	# minecraft:redstone_wire
+T	6181	0	constant	8e0000	# minecraft:redstone_wire
+T	6182	0	constant	8e0000	# minecraft:redstone_wire
+T	6183	0	constant	8e0000	# minecraft:redstone_wire
+T	6184	0	constant	8e0000	# minecraft:redstone_wire
+T	6185	0	constant	8e0000	# minecraft:redstone_wire
+T	6186	0	constant	8e0000	# minecraft:redstone_wire
+T	6187	0	constant	8e0000	# minecraft:redstone_wire
+T	6188	0	constant	990000	# minecraft:redstone_wire
+T	6189	0	constant	990000	# minecraft:redstone_wire
+T	6190	0	constant	990000	# minecraft:redstone_wire
+T	6191	0	constant	990000	# minecraft:redstone_wire
+T	6192	0	constant	990000	# minecraft:redstone_wire
+T	6193	0	constant	990000	# minecraft:redstone_wire
+T	6194	0	constant	990000	# minecraft:redstone_wire
+T	6195	0	constant	990000	# minecraft:redstone_wire
+T	6196	0	constant	990000	# minecraft:redstone_wire
+T	6197	0	constant	a30000	# minecraft:redstone_wire
+T	6198	0	constant	a30000	# minecraft:redstone_wire
+T	6199	0	constant	a30000	# minecraft:redstone_wire
+T	6200	0	constant	a30000	# minecraft:redstone_wire
+T	6201	0	constant	a30000	# minecraft:redstone_wire
+T	6202	0	constant	a30000	# minecraft:redstone_wire
+T	6203	0	constant	a30000	# minecraft:redstone_wire
+T	6204	0	constant	a30000	# minecraft:redstone_wire
+T	6205	0	constant	a30000	# minecraft:redstone_wire
+T	6206	0	constant	ad0000	# minecraft:redstone_wire
+T	6207	0	constant	ad0000	# minecraft:redstone_wire
+T	6208	0	constant	ad0000	# minecraft:redstone_wire
+T	6209	0	constant	ad0000	# minecraft:redstone_wire
+T	6210	0	constant	ad0000	# minecraft:redstone_wire
+T	6211	0	constant	ad0000	# minecraft:redstone_wire
+T	6212	0	constant	ad0000	# minecraft:redstone_wire
+T	6213	0	constant	ad0000	# minecraft:redstone_wire
+T	6214	0	constant	ad0000	# minecraft:redstone_wire
+T	6215	0	constant	b70000	# minecraft:redstone_wire
+T	6216	0	constant	b70000	# minecraft:redstone_wire
+T	6217	0	constant	b70000	# minecraft:redstone_wire
+T	6218	0	constant	b70000	# minecraft:redstone_wire
+T	6219	0	constant	b70000	# minecraft:redstone_wire
+T	6220	0	constant	b70000	# minecraft:redstone_wire
+T	6221	0	constant	b70000	# minecraft:redstone_wire
+T	6222	0	constant	b70000	# minecraft:redstone_wire
+T	6223	0	constant	b70000	# minecraft:redstone_wire
+T	6224	0	constant	c10000	# minecraft:redstone_wire
+T	6225	0	constant	c10000	# minecraft:redstone_wire
+T	6226	0	constant	c10000	# minecraft:redstone_wire
+T	6227	0	constant	c10000	# minecraft:redstone_wire
+T	6228	0	constant	c10000	# minecraft:redstone_wire
+T	6229	0	constant	c10000	# minecraft:redstone_wire
+T	6230	0	constant	c10000	# minecraft:redstone_wire
+T	6231	0	constant	c10000	# minecraft:redstone_wire
+T	6232	0	constant	c10000	# minecraft:redstone_wire
+T	6233	0	constant	cc0000	# minecraft:redstone_wire
+T	6234	0	constant	cc0000	# minecraft:redstone_wire
+T	6235	0	constant	cc0000	# minecraft:redstone_wire
+T	6236	0	constant	cc0000	# minecraft:redstone_wire
+T	6237	0	constant	cc0000	# minecraft:redstone_wire
+T	6238	0	constant	cc0000	# minecraft:redstone_wire
+T	6239	0	constant	cc0000	# minecraft:redstone_wire
+T	6240	0	constant	cc0000	# minecraft:redstone_wire
+T	6241	0	constant	cc0000	# minecraft:redstone_wire
+T	6242	0	constant	d60000	# minecraft:redstone_wire
+T	6243	0	constant	d60000	# minecraft:redstone_wire
+T	6244	0	constant	d60000	# minecraft:redstone_wire
+T	6245	0	constant	d60000	# minecraft:redstone_wire
+T	6246	0	constant	d60000	# minecraft:redstone_wire
+T	6247	0	constant	d60000	# minecraft:redstone_wire
+T	6248	0	constant	d60000	# minecraft:redstone_wire
+T	6249	0	constant	d60000	# minecraft:redstone_wire
+T	6250	0	constant	d60000	# minecraft:redstone_wire
+T	6251	0	constant	e00000	# minecraft:redstone_wire
+T	6252	0	constant	e00000	# minecraft:redstone_wire
+T	6253	0	constant	e00000	# minecraft:redstone_wire
+T	6254	0	constant	e00000	# minecraft:redstone_wire
+T	6255	0	constant	e00000	# minecraft:redstone_wire
+T	6256	0	constant	e00000	# minecraft:redstone_wire
+T	6257	0	constant	e00000	# minecraft:redstone_wire
+T	6258	0	constant	e00000	# minecraft:redstone_wire
+T	6259	0	constant	e00000	# minecraft:redstone_wire
+T	6260	0	constant	ea0600	# minecraft:redstone_wire
+T	6261	0	constant	ea0600	# minecraft:redstone_wire
+T	6262	0	constant	ea0600	# minecraft:redstone_wire
+T	6263	0	constant	ea0600	# minecraft:redstone_wire
+T	6264	0	constant	ea0600	# minecraft:redstone_wire
+T	6265	0	constant	ea0600	# minecraft:redstone_wire
+T	6266	0	constant	ea0600	# minecraft:redstone_wire
+T	6267	0	constant	ea0600	# minecraft:redstone_wire
+T	6268	0	constant	ea0600	# minecraft:redstone_wire
+T	6269	0	constant	f41b00	# minecraft:redstone_wire
+T	6270	0	constant	f41b00	# minecraft:redstone_wire
+T	6271	0	constant	f41b00	# minecraft:redstone_wire
+T	6272	0	constant	f41b00	# minecraft:redstone_wire
+T	6273	0	constant	f41b00	# minecraft:redstone_wire
+T	6274	0	constant	f41b00	# minecraft:redstone_wire
+T	6275	0	constant	f41b00	# minecraft:redstone_wire
+T	6276	0	constant	f41b00	# minecraft:redstone_wire
+T	6277	0	constant	f41b00	# minecraft:redstone_wire
+T	6278	0	constant	ff3200	# minecraft:redstone_wire
+T	6279	0	constant	ff3200	# minecraft:redstone_wire
+T	6280	0	constant	ff3200	# minecraft:redstone_wire
+T	6281	0	constant	ff3200	# minecraft:redstone_wire
+T	6282	0	constant	ff3200	# minecraft:redstone_wire
+T	6283	0	constant	ff3200	# minecraft:redstone_wire
+T	6284	0	constant	ff3200	# minecraft:redstone_wire
+T	6285	0	constant	ff3200	# minecraft:redstone_wire
+T	6286	0	constant	ff3200	# minecraft:redstone_wire
+T	6287	0	constant	4c0000	# minecraft:redstone_wire
+T	6288	0	constant	4c0000	# minecraft:redstone_wire
+T	6289	0	constant	4c0000	# minecraft:redstone_wire
+T	6290	0	constant	4c0000	# minecraft:redstone_wire
+T	6291	0	constant	4c0000	# minecraft:redstone_wire
+T	6292	0	constant	4c0000	# minecraft:redstone_wire
+T	6293	0	constant	4c0000	# minecraft:redstone_wire
+T	6294	0	constant	4c0000	# minecraft:redstone_wire
+T	6295	0	constant	4c0000	# minecraft:redstone_wire
+T	6296	0	constant	700000	# minecraft:redstone_wire
+T	6297	0	constant	700000	# minecraft:redstone_wire
+T	6298	0	constant	700000	# minecraft:redstone_wire
+T	6299	0	constant	700000	# minecraft:redstone_wire
+T	6300	0	constant	700000	# minecraft:redstone_wire
+T	6301	0	constant	700000	# minecraft:redstone_wire
+T	6302	0	constant	700000	# minecraft:redstone_wire
+T	6303	0	constant	700000	# minecraft:redstone_wire
+T	6304	0	constant	700000	# minecraft:redstone_wire
+T	6305	0	constant	7a0000	# minecraft:redstone_wire
+T	6306	0	constant	7a0000	# minecraft:redstone_wire
+T	6307	0	constant	7a0000	# minecraft:redstone_wire
+T	6308	0	constant	7a0000	# minecraft:redstone_wire
+T	6309	0	constant	7a0000	# minecraft:redstone_wire
+T	6310	0	constant	7a0000	# minecraft:redstone_wire
+T	6311	0	constant	7a0000	# minecraft:redstone_wire
+T	6312	0	constant	7a0000	# minecraft:redstone_wire
+T	6313	0	constant	7a0000	# minecraft:redstone_wire
+T	6314	0	constant	840000	# minecraft:redstone_wire
+T	6315	0	constant	840000	# minecraft:redstone_wire
+T	6316	0	constant	840000	# minecraft:redstone_wire
+T	6317	0	constant	840000	# minecraft:redstone_wire
+T	6318	0	constant	840000	# minecraft:redstone_wire
+T	6319	0	constant	840000	# minecraft:redstone_wire
+T	6320	0	constant	840000	# minecraft:redstone_wire
+T	6321	0	constant	840000	# minecraft:redstone_wire
+T	6322	0	constant	840000	# minecraft:redstone_wire
+T	6323	0	constant	8e0000	# minecraft:redstone_wire
+T	6324	0	constant	8e0000	# minecraft:redstone_wire
+T	6325	0	constant	8e0000	# minecraft:redstone_wire
+T	6326	0	constant	8e0000	# minecraft:redstone_wire
+T	6327	0	constant	8e0000	# minecraft:redstone_wire
+T	6328	0	constant	8e0000	# minecraft:redstone_wire
+T	6329	0	constant	8e0000	# minecraft:redstone_wire
+T	6330	0	constant	8e0000	# minecraft:redstone_wire
+T	6331	0	constant	8e0000	# minecraft:redstone_wire
+T	6332	0	constant	990000	# minecraft:redstone_wire
+T	6333	0	constant	990000	# minecraft:redstone_wire
+T	6334	0	constant	990000	# minecraft:redstone_wire
+T	6335	0	constant	990000	# minecraft:redstone_wire
+T	6336	0	constant	990000	# minecraft:redstone_wire
+T	6337	0	constant	990000	# minecraft:redstone_wire
+T	6338	0	constant	990000	# minecraft:redstone_wire
+T	6339	0	constant	990000	# minecraft:redstone_wire
+T	6340	0	constant	990000	# minecraft:redstone_wire
+T	6341	0	constant	a30000	# minecraft:redstone_wire
+T	6342	0	constant	a30000	# minecraft:redstone_wire
+T	6343	0	constant	a30000	# minecraft:redstone_wire
+T	6344	0	constant	a30000	# minecraft:redstone_wire
+T	6345	0	constant	a30000	# minecraft:redstone_wire
+T	6346	0	constant	a30000	# minecraft:redstone_wire
+T	6347	0	constant	a30000	# minecraft:redstone_wire
+T	6348	0	constant	a30000	# minecraft:redstone_wire
+T	6349	0	constant	a30000	# minecraft:redstone_wire
+T	6350	0	constant	ad0000	# minecraft:redstone_wire
+T	6351	0	constant	ad0000	# minecraft:redstone_wire
+T	6352	0	constant	ad0000	# minecraft:redstone_wire
+T	6353	0	constant	ad0000	# minecraft:redstone_wire
+T	6354	0	constant	ad0000	# minecraft:redstone_wire
+T	6355	0	constant	ad0000	# minecraft:redstone_wire
+T	6356	0	constant	ad0000	# minecraft:redstone_wire
+T	6357	0	constant	ad0000	# minecraft:redstone_wire
+T	6358	0	constant	ad0000	# minecraft:redstone_wire
+T	6359	0	constant	b70000	# minecraft:redstone_wire
+T	6360	0	constant	b70000	# minecraft:redstone_wire
+T	6361	0	constant	b70000	# minecraft:redstone_wire
+T	6362	0	constant	b70000	# minecraft:redstone_wire
+T	6363	0	constant	b70000	# minecraft:redstone_wire
+T	6364	0	constant	b70000	# minecraft:redstone_wire
+T	6365	0	constant	b70000	# minecraft:redstone_wire
+T	6366	0	constant	b70000	# minecraft:redstone_wire
+T	6367	0	constant	b70000	# minecraft:redstone_wire
+T	6368	0	constant	c10000	# minecraft:redstone_wire
+T	6369	0	constant	c10000	# minecraft:redstone_wire
+T	6370	0	constant	c10000	# minecraft:redstone_wire
+T	6371	0	constant	c10000	# minecraft:redstone_wire
+T	6372	0	constant	c10000	# minecraft:redstone_wire
+T	6373	0	constant	c10000	# minecraft:redstone_wire
+T	6374	0	constant	c10000	# minecraft:redstone_wire
+T	6375	0	constant	c10000	# minecraft:redstone_wire
+T	6376	0	constant	c10000	# minecraft:redstone_wire
+T	6377	0	constant	cc0000	# minecraft:redstone_wire
+T	6378	0	constant	cc0000	# minecraft:redstone_wire
+T	6379	0	constant	cc0000	# minecraft:redstone_wire
+T	6380	0	constant	cc0000	# minecraft:redstone_wire
+T	6381	0	constant	cc0000	# minecraft:redstone_wire
+T	6382	0	constant	cc0000	# minecraft:redstone_wire
+T	6383	0	constant	cc0000	# minecraft:redstone_wire
+T	6384	0	constant	cc0000	# minecraft:redstone_wire
+T	6385	0	constant	cc0000	# minecraft:redstone_wire
+T	6386	0	constant	d60000	# minecraft:redstone_wire
+T	6387	0	constant	d60000	# minecraft:redstone_wire
+T	6388	0	constant	d60000	# minecraft:redstone_wire
+T	6389	0	constant	d60000	# minecraft:redstone_wire
+T	6390	0	constant	d60000	# minecraft:redstone_wire
+T	6391	0	constant	d60000	# minecraft:redstone_wire
+T	6392	0	constant	d60000	# minecraft:redstone_wire
+T	6393	0	constant	d60000	# minecraft:redstone_wire
+T	6394	0	constant	d60000	# minecraft:redstone_wire
+T	6395	0	constant	e00000	# minecraft:redstone_wire
+T	6396	0	constant	e00000	# minecraft:redstone_wire
+T	6397	0	constant	e00000	# minecraft:redstone_wire
+T	6398	0	constant	e00000	# minecraft:redstone_wire
+T	6399	0	constant	e00000	# minecraft:redstone_wire
+T	6400	0	constant	e00000	# minecraft:redstone_wire
+T	6401	0	constant	e00000	# minecraft:redstone_wire
+T	6402	0	constant	e00000	# minecraft:redstone_wire
+T	6403	0	constant	e00000	# minecraft:redstone_wire
+T	6404	0	constant	ea0600	# minecraft:redstone_wire
+T	6405	0	constant	ea0600	# minecraft:redstone_wire
+T	6406	0	constant	ea0600	# minecraft:redstone_wire
+T	6407	0	constant	ea0600	# minecraft:redstone_wire
+T	6408	0	constant	ea0600	# minecraft:redstone_wire
+T	6409	0	constant	ea0600	# minecraft:redstone_wire
+T	6410	0	constant	ea0600	# minecraft:redstone_wire
+T	6411	0	constant	ea0600	# minecraft:redstone_wire
+T	6412	0	constant	ea0600	# minecraft:redstone_wire
+T	6413	0	constant	f41b00	# minecraft:redstone_wire
+T	6414	0	constant	f41b00	# minecraft:redstone_wire
+T	6415	0	constant	f41b00	# minecraft:redstone_wire
+T	6416	0	constant	f41b00	# minecraft:redstone_wire
+T	6417	0	constant	f41b00	# minecraft:redstone_wire
+T	6418	0	constant	f41b00	# minecraft:redstone_wire
+T	6419	0	constant	f41b00	# minecraft:redstone_wire
+T	6420	0	constant	f41b00	# minecraft:redstone_wire
+T	6421	0	constant	f41b00	# minecraft:redstone_wire
+T	6422	0	constant	ff3200	# minecraft:redstone_wire
+T	6423	0	constant	ff3200	# minecraft:redstone_wire
+T	6424	0	constant	ff3200	# minecraft:redstone_wire
+T	6425	0	constant	ff3200	# minecraft:redstone_wire
+T	6426	0	constant	ff3200	# minecraft:redstone_wire
+T	6427	0	constant	ff3200	# minecraft:redstone_wire
+T	6428	0	constant	ff3200	# minecraft:redstone_wire
+T	6429	0	constant	ff3200	# minecraft:redstone_wire
+T	6430	0	constant	ff3200	# minecraft:redstone_wire
+T	6431	0	constant	4c0000	# minecraft:redstone_wire
+T	6432	0	constant	4c0000	# minecraft:redstone_wire
+T	6433	0	constant	4c0000	# minecraft:redstone_wire
+T	6434	0	constant	4c0000	# minecraft:redstone_wire
+T	6435	0	constant	4c0000	# minecraft:redstone_wire
+T	6436	0	constant	4c0000	# minecraft:redstone_wire
+T	6437	0	constant	4c0000	# minecraft:redstone_wire
+T	6438	0	constant	4c0000	# minecraft:redstone_wire
+T	6439	0	constant	4c0000	# minecraft:redstone_wire
+T	6440	0	constant	700000	# minecraft:redstone_wire
+T	6441	0	constant	700000	# minecraft:redstone_wire
+T	6442	0	constant	700000	# minecraft:redstone_wire
+T	6443	0	constant	700000	# minecraft:redstone_wire
+T	6444	0	constant	700000	# minecraft:redstone_wire
+T	6445	0	constant	700000	# minecraft:redstone_wire
+T	6446	0	constant	700000	# minecraft:redstone_wire
+T	6447	0	constant	700000	# minecraft:redstone_wire
+T	6448	0	constant	700000	# minecraft:redstone_wire
+T	6449	0	constant	7a0000	# minecraft:redstone_wire
+T	6450	0	constant	7a0000	# minecraft:redstone_wire
+T	6451	0	constant	7a0000	# minecraft:redstone_wire
+T	6452	0	constant	7a0000	# minecraft:redstone_wire
+T	6453	0	constant	7a0000	# minecraft:redstone_wire
+T	6454	0	constant	7a0000	# minecraft:redstone_wire
+T	6455	0	constant	7a0000	# minecraft:redstone_wire
+T	6456	0	constant	7a0000	# minecraft:redstone_wire
+T	6457	0	constant	7a0000	# minecraft:redstone_wire
+T	6458	0	constant	840000	# minecraft:redstone_wire
+T	6459	0	constant	840000	# minecraft:redstone_wire
+T	6460	0	constant	840000	# minecraft:redstone_wire
+T	6461	0	constant	840000	# minecraft:redstone_wire
+T	6462	0	constant	840000	# minecraft:redstone_wire
+T	6463	0	constant	840000	# minecraft:redstone_wire
+T	6464	0	constant	840000	# minecraft:redstone_wire
+T	6465	0	constant	840000	# minecraft:redstone_wire
+T	6466	0	constant	840000	# minecraft:redstone_wire
+T	6467	0	constant	8e0000	# minecraft:redstone_wire
+T	6468	0	constant	8e0000	# minecraft:redstone_wire
+T	6469	0	constant	8e0000	# minecraft:redstone_wire
+T	6470	0	constant	8e0000	# minecraft:redstone_wire
+T	6471	0	constant	8e0000	# minecraft:redstone_wire
+T	6472	0	constant	8e0000	# minecraft:redstone_wire
+T	6473	0	constant	8e0000	# minecraft:redstone_wire
+T	6474	0	constant	8e0000	# minecraft:redstone_wire
+T	6475	0	constant	8e0000	# minecraft:redstone_wire
+T	6476	0	constant	990000	# minecraft:redstone_wire
+T	6477	0	constant	990000	# minecraft:redstone_wire
+T	6478	0	constant	990000	# minecraft:redstone_wire
+T	6479	0	constant	990000	# minecraft:redstone_wire
+T	6480	0	constant	990000	# minecraft:redstone_wire
+T	6481	0	constant	990000	# minecraft:redstone_wire
+T	6482	0	constant	990000	# minecraft:redstone_wire
+T	6483	0	constant	990000	# minecraft:redstone_wire
+T	6484	0	constant	990000	# minecraft:redstone_wire
+T	6485	0	constant	a30000	# minecraft:redstone_wire
+T	6486	0	constant	a30000	# minecraft:redstone_wire
+T	6487	0	constant	a30000	# minecraft:redstone_wire
+T	6488	0	constant	a30000	# minecraft:redstone_wire
+T	6489	0	constant	a30000	# minecraft:redstone_wire
+T	6490	0	constant	a30000	# minecraft:redstone_wire
+T	6491	0	constant	a30000	# minecraft:redstone_wire
+T	6492	0	constant	a30000	# minecraft:redstone_wire
+T	6493	0	constant	a30000	# minecraft:redstone_wire
+T	6494	0	constant	ad0000	# minecraft:redstone_wire
+T	6495	0	constant	ad0000	# minecraft:redstone_wire
+T	6496	0	constant	ad0000	# minecraft:redstone_wire
+T	6497	0	constant	ad0000	# minecraft:redstone_wire
+T	6498	0	constant	ad0000	# minecraft:redstone_wire
+T	6499	0	constant	ad0000	# minecraft:redstone_wire
+T	6500	0	constant	ad0000	# minecraft:redstone_wire
+T	6501	0	constant	ad0000	# minecraft:redstone_wire
+T	6502	0	constant	ad0000	# minecraft:redstone_wire
+T	6503	0	constant	b70000	# minecraft:redstone_wire
+T	6504	0	constant	b70000	# minecraft:redstone_wire
+T	6505	0	constant	b70000	# minecraft:redstone_wire
+T	6506	0	constant	b70000	# minecraft:redstone_wire
+T	6507	0	constant	b70000	# minecraft:redstone_wire
+T	6508	0	constant	b70000	# minecraft:redstone_wire
+T	6509	0	constant	b70000	# minecraft:redstone_wire
+T	6510	0	constant	b70000	# minecraft:redstone_wire
+T	6511	0	constant	b70000	# minecraft:redstone_wire
+T	6512	0	constant	c10000	# minecraft:redstone_wire
+T	6513	0	constant	c10000	# minecraft:redstone_wire
+T	6514	0	constant	c10000	# minecraft:redstone_wire
+T	6515	0	constant	c10000	# minecraft:redstone_wire
+T	6516	0	constant	c10000	# minecraft:redstone_wire
+T	6517	0	constant	c10000	# minecraft:redstone_wire
+T	6518	0	constant	c10000	# minecraft:redstone_wire
+T	6519	0	constant	c10000	# minecraft:redstone_wire
+T	6520	0	constant	c10000	# minecraft:redstone_wire
+T	6521	0	constant	cc0000	# minecraft:redstone_wire
+T	6522	0	constant	cc0000	# minecraft:redstone_wire
+T	6523	0	constant	cc0000	# minecraft:redstone_wire
+T	6524	0	constant	cc0000	# minecraft:redstone_wire
+T	6525	0	constant	cc0000	# minecraft:redstone_wire
+T	6526	0	constant	cc0000	# minecraft:redstone_wire
+T	6527	0	constant	cc0000	# minecraft:redstone_wire
+T	6528	0	constant	cc0000	# minecraft:redstone_wire
+T	6529	0	constant	cc0000	# minecraft:redstone_wire
+T	6530	0	constant	d60000	# minecraft:redstone_wire
+T	6531	0	constant	d60000	# minecraft:redstone_wire
+T	6532	0	constant	d60000	# minecraft:redstone_wire
+T	6533	0	constant	d60000	# minecraft:redstone_wire
+T	6534	0	constant	d60000	# minecraft:redstone_wire
+T	6535	0	constant	d60000	# minecraft:redstone_wire
+T	6536	0	constant	d60000	# minecraft:redstone_wire
+T	6537	0	constant	d60000	# minecraft:redstone_wire
+T	6538	0	constant	d60000	# minecraft:redstone_wire
+T	6539	0	constant	e00000	# minecraft:redstone_wire
+T	6540	0	constant	e00000	# minecraft:redstone_wire
+T	6541	0	constant	e00000	# minecraft:redstone_wire
+T	6542	0	constant	e00000	# minecraft:redstone_wire
+T	6543	0	constant	e00000	# minecraft:redstone_wire
+T	6544	0	constant	e00000	# minecraft:redstone_wire
+T	6545	0	constant	e00000	# minecraft:redstone_wire
+T	6546	0	constant	e00000	# minecraft:redstone_wire
+T	6547	0	constant	e00000	# minecraft:redstone_wire
+T	6548	0	constant	ea0600	# minecraft:redstone_wire
+T	6549	0	constant	ea0600	# minecraft:redstone_wire
+T	6550	0	constant	ea0600	# minecraft:redstone_wire
+T	6551	0	constant	ea0600	# minecraft:redstone_wire
+T	6552	0	constant	ea0600	# minecraft:redstone_wire
+T	6553	0	constant	ea0600	# minecraft:redstone_wire
+T	6554	0	constant	ea0600	# minecraft:redstone_wire
+T	6555	0	constant	ea0600	# minecraft:redstone_wire
+T	6556	0	constant	ea0600	# minecraft:redstone_wire
+T	6557	0	constant	f41b00	# minecraft:redstone_wire
+T	6558	0	constant	f41b00	# minecraft:redstone_wire
+T	6559	0	constant	f41b00	# minecraft:redstone_wire
+T	6560	0	constant	f41b00	# minecraft:redstone_wire
+T	6561	0	constant	f41b00	# minecraft:redstone_wire
+T	6562	0	constant	f41b00	# minecraft:redstone_wire
+T	6563	0	constant	f41b00	# minecraft:redstone_wire
+T	6564	0	constant	f41b00	# minecraft:redstone_wire
+T	6565	0	constant	f41b00	# minecraft:redstone_wire
+T	6566	0	constant	ff3200	# minecraft:redstone_wire
+T	6567	0	constant	ff3200	# minecraft:redstone_wire
+T	6568	0	constant	ff3200	# minecraft:redstone_wire
+T	6569	0	constant	ff3200	# minecraft:redstone_wire
+T	6570	0	constant	ff3200	# minecraft:redstone_wire
+T	6571	0	constant	ff3200	# minecraft:redstone_wire
+T	6572	0	constant	ff3200	# minecraft:redstone_wire
+T	6573	0	constant	ff3200	# minecraft:redstone_wire
+T	6574	0	constant	ff3200	# minecraft:redstone_wire
+T	6575	0	constant	4c0000	# minecraft:redstone_wire
+T	6576	0	constant	4c0000	# minecraft:redstone_wire
+T	6577	0	constant	4c0000	# minecraft:redstone_wire
+T	6578	0	constant	4c0000	# minecraft:redstone_wire
+T	6579	0	constant	4c0000	# minecraft:redstone_wire
+T	6580	0	constant	4c0000	# minecraft:redstone_wire
+T	6581	0	constant	4c0000	# minecraft:redstone_wire
+T	6582	0	constant	4c0000	# minecraft:redstone_wire
+T	6583	0	constant	4c0000	# minecraft:redstone_wire
+T	6584	0	constant	700000	# minecraft:redstone_wire
+T	6585	0	constant	700000	# minecraft:redstone_wire
+T	6586	0	constant	700000	# minecraft:redstone_wire
+T	6587	0	constant	700000	# minecraft:redstone_wire
+T	6588	0	constant	700000	# minecraft:redstone_wire
+T	6589	0	constant	700000	# minecraft:redstone_wire
+T	6590	0	constant	700000	# minecraft:redstone_wire
+T	6591	0	constant	700000	# minecraft:redstone_wire
+T	6592	0	constant	700000	# minecraft:redstone_wire
+T	6593	0	constant	7a0000	# minecraft:redstone_wire
+T	6594	0	constant	7a0000	# minecraft:redstone_wire
+T	6595	0	constant	7a0000	# minecraft:redstone_wire
+T	6596	0	constant	7a0000	# minecraft:redstone_wire
+T	6597	0	constant	7a0000	# minecraft:redstone_wire
+T	6598	0	constant	7a0000	# minecraft:redstone_wire
+T	6599	0	constant	7a0000	# minecraft:redstone_wire
+T	6600	0	constant	7a0000	# minecraft:redstone_wire
+T	6601	0	constant	7a0000	# minecraft:redstone_wire
+T	6602	0	constant	840000	# minecraft:redstone_wire
+T	6603	0	constant	840000	# minecraft:redstone_wire
+T	6604	0	constant	840000	# minecraft:redstone_wire
+T	6605	0	constant	840000	# minecraft:redstone_wire
+T	6606	0	constant	840000	# minecraft:redstone_wire
+T	6607	0	constant	840000	# minecraft:redstone_wire
+T	6608	0	constant	840000	# minecraft:redstone_wire
+T	6609	0	constant	840000	# minecraft:redstone_wire
+T	6610	0	constant	840000	# minecraft:redstone_wire
+T	6611	0	constant	8e0000	# minecraft:redstone_wire
+T	6612	0	constant	8e0000	# minecraft:redstone_wire
+T	6613	0	constant	8e0000	# minecraft:redstone_wire
+T	6614	0	constant	8e0000	# minecraft:redstone_wire
+T	6615	0	constant	8e0000	# minecraft:redstone_wire
+T	6616	0	constant	8e0000	# minecraft:redstone_wire
+T	6617	0	constant	8e0000	# minecraft:redstone_wire
+T	6618	0	constant	8e0000	# minecraft:redstone_wire
+T	6619	0	constant	8e0000	# minecraft:redstone_wire
+T	6620	0	constant	990000	# minecraft:redstone_wire
+T	6621	0	constant	990000	# minecraft:redstone_wire
+T	6622	0	constant	990000	# minecraft:redstone_wire
+T	6623	0	constant	990000	# minecraft:redstone_wire
+T	6624	0	constant	990000	# minecraft:redstone_wire
+T	6625	0	constant	990000	# minecraft:redstone_wire
+T	6626	0	constant	990000	# minecraft:redstone_wire
+T	6627	0	constant	990000	# minecraft:redstone_wire
+T	6628	0	constant	990000	# minecraft:redstone_wire
+T	6629	0	constant	a30000	# minecraft:redstone_wire
+T	6630	0	constant	a30000	# minecraft:redstone_wire
+T	6631	0	constant	a30000	# minecraft:redstone_wire
+T	6632	0	constant	a30000	# minecraft:redstone_wire
+T	6633	0	constant	a30000	# minecraft:redstone_wire
+T	6634	0	constant	a30000	# minecraft:redstone_wire
+T	6635	0	constant	a30000	# minecraft:redstone_wire
+T	6636	0	constant	a30000	# minecraft:redstone_wire
+T	6637	0	constant	a30000	# minecraft:redstone_wire
+T	6638	0	constant	ad0000	# minecraft:redstone_wire
+T	6639	0	constant	ad0000	# minecraft:redstone_wire
+T	6640	0	constant	ad0000	# minecraft:redstone_wire
+T	6641	0	constant	ad0000	# minecraft:redstone_wire
+T	6642	0	constant	ad0000	# minecraft:redstone_wire
+T	6643	0	constant	ad0000	# minecraft:redstone_wire
+T	6644	0	constant	ad0000	# minecraft:redstone_wire
+T	6645	0	constant	ad0000	# minecraft:redstone_wire
+T	6646	0	constant	ad0000	# minecraft:redstone_wire
+T	6647	0	constant	b70000	# minecraft:redstone_wire
+T	6648	0	constant	b70000	# minecraft:redstone_wire
+T	6649	0	constant	b70000	# minecraft:redstone_wire
+T	6650	0	constant	b70000	# minecraft:redstone_wire
+T	6651	0	constant	b70000	# minecraft:redstone_wire
+T	6652	0	constant	b70000	# minecraft:redstone_wire
+T	6653	0	constant	b70000	# minecraft:redstone_wire
+T	6654	0	constant	b70000	# minecraft:redstone_wire
+T	6655	0	constant	b70000	# minecraft:redstone_wire
+T	6656	0	constant	c10000	# minecraft:redstone_wire
+T	6657	0	constant	c10000	# minecraft:redstone_wire
+T	6658	0	constant	c10000	# minecraft:redstone_wire
+T	6659	0	constant	c10000	# minecraft:redstone_wire
+T	6660	0	constant	c10000	# minecraft:redstone_wire
+T	6661	0	constant	c10000	# minecraft:redstone_wire
+T	6662	0	constant	c10000	# minecraft:redstone_wire
+T	6663	0	constant	c10000	# minecraft:redstone_wire
+T	6664	0	constant	c10000	# minecraft:redstone_wire
+T	6665	0	constant	cc0000	# minecraft:redstone_wire
+T	6666	0	constant	cc0000	# minecraft:redstone_wire
+T	6667	0	constant	cc0000	# minecraft:redstone_wire
+T	6668	0	constant	cc0000	# minecraft:redstone_wire
+T	6669	0	constant	cc0000	# minecraft:redstone_wire
+T	6670	0	constant	cc0000	# minecraft:redstone_wire
+T	6671	0	constant	cc0000	# minecraft:redstone_wire
+T	6672	0	constant	cc0000	# minecraft:redstone_wire
+T	6673	0	constant	cc0000	# minecraft:redstone_wire
+T	6674	0	constant	d60000	# minecraft:redstone_wire
+T	6675	0	constant	d60000	# minecraft:redstone_wire
+T	6676	0	constant	d60000	# minecraft:redstone_wire
+T	6677	0	constant	d60000	# minecraft:redstone_wire
+T	6678	0	constant	d60000	# minecraft:redstone_wire
+T	6679	0	constant	d60000	# minecraft:redstone_wire
+T	6680	0	constant	d60000	# minecraft:redstone_wire
+T	6681	0	constant	d60000	# minecraft:redstone_wire
+T	6682	0	constant	d60000	# minecraft:redstone_wire
+T	6683	0	constant	e00000	# minecraft:redstone_wire
+T	6684	0	constant	e00000	# minecraft:redstone_wire
+T	6685	0	constant	e00000	# minecraft:redstone_wire
+T	6686	0	constant	e00000	# minecraft:redstone_wire
+T	6687	0	constant	e00000	# minecraft:redstone_wire
+T	6688	0	constant	e00000	# minecraft:redstone_wire
+T	6689	0	constant	e00000	# minecraft:redstone_wire
+T	6690	0	constant	e00000	# minecraft:redstone_wire
+T	6691	0	constant	e00000	# minecraft:redstone_wire
+T	6692	0	constant	ea0600	# minecraft:redstone_wire
+T	6693	0	constant	ea0600	# minecraft:redstone_wire
+T	6694	0	constant	ea0600	# minecraft:redstone_wire
+T	6695	0	constant	ea0600	# minecraft:redstone_wire
+T	6696	0	constant	ea0600	# minecraft:redstone_wire
+T	6697	0	constant	ea0600	# minecraft:redstone_wire
+T	6698	0	constant	ea0600	# minecraft:redstone_wire
+T	6699	0	constant	ea0600	# minecraft:redstone_wire
+T	6700	0	constant	ea0600	# minecraft:redstone_wire
+T	6701	0	constant	f41b00	# minecraft:redstone_wire
+T	6702	0	constant	f41b00	# minecraft:redstone_wire
+T	6703	0	constant	f41b00	# minecraft:redstone_wire
+T	6704	0	constant	f41b00	# minecraft:redstone_wire
+T	6705	0	constant	f41b00	# minecraft:redstone_wire
+T	6706	0	constant	f41b00	# minecraft:redstone_wire
+T	6707	0	constant	f41b00	# minecraft:redstone_wire
+T	6708	0	constant	f41b00	# minecraft:redstone_wire
+T	6709	0	constant	f41b00	# minecraft:redstone_wire
+T	6710	0	constant	ff3200	# minecraft:redstone_wire
+T	6711	0	constant	ff3200	# minecraft:redstone_wire
+T	6712	0	constant	ff3200	# minecraft:redstone_wire
+T	6713	0	constant	ff3200	# minecraft:redstone_wire
+T	6714	0	constant	ff3200	# minecraft:redstone_wire
+T	6715	0	constant	ff3200	# minecraft:redstone_wire
+T	6716	0	constant	ff3200	# minecraft:redstone_wire
+T	6717	0	constant	ff3200	# minecraft:redstone_wire
+T	6718	0	constant	ff3200	# minecraft:redstone_wire
+T	6719	0	constant	4c0000	# minecraft:redstone_wire
+T	6720	0	constant	4c0000	# minecraft:redstone_wire
+T	6721	0	constant	4c0000	# minecraft:redstone_wire
+T	6722	0	constant	4c0000	# minecraft:redstone_wire
+T	6723	0	constant	4c0000	# minecraft:redstone_wire
+T	6724	0	constant	4c0000	# minecraft:redstone_wire
+T	6725	0	constant	4c0000	# minecraft:redstone_wire
+T	6726	0	constant	4c0000	# minecraft:redstone_wire
+T	6727	0	constant	4c0000	# minecraft:redstone_wire
+T	6728	0	constant	700000	# minecraft:redstone_wire
+T	6729	0	constant	700000	# minecraft:redstone_wire
+T	6730	0	constant	700000	# minecraft:redstone_wire
+T	6731	0	constant	700000	# minecraft:redstone_wire
+T	6732	0	constant	700000	# minecraft:redstone_wire
+T	6733	0	constant	700000	# minecraft:redstone_wire
+T	6734	0	constant	700000	# minecraft:redstone_wire
+T	6735	0	constant	700000	# minecraft:redstone_wire
+T	6736	0	constant	700000	# minecraft:redstone_wire
+T	6737	0	constant	7a0000	# minecraft:redstone_wire
+T	6738	0	constant	7a0000	# minecraft:redstone_wire
+T	6739	0	constant	7a0000	# minecraft:redstone_wire
+T	6740	0	constant	7a0000	# minecraft:redstone_wire
+T	6741	0	constant	7a0000	# minecraft:redstone_wire
+T	6742	0	constant	7a0000	# minecraft:redstone_wire
+T	6743	0	constant	7a0000	# minecraft:redstone_wire
+T	6744	0	constant	7a0000	# minecraft:redstone_wire
+T	6745	0	constant	7a0000	# minecraft:redstone_wire
+T	6746	0	constant	840000	# minecraft:redstone_wire
+T	6747	0	constant	840000	# minecraft:redstone_wire
+T	6748	0	constant	840000	# minecraft:redstone_wire
+T	6749	0	constant	840000	# minecraft:redstone_wire
+T	6750	0	constant	840000	# minecraft:redstone_wire
+T	6751	0	constant	840000	# minecraft:redstone_wire
+T	6752	0	constant	840000	# minecraft:redstone_wire
+T	6753	0	constant	840000	# minecraft:redstone_wire
+T	6754	0	constant	840000	# minecraft:redstone_wire
+T	6755	0	constant	8e0000	# minecraft:redstone_wire
+T	6756	0	constant	8e0000	# minecraft:redstone_wire
+T	6757	0	constant	8e0000	# minecraft:redstone_wire
+T	6758	0	constant	8e0000	# minecraft:redstone_wire
+T	6759	0	constant	8e0000	# minecraft:redstone_wire
+T	6760	0	constant	8e0000	# minecraft:redstone_wire
+T	6761	0	constant	8e0000	# minecraft:redstone_wire
+T	6762	0	constant	8e0000	# minecraft:redstone_wire
+T	6763	0	constant	8e0000	# minecraft:redstone_wire
+T	6764	0	constant	990000	# minecraft:redstone_wire
+T	6765	0	constant	990000	# minecraft:redstone_wire
+T	6766	0	constant	990000	# minecraft:redstone_wire
+T	6767	0	constant	990000	# minecraft:redstone_wire
+T	6768	0	constant	990000	# minecraft:redstone_wire
+T	6769	0	constant	990000	# minecraft:redstone_wire
+T	6770	0	constant	990000	# minecraft:redstone_wire
+T	6771	0	constant	990000	# minecraft:redstone_wire
+T	6772	0	constant	990000	# minecraft:redstone_wire
+T	6773	0	constant	a30000	# minecraft:redstone_wire
+T	6774	0	constant	a30000	# minecraft:redstone_wire
+T	6775	0	constant	a30000	# minecraft:redstone_wire
+T	6776	0	constant	a30000	# minecraft:redstone_wire
+T	6777	0	constant	a30000	# minecraft:redstone_wire
+T	6778	0	constant	a30000	# minecraft:redstone_wire
+T	6779	0	constant	a30000	# minecraft:redstone_wire
+T	6780	0	constant	a30000	# minecraft:redstone_wire
+T	6781	0	constant	a30000	# minecraft:redstone_wire
+T	6782	0	constant	ad0000	# minecraft:redstone_wire
+T	6783	0	constant	ad0000	# minecraft:redstone_wire
+T	6784	0	constant	ad0000	# minecraft:redstone_wire
+T	6785	0	constant	ad0000	# minecraft:redstone_wire
+T	6786	0	constant	ad0000	# minecraft:redstone_wire
+T	6787	0	constant	ad0000	# minecraft:redstone_wire
+T	6788	0	constant	ad0000	# minecraft:redstone_wire
+T	6789	0	constant	ad0000	# minecraft:redstone_wire
+T	6790	0	constant	ad0000	# minecraft:redstone_wire
+T	6791	0	constant	b70000	# minecraft:redstone_wire
+T	6792	0	constant	b70000	# minecraft:redstone_wire
+T	6793	0	constant	b70000	# minecraft:redstone_wire
+T	6794	0	constant	b70000	# minecraft:redstone_wire
+T	6795	0	constant	b70000	# minecraft:redstone_wire
+T	6796	0	constant	b70000	# minecraft:redstone_wire
+T	6797	0	constant	b70000	# minecraft:redstone_wire
+T	6798	0	constant	b70000	# minecraft:redstone_wire
+T	6799	0	constant	b70000	# minecraft:redstone_wire
+T	6800	0	constant	c10000	# minecraft:redstone_wire
+T	6801	0	constant	c10000	# minecraft:redstone_wire
+T	6802	0	constant	c10000	# minecraft:redstone_wire
+T	6803	0	constant	c10000	# minecraft:redstone_wire
+T	6804	0	constant	c10000	# minecraft:redstone_wire
+T	6805	0	constant	c10000	# minecraft:redstone_wire
+T	6806	0	constant	c10000	# minecraft:redstone_wire
+T	6807	0	constant	c10000	# minecraft:redstone_wire
+T	6808	0	constant	c10000	# minecraft:redstone_wire
+T	6809	0	constant	cc0000	# minecraft:redstone_wire
+T	6810	0	constant	cc0000	# minecraft:redstone_wire
+T	6811	0	constant	cc0000	# minecraft:redstone_wire
+T	6812	0	constant	cc0000	# minecraft:redstone_wire
+T	6813	0	constant	cc0000	# minecraft:redstone_wire
+T	6814	0	constant	cc0000	# minecraft:redstone_wire
+T	6815	0	constant	cc0000	# minecraft:redstone_wire
+T	6816	0	constant	cc0000	# minecraft:redstone_wire
+T	6817	0	constant	cc0000	# minecraft:redstone_wire
+T	6818	0	constant	d60000	# minecraft:redstone_wire
+T	6819	0	constant	d60000	# minecraft:redstone_wire
+T	6820	0	constant	d60000	# minecraft:redstone_wire
+T	6821	0	constant	d60000	# minecraft:redstone_wire
+T	6822	0	constant	d60000	# minecraft:redstone_wire
+T	6823	0	constant	d60000	# minecraft:redstone_wire
+T	6824	0	constant	d60000	# minecraft:redstone_wire
+T	6825	0	constant	d60000	# minecraft:redstone_wire
+T	6826	0	constant	d60000	# minecraft:redstone_wire
+T	6827	0	constant	e00000	# minecraft:redstone_wire
+T	6828	0	constant	e00000	# minecraft:redstone_wire
+T	6829	0	constant	e00000	# minecraft:redstone_wire
+T	6830	0	constant	e00000	# minecraft:redstone_wire
+T	6831	0	constant	e00000	# minecraft:redstone_wire
+T	6832	0	constant	e00000	# minecraft:redstone_wire
+T	6833	0	constant	e00000	# minecraft:redstone_wire
+T	6834	0	constant	e00000	# minecraft:redstone_wire
+T	6835	0	constant	e00000	# minecraft:redstone_wire
+T	6836	0	constant	ea0600	# minecraft:redstone_wire
+T	6837	0	constant	ea0600	# minecraft:redstone_wire
+T	6838	0	constant	ea0600	# minecraft:redstone_wire
+T	6839	0	constant	ea0600	# minecraft:redstone_wire
+T	6840	0	constant	ea0600	# minecraft:redstone_wire
+T	6841	0	constant	ea0600	# minecraft:redstone_wire
+T	6842	0	constant	ea0600	# minecraft:redstone_wire
+T	6843	0	constant	ea0600	# minecraft:redstone_wire
+T	6844	0	constant	ea0600	# minecraft:redstone_wire
+T	6845	0	constant	f41b00	# minecraft:redstone_wire
+T	6846	0	constant	f41b00	# minecraft:redstone_wire
+T	6847	0	constant	f41b00	# minecraft:redstone_wire
+T	6848	0	constant	f41b00	# minecraft:redstone_wire
+T	6849	0	constant	f41b00	# minecraft:redstone_wire
+T	6850	0	constant	f41b00	# minecraft:redstone_wire
+T	6851	0	constant	f41b00	# minecraft:redstone_wire
+T	6852	0	constant	f41b00	# minecraft:redstone_wire
+T	6853	0	constant	f41b00	# minecraft:redstone_wire
+T	6854	0	constant	ff3200	# minecraft:redstone_wire
+T	6855	0	constant	ff3200	# minecraft:redstone_wire
+T	6856	0	constant	ff3200	# minecraft:redstone_wire
+T	6857	0	constant	ff3200	# minecraft:redstone_wire
+T	6858	0	constant	ff3200	# minecraft:redstone_wire
+T	6859	0	constant	ff3200	# minecraft:redstone_wire
+T	6860	0	constant	ff3200	# minecraft:redstone_wire
+T	6861	0	constant	ff3200	# minecraft:redstone_wire
+T	6862	0	constant	ff3200	# minecraft:redstone_wire
+T	8617	0	grass	# minecraft:sugar_cane
+T	8618	0	grass	# minecraft:sugar_cane
+T	8619	0	grass	# minecraft:sugar_cane
+T	8620	0	grass	# minecraft:sugar_cane
+T	8621	0	grass	# minecraft:sugar_cane
+T	8622	0	grass	# minecraft:sugar_cane
+T	8623	0	grass	# minecraft:sugar_cane
+T	8624	0	grass	# minecraft:sugar_cane
+T	8625	0	grass	# minecraft:sugar_cane
+T	8626	0	grass	# minecraft:sugar_cane
+T	8627	0	grass	# minecraft:sugar_cane
+T	8628	0	grass	# minecraft:sugar_cane
+T	8629	0	grass	# minecraft:sugar_cane
+T	8630	0	grass	# minecraft:sugar_cane
+T	8631	0	grass	# minecraft:sugar_cane
+T	8632	0	grass	# minecraft:sugar_cane
+T	10068	0	constant	e0c71c	# minecraft:attached_pumpkin_stem
+T	10069	0	constant	e0c71c	# minecraft:attached_pumpkin_stem
+T	10070	0	constant	e0c71c	# minecraft:attached_pumpkin_stem
+T	10071	0	constant	e0c71c	# minecraft:attached_pumpkin_stem
+T	10072	0	constant	e0c71c	# minecraft:attached_melon_stem
+T	10073	0	constant	e0c71c	# minecraft:attached_melon_stem
+T	10074	0	constant	e0c71c	# minecraft:attached_melon_stem
+T	10075	0	constant	e0c71c	# minecraft:attached_melon_stem
+T	10076	0	constant	00ff00	# minecraft:pumpkin_stem
+T	10077	0	constant	20f704	# minecraft:pumpkin_stem
+T	10078	0	constant	40ef08	# minecraft:pumpkin_stem
+T	10079	0	constant	60e70c	# minecraft:pumpkin_stem
+T	10080	0	constant	80df10	# minecraft:pumpkin_stem
+T	10081	0	constant	a0d714	# minecraft:pumpkin_stem
+T	10082	0	constant	c0cf18	# minecraft:pumpkin_stem
+T	10083	0	constant	e0c71c	# minecraft:pumpkin_stem
+T	10084	0	constant	00ff00	# minecraft:melon_stem
+T	10085	0	constant	20f704	# minecraft:melon_stem
+T	10086	0	constant	40ef08	# minecraft:melon_stem
+T	10087	0	constant	60e70c	# minecraft:melon_stem
+T	10088	0	constant	80df10	# minecraft:melon_stem
+T	10089	0	constant	a0d714	# minecraft:melon_stem
+T	10090	0	constant	c0cf18	# minecraft:melon_stem
+T	10091	0	constant	e0c71c	# minecraft:melon_stem
+T	10092	0	foliage	# minecraft:vine
+T	10093	0	foliage	# minecraft:vine
+T	10094	0	foliage	# minecraft:vine
+T	10095	0	foliage	# minecraft:vine
+T	10096	0	foliage	# minecraft:vine
+T	10097	0	foliage	# minecraft:vine
+T	10098	0	foliage	# minecraft:vine
+T	10099	0	foliage	# minecraft:vine
+T	10100	0	foliage	# minecraft:vine
+T	10101	0	foliage	# minecraft:vine
+T	10102	0	foliage	# minecraft:vine
+T	10103	0	foliage	# minecraft:vine
+T	10104	0	foliage	# minecraft:vine
+T	10105	0	foliage	# minecraft:vine
+T	10106	0	foliage	# minecraft:vine
+T	10107	0	foliage	# minecraft:vine
+T	10108	0	foliage	# minecraft:vine
+T	10109	0	foliage	# minecraft:vine
+T	10110	0	foliage	# minecraft:vine
+T	10111	0	foliage	# minecraft:vine
+T	10112	0	foliage	# minecraft:vine
+T	10113	0	foliage	# minecraft:vine
+T	10114	0	foliage	# minecraft:vine
+T	10115	0	foliage	# minecraft:vine
+T	10116	0	foliage	# minecraft:vine
+T	10117	0	foliage	# minecraft:vine
+T	10118	0	foliage	# minecraft:vine
+T	10119	0	foliage	# minecraft:vine
+T	10120	0	foliage	# minecraft:vine
+T	10121	0	foliage	# minecraft:vine
+T	10122	0	foliage	# minecraft:vine
+T	10123	0	foliage	# minecraft:vine
+T	10654	0	constant	208030	# minecraft:lily_pad
+T	11195	0	water	# minecraft:water_cauldron
+T	11196	0	water	# minecraft:water_cauldron
+T	11197	0	water	# minecraft:water_cauldron
+T	12383	0	grass	# minecraft:potted_fern
+T	14770	0	grass_below	# minecraft:tall_grass
+T	14771	0	grass	# minecraft:tall_grass
+T	14772	0	grass_below	# minecraft:large_fern
+T	14773	0	grass	# minecraft:large_fern
+T	18651	0	none	# minecraft:bubble_column
+T	18652	0	none	# minecraft:bubble_column
+T	33664	0	none	# minecraft:pink_petals
+T	33664	1	grass	# minecraft:pink_petals
+T	33665	0	none	# minecraft:pink_petals
+T	33665	1	grass	# minecraft:pink_petals
+T	33666	0	none	# minecraft:pink_petals
+T	33666	1	grass	# minecraft:pink_petals
+T	33667	0	none	# minecraft:pink_petals
+T	33667	1	grass	# minecraft:pink_petals
+T	33668	0	none	# minecraft:pink_petals
+T	33668	1	grass	# minecraft:pink_petals
+T	33669	0	none	# minecraft:pink_petals
+T	33669	1	grass	# minecraft:pink_petals
+T	33670	0	none	# minecraft:pink_petals
+T	33670	1	grass	# minecraft:pink_petals
+T	33671	0	none	# minecraft:pink_petals
+T	33671	1	grass	# minecraft:pink_petals
+T	33672	0	none	# minecraft:pink_petals
+T	33672	1	grass	# minecraft:pink_petals
+T	33673	0	none	# minecraft:pink_petals
+T	33673	1	grass	# minecraft:pink_petals
+T	33674	0	none	# minecraft:pink_petals
+T	33674	1	grass	# minecraft:pink_petals
+T	33675	0	none	# minecraft:pink_petals
+T	33675	1	grass	# minecraft:pink_petals
+T	33676	0	none	# minecraft:pink_petals
+T	33676	1	grass	# minecraft:pink_petals
+T	33677	0	none	# minecraft:pink_petals
+T	33677	1	grass	# minecraft:pink_petals
+T	33678	0	none	# minecraft:pink_petals
+T	33678	1	grass	# minecraft:pink_petals
+T	33679	0	none	# minecraft:pink_petals
+T	33679	1	grass	# minecraft:pink_petals
+T	33680	0	none	# minecraft:wildflowers
+T	33680	1	grass	# minecraft:wildflowers
+T	33681	0	none	# minecraft:wildflowers
+T	33681	1	grass	# minecraft:wildflowers
+T	33682	0	none	# minecraft:wildflowers
+T	33682	1	grass	# minecraft:wildflowers
+T	33683	0	none	# minecraft:wildflowers
+T	33683	1	grass	# minecraft:wildflowers
+T	33684	0	none	# minecraft:wildflowers
+T	33684	1	grass	# minecraft:wildflowers
+T	33685	0	none	# minecraft:wildflowers
+T	33685	1	grass	# minecraft:wildflowers
+T	33686	0	none	# minecraft:wildflowers
+T	33686	1	grass	# minecraft:wildflowers
+T	33687	0	none	# minecraft:wildflowers
+T	33687	1	grass	# minecraft:wildflowers
+T	33688	0	none	# minecraft:wildflowers
+T	33688	1	grass	# minecraft:wildflowers
+T	33689	0	none	# minecraft:wildflowers
+T	33689	1	grass	# minecraft:wildflowers
+T	33690	0	none	# minecraft:wildflowers
+T	33690	1	grass	# minecraft:wildflowers
+T	33691	0	none	# minecraft:wildflowers
+T	33691	1	grass	# minecraft:wildflowers
+T	33692	0	none	# minecraft:wildflowers
+T	33692	1	grass	# minecraft:wildflowers
+T	33693	0	none	# minecraft:wildflowers
+T	33693	1	grass	# minecraft:wildflowers
+T	33694	0	none	# minecraft:wildflowers
+T	33694	1	grass	# minecraft:wildflowers
+T	33695	0	none	# minecraft:wildflowers
+T	33695	1	grass	# minecraft:wildflowers
+T	33696	0	dry_foliage	# minecraft:leaf_litter
+T	33697	0	dry_foliage	# minecraft:leaf_litter
+T	33698	0	dry_foliage	# minecraft:leaf_litter
+T	33699	0	dry_foliage	# minecraft:leaf_litter
+T	33700	0	dry_foliage	# minecraft:leaf_litter
+T	33701	0	dry_foliage	# minecraft:leaf_litter
+T	33702	0	dry_foliage	# minecraft:leaf_litter
+T	33703	0	dry_foliage	# minecraft:leaf_litter
+T	33704	0	dry_foliage	# minecraft:leaf_litter
+T	33705	0	dry_foliage	# minecraft:leaf_litter
+T	33706	0	dry_foliage	# minecraft:leaf_litter
+T	33707	0	dry_foliage	# minecraft:leaf_litter
+T	33708	0	dry_foliage	# minecraft:leaf_litter
+T	33709	0	dry_foliage	# minecraft:leaf_litter
+T	33710	0	dry_foliage	# minecraft:leaf_litter
+T	33711	0	dry_foliage	# minecraft:leaf_litter

@@ -1,0 +1,65 @@
+# M5-Teststrecke (docs/23): gemeinsame Eingabe für den Vanilla-Referenzclient (research: PhysicsReferenceClient) und den
+# eigenen Client (WorldIntegration: PhysicsIntegrationTest). Zeilen:
+#   build <Serverbefehl>                                  Aufbau über die Serverkonsole (vor allen Szenarien)
+#   scenario <name> <x> <y> <z> <yaw> <seg> <seg> …       Start (Füße), Blickrichtung, Tastenfolge
+#   Segment = <tasten>:<ticks>, Tasten aus f b l r j (vorwärts, rückwärts, links, rechts, Sprung) oder "-" (keine)
+# Boden: Stein mit Oberkante y=100 über x -24..40, z -40..20 (Chunkgrenzen bei x=-16, x=0, z=-16, z=0 werden gekreuzt).
+# Gleiche Vorwärtstaste nie zweimal binnen 7 Ticks neu drücken (Vanilla-Sprint per Doppeltipp, sprintWindow=7).
+
+build forceload add -32 -48 47 31
+build fill -24 99 -40 40 99 20 minecraft:stone
+build fill -24 100 -40 40 104 20 minecraft:air
+build fill -24 105 -40 40 110 20 minecraft:air
+# L3 einzelnes Hindernis (voller Block)
+build setblock -13 100 -15 minecraft:stone
+# L4 Halbblock-Stufe, dann Block, dann Kante
+build setblock -9 100 -15 minecraft:oak_slab[type=bottom]
+build fill -9 100 -14 -9 100 -10 minecraft:stone
+# L5 Treppe (drei Stufen) auf Plattform y=103
+build setblock -5 100 -15 minecraft:oak_stairs[facing=south,half=bottom]
+build setblock -5 100 -14 minecraft:stone
+build setblock -5 101 -14 minecraft:oak_stairs[facing=south,half=bottom]
+build fill -5 100 -13 -5 101 -13 minecraft:stone
+build setblock -5 102 -13 minecraft:oak_stairs[facing=south,half=bottom]
+build fill -5 100 -12 -5 102 -8 minecraft:stone
+# L6 schmaler Durchgang (x=-1), Wände x=-2 und x=0, zwei Blöcke hoch
+build fill -2 100 -16 -2 101 -4 minecraft:stone
+build fill 0 100 -16 0 101 -4 minecraft:stone
+# L8 Sprung auf einen Block
+build fill 7 100 -14 7 100 -8 minecraft:stone
+# L9 niedrige Decke (Unterkante y=102 → 0,2 Kopffreiheit)
+build fill 11 102 -18 11 102 -6 minecraft:stone
+# L10 Grube, Boden drei Blöcke tiefer (Oberkante 97)
+build fill 15 99 -14 15 99 -4 minecraft:air
+build fill 15 96 -14 15 96 -4 minecraft:stone
+# L11 Zaun, L12 Mauer, L13 Falltür (geschlossen, unten), L14 Tür (geschlossen), L15 Teppich+Schnee+Gitter-Rand
+build setblock 19 100 -15 minecraft:oak_fence
+build setblock 23 100 -15 minecraft:cobblestone_wall
+build setblock 27 100 -15 minecraft:oak_trapdoor[facing=north,half=bottom,open=false]
+build setblock 31 100 -15 minecraft:oak_door[facing=north,half=lower,open=false]
+build setblock 31 101 -15 minecraft:oak_door[facing=north,half=upper,open=false]
+build setblock 35 100 -15 minecraft:white_carpet
+build setblock 35 100 -13 minecraft:snow[layers=4]
+build setblock 35 100 -11 minecraft:iron_bars
+build setblock 39 100 -15 minecraft:chest[facing=north]
+
+scenario flat_walk     -20.5 100 -19.5   0   f:30 -:15
+scenario strafe_left   -20.5 100 -19.5   0   l:20 -:15
+scenario diagonal      -20.5 100 -5.5    0   fl:30 -:15
+scenario obstacle      -12.5 100 -19.5   0   f:30 -:10
+scenario slab_step      -8.5 100 -19.5   0   f:40 -:20
+scenario stairs         -4.5 100 -19.5   0   f:40 -:15
+scenario narrow_pass    -0.5 100 -19.5   0   f:45 -:15
+scenario wall_slide     -0.5 100 -14.5   0   fr:30 -:15
+scenario jump_in_place   3.5 100 -19.5   0   j:1 -:20
+scenario jump_hold       3.5 100 -19.5   0   j:30 -:15
+scenario jump_onto       7.5 100 -19.5   0   f:4 fj:14 f:10 -:15
+scenario low_ceiling    11.5 100 -19.5   0   f:8 fj:24 -:15
+scenario drop_pit       15.5 100 -19.5   0   f:20 -:30
+scenario fence          19.5 100 -19.5   0   f:30 -:10
+scenario wall           23.5 100 -19.5   0   f:30 -:10
+scenario trapdoor       27.5 100 -19.5   0   f:30 -:15
+scenario door           31.5 100 -19.5   0   f:30 -:10
+scenario carpet_snow    35.5 100 -19.5   0   f:45 -:15
+scenario chest          39.5 100 -19.5   0   f:30 -:10
+scenario turned_yaw     -20.5 100 -10.5 -63.5 f:25 -:15

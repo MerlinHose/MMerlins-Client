@@ -1,0 +1,56 @@
+# M12 Leistungsmessung (docs/49 §5): gleiche Orte wie M6 (Teststrecke, Gelände), je Fenster 15 s.
+# Aufruf: M6_SERVER_XMX=1G bash analysis/tools/m6-run.sh analysis/tools/m12-perf.txt <label> "[--no-vsync] [--render-distance N]"
+# Kennzahlen je Fenster (perf-end): Ø FPS, 1-%-Low, p99/max Bildzeit, Spitzen > 33 ms, CPU- und GPU-Bildzeit, Draw Calls,
+# transparente Sektionen/Vertices, VRAM (NVX), Meshes, Mesh-Bauzeiten, Heap.
+server-console ${CONSOLE}
+wait-play
+console gamerule advance_time false
+console time set 6000
+console weather clear
+hide-gui on
+console tp ${NAME} -20.5 100 -22.5 -40 18
+wait 3
+wait-meshes
+wait 2
+perf-begin
+wait 15
+perf-end course-standing
+console tp ${NAME} 7.5 64 9.5 45 10
+wait 3
+wait-meshes
+wait 2
+perf-begin
+wait 15
+perf-end terrain-standing
+perf-begin
+keys f 15
+perf-end terrain-walking
+console tp ${NAME} 7.5 64 9.5 45 10
+wait 3
+wait-meshes
+look 45 10
+perf-begin
+console setblock 9 64 12 minecraft:glowstone
+wait 1
+console setblock 9 64 12 minecraft:air
+wait 1
+console setblock 9 64 12 minecraft:glowstone
+wait 1
+console setblock 9 64 12 minecraft:air
+wait 1
+console setblock 9 64 12 minecraft:glowstone
+wait 1
+console setblock 9 64 12 minecraft:air
+wait 1
+console setblock 9 64 12 minecraft:glowstone
+wait 1
+console setblock 9 64 12 minecraft:air
+wait 1
+console setblock 9 64 12 minecraft:glowstone
+wait 1
+console setblock 9 64 12 minecraft:air
+wait 2
+perf-end terrain-rebuilds
+screenshot ${OUT}/perf-terrain.png
+hide-gui off
+console gamerule advance_time true

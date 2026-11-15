@@ -1,0 +1,104 @@
+# M10 Grafiktest (docs/41 §6): Herzen/Absorption/Rüstung/Hunger, Angriffsabklingzeit, Treffer mit Partikeln, Schadensrand, Effekte,
+# Essen, Maximalgesundheit 40 (zwei Herzreihen), Tod mit Todesbildschirm und Klick auf „Wiederbeleben“.
+# Aufruf: M6_DIFFICULTY=easy bash analysis/tools/m6-run.sh analysis/tools/m10-gfx.txt <label> ["--width 1600 --height 900"]
+server-console ${CONSOLE}
+wait-play
+mark joined
+console gamerule spawn_mobs false
+console gamerule natural_health_regeneration false
+console forceload add -32 -64 47 15
+console kill @e[type=!player]
+console kill @e[type=item]
+console fill -14 99 -48 20 99 -16 minecraft:grass_block
+console fill -14 100 -48 20 106 -16 minecraft:air
+console fill -14 107 -48 20 107 -16 minecraft:glass
+console fill -14 103 -44 20 103 -22 minecraft:light[level=15]
+console gamemode survival ${NAME}
+console clear ${NAME}
+console effect clear ${NAME}
+console effect give ${NAME} minecraft:instant_health 1 10 true
+console summon pig 0.5 100 -30.5 {NoAI:1b,Tags:[m10]}
+console summon zombie 3.5 100 -31.5 {NoAI:1b,Tags:[m10],Rotation:[180f,0f]}
+console item replace entity ${NAME} hotbar.0 with minecraft:iron_sword
+console item replace entity ${NAME} hotbar.1 with minecraft:cooked_beef 8
+console item replace entity ${NAME} armor.chest with minecraft:iron_chestplate
+console item replace entity ${NAME} armor.head with minecraft:iron_helmet
+console tp ${NAME} 0.5 100 -27.5 180 0
+wait 3
+wait-meshes
+wait-entities 2
+slot 1
+look-at 0.5 100.45 -30.5
+wait 1
+survival-dump start
+screenshot ${OUT}/50-hud.png
+# --- Angriff: Abklingzeit sichtbar direkt nach dem Treffer, Partikel am Ziel
+attack 0.1
+wait 0.15
+screenshot ${OUT}/51-hit-cooldown.png
+wait 1
+entity-frame after-hit
+# --- Speer: STAB-Schwung (19 Ticks) ohne Angriffspaket (piercingAttack nicht umgesetzt)
+console item replace entity ${NAME} hotbar.2 with minecraft:iron_spear
+wait 0.5
+slot 3
+wait 0.5
+attack 0.1
+wait 0.35
+screenshot ${OUT}/51b-spear-stab.png
+survival-dump spear
+wait 1
+slot 1
+wait 0.5
+# --- Schaden: roter Rand, Herzen blinken
+console damage ${NAME} 5 minecraft:generic
+wait 0.2
+screenshot ${OUT}/52-damage.png
+wait 1
+survival-dump after-damage
+# --- Effekte und Absorption
+console effect give ${NAME} minecraft:speed 120 1
+console effect give ${NAME} minecraft:regeneration 120 0
+console effect give ${NAME} minecraft:absorption 120 1
+wait 1.5
+screenshot ${OUT}/53-effects.png
+survival-dump effects
+console effect clear ${NAME}
+# --- Hunger erzeugen und essen
+console effect give ${NAME} minecraft:hunger 7 255
+wait 8
+console effect clear ${NAME}
+slot 2
+wait 0.5
+survival-dump hungry
+use-hold 2.2
+wait 1
+survival-dump eaten
+screenshot ${OUT}/54-eaten.png
+# --- Maximalgesundheit 40: zwei Herzreihen
+console attribute ${NAME} minecraft:max_health base set 40
+console effect give ${NAME} minecraft:instant_health 1 10 true
+wait 1.5
+screenshot ${OUT}/55-max-health-40.png
+survival-dump max40
+console attribute ${NAME} minecraft:max_health base set 20
+wait 1
+# --- Tod und Wiederbelebung über den Knopf
+console kill ${NAME}
+wait-dead
+wait 1
+screenshot ${OUT}/56-death-screen.png
+survival-dump dead
+death-click
+wait-alive
+wait 2
+survival-dump respawned
+screenshot ${OUT}/57-respawned.png
+console kill @e[tag=m10]
+console kill @e[type=item]
+console fill -14 103 -44 20 103 -22 minecraft:air
+console gamerule natural_health_regeneration true
+console gamerule spawn_mobs true
+console gamemode creative ${NAME}
+wait 1
+mark done

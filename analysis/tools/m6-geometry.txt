@@ -1,0 +1,19 @@
+# M6 Schritt C: Geometrienachweis im Farbmodus (ohne Texturen). Start mit runGraphical --colors.
+server-console ${CONSOLE}
+wait-play
+console tp ${NAME} -20.5 100 -19.5 0 0
+wait 3
+wait-meshes
+mark course-loaded
+look 0 20
+screenshot ${OUT}/01-colors-course-south.png
+look -135 25
+screenshot ${OUT}/02-colors-course-northeast.png
+look 90 60
+screenshot ${OUT}/03-colors-down-west.png
+console tp ${NAME} 7.5 64 9.5 0 0
+wait 3
+wait-meshes
+look 45 10
+screenshot ${OUT}/04-colors-terrain.png
+mark done-geometry

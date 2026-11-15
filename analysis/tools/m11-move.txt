@@ -1,0 +1,48 @@
+# M11-Teststrecke Phase C (docs/45 §2): Sprinten und Schleichen. Format wie m5-course.txt; zusätzliche Tasten:
+#   s = Schleichen (Shift), p = Sprinttaste. Sprinten per Doppeltipp: Vorwärtstaste binnen 7 Ticks erneut drücken.
+# Fläche: Steinboden Oberkante y=100 (m5-course), Bahnen bei z = -2.5 … 19 in +Z-Richtung (Yaw 0), Abstand 3 Blöcke.
+# Die M5-Hindernisse liegen bei z ≤ -4 und werden nicht berührt.
+
+build forceload add -32 -48 47 31
+build fill -24 99 -3 40 99 20 minecraft:stone
+build fill -24 100 -4 40 104 20 minecraft:air
+# Wand quer zur Bahn x=-10.5 bei z=8 (Sprint endet bei voller Kollision)
+build fill -12 100 8 -9 101 8 minecraft:stone
+# Wand längs der Bahn bei x=-6 (kleine Kollision unter 8° hält den Sprint, große nicht)
+build fill -6 100 -3 -6 101 19 minecraft:stone
+# erhöhte Plattform x 2..4, z -4..6, Oberkante 101 (Kante 1 Block hoch, Schleich-Kantenschutz)
+build fill 2 100 -4 4 100 6 minecraft:stone
+# niedrige Decke: obere Halbstufen y=101 (Unterkante 101,5 → 1,5 Blöcke Freiraum) bei x 8..11, z 0..2
+build fill 8 101 0 11 101 2 minecraft:oak_slab[type=top]
+# Treppe (Sprint über Stufen) bei x=28, z 6..8, Plattform y=103
+build setblock 28 100 6 minecraft:oak_stairs[facing=south,half=bottom]
+build setblock 28 100 7 minecraft:stone
+build setblock 28 101 7 minecraft:oak_stairs[facing=south,half=bottom]
+build fill 28 100 8 28 101 8 minecraft:stone
+build setblock 28 102 8 minecraft:oak_stairs[facing=south,half=bottom]
+build fill 28 100 9 28 102 12 minecraft:stone
+# Block für Sprint-Sprung (x=31, z=8)
+build fill 31 100 8 31 100 9 minecraft:stone
+
+scenario sprint_key        -22.5 100 -2.5  0   f:3 fp:25 f:10 -:15
+scenario sprint_doubletap  -19.5 100 -2.5  0   f:2 -:2 f:30 -:15
+scenario doubletap_slow    -16.5 100 -2.5  0   f:2 -:8 f:25 -:15
+scenario sprint_jump       -13.5 100 -2.5  0   fp:5 fpj:24 fp:6 -:15
+scenario sprint_wall_stop  -10.5 100 -2.5  0   fp:45 -:10
+scenario sprint_minor_wall  -6.75 100 -2.5 -3   fp:40 -:15
+scenario sprint_major_wall  -6.75 100 -2.5 -20  fp:30 -:15
+scenario sprint_backward    -3.5 100 -2.5  0   fp:10 bp:10 -:15
+scenario sneak_edge          3.5 101 4.5   0   s:3 fs:55 s:5 -:10
+scenario sneak_edge_diag     2.5 101 3.5  -45  s:3 fs:70 s:5 -:10
+scenario sneak_edge_jump     3.5 101 4.5   0   s:3 fs:40 fsj:8 fs:10 -:20
+scenario sneak_walk          6.5 100 -2.5  0   s:3 fs:30 s:3 -:12
+scenario sneak_low_ceiling   9.5 100 -2.5  0   s:3 fs:50 f:70 -:15
+scenario stand_low_ceiling  10.5 100 -2.5  0   f:25 -:15
+scenario sprint_strafe      13.5 100 -2.5  0   flp:22 -:15
+scenario sprint_sneak       16.5 100 -2.5  0   fp:10 fps:15 fp:8 -:15
+scenario sneak_sprint_key   19.5 100 -2.5  0   s:3 fsp:15 fp:15 -:15
+scenario sneak_toggle       22.5 100 -2.5  0   fs:2 f:2 fs:2 f:2 fs:2 f:2 fs:2 f:2 -:15
+scenario sneak_jump         25.5 100 -2.5  0   s:3 sj:14 fsj:14 -:15
+scenario sprint_stairs      28.5 100 -2.5  0   fp:35 -:15
+scenario sprint_jump_onto   31.5 100 -2.5  0   fp:12 fpj:12 fp:6 -:15
+scenario sprint_release     34.5 100 -2.5  0   fp:15 f:15 -:15

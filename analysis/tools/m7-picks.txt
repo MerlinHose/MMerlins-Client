@@ -1,0 +1,112 @@
+# M7-Auswahltest (docs/29 §1): gleiche Blickrichtungen für den Vanilla-Client (PickReferenceClient) und den eigenen Client.
+#   build <Serverbefehl>                    Aufbau (vor allen Messungen)
+#   pick <name> <x> <y> <z> <yaw> <pitch>   Standpunkt (Füße) und Blickrichtung; erfasst wird das BlockHitResult
+# Zielreihe: Blöcke bei (x, 100, -30) auf Steinboden (Oberkante y=100); Standpunkt 2,5 Blöcke südlich (z=-27.5).
+#   a: Yaw 180, Pitch 39  → Strahl erreicht y=100 etwa bei der Blockmitte (z≈-29.5)
+#   b: Yaw 172, Pitch 30  → flach und schräg: Vorderseite (Süd) hoher Formen, sonst dahinter
+#   c: Yaw 190, Pitch 47  → steil und schräg von der anderen Seite
+build forceload add -32 -48 47 31
+build fill -24 100 -34 24 104 -26 minecraft:air
+build fill -24 99 -34 24 99 -26 minecraft:stone
+build setblock -20 100 -30 minecraft:torch
+build setblock -18 99 -30 minecraft:grass_block
+build setblock -18 100 -30 minecraft:poppy
+build setblock -16 99 -30 minecraft:grass_block
+build setblock -16 100 -30 minecraft:short_grass
+build setblock -14 100 -30 minecraft:oak_fence
+build setblock -12 100 -30 minecraft:oak_stairs[facing=north]
+build setblock -10 100 -30 minecraft:oak_slab[type=top]
+build setblock -8 100 -30 minecraft:glass_pane
+build setblock -6 100 -30 minecraft:lever[face=floor,facing=north]
+build setblock -4 100 -30 minecraft:chest[facing=south]
+build setblock -2 100 -30 minecraft:oak_trapdoor[facing=north,open=true]
+build setblock 0 100 -30 minecraft:oak_door[facing=south,half=lower]
+build setblock 0 101 -30 minecraft:oak_door[facing=south,half=upper]
+build setblock 2 100 -30 minecraft:stone_button[face=floor,facing=north]
+build setblock 4 100 -30 minecraft:snow[layers=3]
+build setblock 6 100 -30 minecraft:white_carpet
+build setblock 8 99 -30 minecraft:grass_block
+build setblock 8 100 -30 minecraft:fern
+build setblock 10 100 -30 minecraft:lantern
+build setblock 12 100 -30 minecraft:end_rod[facing=up]
+build setblock 14 100 -30 minecraft:cake
+build setblock 16 100 -30 minecraft:anvil[facing=east]
+build setblock 18 100 -30 minecraft:hopper
+build setblock 20 100 -30 minecraft:composter
+
+pick torch_a -19.5 100 -27.5 180 39
+pick torch_b -19.5 100 -27.5 172 30
+pick torch_c -19.5 100 -27.5 190 47
+pick poppy_a -17.5 100 -27.5 180 39
+pick poppy_b -17.5 100 -27.5 172 30
+pick poppy_c -17.5 100 -27.5 190 47
+pick short_grass_a -15.5 100 -27.5 180 39
+pick short_grass_b -15.5 100 -27.5 172 30
+pick short_grass_c -15.5 100 -27.5 190 47
+pick oak_fence_a -13.5 100 -27.5 180 39
+pick oak_fence_b -13.5 100 -27.5 172 30
+pick oak_fence_c -13.5 100 -27.5 190 47
+pick oak_stairs_a -11.5 100 -27.5 180 39
+pick oak_stairs_b -11.5 100 -27.5 172 30
+pick oak_stairs_c -11.5 100 -27.5 190 47
+pick oak_slab_a -9.5 100 -27.5 180 39
+pick oak_slab_b -9.5 100 -27.5 172 30
+pick oak_slab_c -9.5 100 -27.5 190 47
+pick glass_pane_a -7.5 100 -27.5 180 39
+pick glass_pane_b -7.5 100 -27.5 172 30
+pick glass_pane_c -7.5 100 -27.5 190 47
+pick lever_a -5.5 100 -27.5 180 39
+pick lever_b -5.5 100 -27.5 172 30
+pick lever_c -5.5 100 -27.5 190 47
+pick chest_a -3.5 100 -27.5 180 39
+pick chest_b -3.5 100 -27.5 172 30
+pick chest_c -3.5 100 -27.5 190 47
+pick oak_trapdoor_a -1.5 100 -27.5 180 39
+pick oak_trapdoor_b -1.5 100 -27.5 172 30
+pick oak_trapdoor_c -1.5 100 -27.5 190 47
+pick oak_door_a 0.5 100 -27.5 180 39
+pick oak_door_b 0.5 100 -27.5 172 30
+pick oak_door_c 0.5 100 -27.5 190 47
+pick stone_button_a 2.5 100 -27.5 180 39
+pick stone_button_b 2.5 100 -27.5 172 30
+pick stone_button_c 2.5 100 -27.5 190 47
+pick snow_a 4.5 100 -27.5 180 39
+pick snow_b 4.5 100 -27.5 172 30
+pick snow_c 4.5 100 -27.5 190 47
+pick white_carpet_a 6.5 100 -27.5 180 39
+pick white_carpet_b 6.5 100 -27.5 172 30
+pick white_carpet_c 6.5 100 -27.5 190 47
+pick fern_a 8.5 100 -27.5 180 39
+pick fern_b 8.5 100 -27.5 172 30
+pick fern_c 8.5 100 -27.5 190 47
+pick lantern_a 10.5 100 -27.5 180 39
+pick lantern_b 10.5 100 -27.5 172 30
+pick lantern_c 10.5 100 -27.5 190 47
+pick end_rod_a 12.5 100 -27.5 180 39
+pick end_rod_b 12.5 100 -27.5 172 30
+pick end_rod_c 12.5 100 -27.5 190 47
+pick cake_a 14.5 100 -27.5 180 39
+pick cake_b 14.5 100 -27.5 172 30
+pick cake_c 14.5 100 -27.5 190 47
+pick anvil_a 16.5 100 -27.5 180 39
+pick anvil_b 16.5 100 -27.5 172 30
+pick anvil_c 16.5 100 -27.5 190 47
+pick hopper_a 18.5 100 -27.5 180 39
+pick hopper_b 18.5 100 -27.5 172 30
+pick hopper_c 18.5 100 -27.5 190 47
+pick composter_a 20.5 100 -27.5 180 39
+pick composter_b 20.5 100 -27.5 172 30
+pick composter_c 20.5 100 -27.5 190 47
+pick miss_sky 0.5 100 -27.5 180 -45
+pick miss_range -19.5 100 -25.3 180 20
+pick side_view -21.3 100 -28.2 225 28
+pick floor_down 3.5 100 -27.5 0 90
+pick inside_floor 0.5 98.5 -27.5 180 10
+pick negative_x -21.5 100 -30.5 90 20
+# Blockgrenzen: Augen-x exakt auf der Grenze (Tür bei x=0, Falltür bei x=−2), Ecke; Auge im Steinboden (Treffer von innen)
+pick boundary_x0 0.0 100 -27.5 180 20
+pick boundary_xneg -2.0 100 -27.5 180 25
+pick boundary_corner -14.0 100 -28.0 180 35
+pick inside_stone 0.5 97.6 -27.5 180 10
+pick inside_stone_up -3.5 97.6 -27.5 0 -60
+pick far_creative -19.5 100 -25.1 180 21

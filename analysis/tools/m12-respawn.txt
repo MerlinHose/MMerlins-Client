@@ -1,0 +1,15 @@
+# M12 Reparatur (docs/49 §8): Der Grafik-Testspieler blieb nach dem Abbruch des M10-Grafiktests (OutOfMemoryError im Overlay) tot in der
+# Welt gespeichert; ein toter Spieler erhält beim Login keine Chunks, alle folgenden Grafiktests warteten vergeblich (wait-play).
+# Wiederbelebung über den eigenen Todesbildschirm wie in m10-gfx.txt, danach Kreativmodus wie am Ende der Grafiktests.
+# Aufruf: bash analysis/tools/m6-run.sh analysis/tools/m12-respawn.txt m12-respawn
+server-console ${CONSOLE}
+wait-dead
+wait 1
+survival-dump dead-at-login
+death-click
+wait-alive
+wait 2
+survival-dump respawned
+wait-play
+console gamemode creative ${NAME}
+wait 1

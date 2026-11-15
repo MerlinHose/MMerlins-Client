@@ -1,0 +1,16 @@
+# M6 Leistungsmessung ohne VSync (docs/26 §4): Teststrecke und Gelände, je 15 s stehend und gehend.
+server-console ${CONSOLE}
+wait-play
+console tp ${NAME} -20.5 100 -22.5 -40 18
+wait 3
+wait-meshes
+mark perf-course-start
+wait 15
+mark perf-course-15s
+console tp ${NAME} 7.5 64 9.5 45 10
+wait 3
+wait-meshes
+keys f 3
+wait 12
+mark perf-terrain-15s
+screenshot ${OUT}/30-perf-terrain.png

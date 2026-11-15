@@ -1,0 +1,31 @@
+# M8: echte Maus-/Tastaturereignisse (docs/33 §3.2). Der Treiber m8-realinput.ps1 spielt Betriebssystem-Eingaben ein;
+# der Autotest bereitet nur vor, wartet und prüft danach Client gegen Server.
+server-console ${CONSOLE}
+wait-play
+mark joined
+console gamemode survival ${NAME}
+console kill @e[type=item]
+console clear ${NAME}
+console item replace entity ${NAME} hotbar.0 with minecraft:oak_planks 16
+console item replace entity ${NAME} inventory.0 with minecraft:cobblestone 32
+console item replace entity ${NAME} hotbar.3 with minecraft:stick 4
+console tp ${NAME} 6.5 100 -27.5 180 0
+wait 3
+wait-meshes
+slot 9
+external-input on
+mark ready-external
+wait-file ${OUT}/stage1.flag
+wait 1
+export-slots ${OUT}/slots.txt
+screenshot ${OUT}/40-real-open.png
+wait-file ${OUT}/done.flag
+wait 1.5
+external-input off
+inv-history
+inv-dump r1-final
+console say CHECK r1-final
+console data get entity ${NAME} Inventory
+console data get entity ${NAME} equipment
+wait 3
+mark end

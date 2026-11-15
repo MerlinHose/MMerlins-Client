@@ -1,0 +1,43 @@
+# M10 Vanilla-Vergleich (docs/41 §7): gleiche Ziele und Abläufe für den unveränderten Vanilla-Client ("ref", CombatReferenceClient)
+# und den eigenen Client ("own", Terminalbefehle). Spieler am Messplatz 0.5/100/-27.5; Hotbar: 0 leer, 1 Eisenschwert, 2 Eisenaxt.
+# Ziele (Tags m10v,tN): T1 Schwein vorn (Faust), T2 Schwein rechts (Schwert voll), T3 Schwein links (Schwert ohne Abklingzeit),
+# T4 Kuh rechts hinten (Axt voll), T5 Schwein links hinten (kritischer Treffer im Fallen).
+target t1 pig 0.5 100 -29.9
+target t2 pig 2.7 100 -28.7
+target t3 pig -1.7 100 -28.7
+target t4 cow 2.5 100 -25.9
+target t5 pig -0.9 100 -26.2
+ref slot 0
+ref waitfull
+ref lookat 0.5 100.45 -29.9
+ref attack fist
+ref wait 20
+ref slot 1
+ref waitfull
+ref lookat 2.7 100.45 -28.7
+ref attack sword
+ref lookat -1.7 100.45 -28.7
+ref attack sword_nocooldown
+ref wait 30
+ref slot 2
+ref waitfull
+ref lookat 2.5 100.7 -25.9
+ref attack axe
+ref wait 30
+ref slot 1
+ref waitfull
+ref jumpfall -0.9 100.45 -26.2
+ref attack crit
+ref wait 40
+ref done
+own slot 1
+own look-at 0.5 100.45 -29.9
+own hit 1.0
+own slot 2
+own look-at 2.7 100.45 -28.7
+own hitpair 2.7 100.45 -28.7 -1.7 100.45 -28.7
+own slot 3
+own look-at 2.5 100.7 -25.9
+own hit 1.0
+own slot 2
+own hitfall -0.9 100.45 -26.2

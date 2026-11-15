@@ -1,0 +1,134 @@
+# M6 Integrationstest (docs/26): texturierter Client, Kriterien 1–9. Platzhalter ${CONSOLE}, ${OUT}, ${NAME} setzt m6-run.sh.
+server-console ${CONSOLE}
+wait-play
+mark joined
+# --- Teststrecke aus M5 (Boden y=99, Hindernisse), Übersicht
+console tp ${NAME} -20.5 100 -22.5 0 0
+wait 3
+wait-meshes
+mark course-loaded
+look -40 18
+screenshot ${OUT}/10-course-overview.png
+look 0 0
+screenshot ${OUT}/11-course-south.png
+# --- Gehen (WASD) und Springen, jeweils serverseitig geprüft
+keys f 1.5
+verify walk-forward
+keys j 0.1
+wait 1.2
+verify jump-landed
+keys fl 1.0
+verify walk-diagonal
+# --- Kollision: Hindernis (L3), Treppe (L5), Zaun (L11), Fall in die Grube (L10)
+console tp ${NAME} -12.5 100 -19.5 0 0
+wait 2
+keys f 3
+verify obstacle
+console tp ${NAME} -4.5 100 -19.5 0 0
+wait 2
+keys f 1.6
+verify stairs
+screenshot ${OUT}/12-stairs.png
+console tp ${NAME} 19.5 100 -19.5 0 0
+wait 2
+keys f 3
+verify fence
+console tp ${NAME} 15.5 100 -19.5 0 0
+wait 2
+keys f 1.5
+wait 2
+verify pit
+# --- Blockänderungen sichtbar (block_update / section_blocks_update → Remesh)
+console tp ${NAME} -20.5 100 -22.5 0 0
+wait 2
+look 0 25
+wait-meshes
+screenshot ${OUT}/13-before-blockchange.png
+console setblock -21 100 -18 minecraft:gold_block
+console fill -22 100 -16 -19 101 -16 minecraft:glass
+console setblock -20 100 -17 minecraft:oak_stairs[facing=north]
+wait 1.5
+wait-meshes
+mark after-blockchange
+screenshot ${OUT}/14-after-blockchange.png
+# --- Chunk-Unload und -Reload (Teleport weg und zurück; kreativ gegen Fallschaden, danach erst landen, dann Überleben)
+console gamemode creative ${NAME}
+console tp ${NAME} 600.5 200 600.5 0 0
+wait 8
+wait-meshes
+mark far-away
+screenshot ${OUT}/15-far-away.png
+console tp ${NAME} -20.5 100 -22.5 0 25
+wait 4
+wait-meshes
+verify reloaded
+console gamemode survival ${NAME}
+screenshot ${OUT}/16-reloaded.png
+# Blockänderungen zurücksetzen
+console fill -22 100 -18 -19 101 -16 minecraft:air
+# --- 5 Minuten Spielbetrieb mit Bewegung
+mark run5-start
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 36 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 72 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 108 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 144 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 180 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 216 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 252 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 288 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 324 10
+wait 25.4
+keys f 1.5
+keys b 1.5
+keys j 0.1
+wait 1.5
+look 360 10
+wait 25.4
+verify run5-end
+mark run5-end
+look -30 20
+screenshot ${OUT}/17-final.png

@@ -1,0 +1,130 @@
+# M9 Dauerbetrieb (docs/37 §5): mindestens fünf Minuten Grafik mit 20 KI-Mobs, Items, Rüstungsständer (Debug-Box) und einem laufenden
+# zweiten Spieler; jede Minute Zähler (entity-frame); am Ende alles einfrieren und je UUID gegen den Server vergleichen (entity-query).
+# Aufruf: M6_DIFFICULTY=easy M6_COMPANION=ProtoBotM9B bash analysis/tools/m6-run.sh analysis/tools/m9-long.txt <label>
+server-console ${CONSOLE}
+wait-play
+mark joined
+console gamemode creative ${NAME}
+console gamerule spawn_mobs false
+console forceload add -32 -64 47 15
+console kill @e[type=!player]
+console kill @e[type=item]
+console fill -14 99 -48 20 99 -16 minecraft:grass_block
+console fill -14 100 -48 20 106 -16 minecraft:air
+console fill -14 107 -48 20 107 -16 minecraft:glass
+console fill -15 100 -49 21 101 -49 minecraft:oak_fence
+console fill -15 100 -15 21 101 -15 minecraft:oak_fence
+console fill -15 100 -49 -15 101 -15 minecraft:oak_fence
+console fill 21 100 -49 21 101 -15 minecraft:oak_fence
+console fill -14 103 -44 20 103 -22 minecraft:light[level=15]
+console gamemode creative ProtoBotM9B
+console tp ProtoBotM9B 3.5 100 -38.5 0 0
+console summon pig -10.5 100 -44.5 {Tags:[m9]}
+console summon pig -6.5 100 -44.5 {Tags:[m9]}
+console summon pig -2.5 100 -44.5 {Tags:[m9]}
+console summon pig 2.5 100 -44.5 {Tags:[m9]}
+console summon pig 6.5 100 -44.5 {Tags:[m9]}
+console summon cow 10.5 100 -44.5 {Tags:[m9]}
+console summon cow 14.5 100 -44.5 {Tags:[m9]}
+console summon cow 18.5 100 -44.5 {Tags:[m9]}
+console summon cow -10.5 100 -39.5 {Tags:[m9]}
+console summon sheep -6.5 100 -39.5 {Tags:[m9],Color:0b}
+console summon sheep -2.5 100 -39.5 {Tags:[m9],Color:3b}
+console summon sheep 2.5 100 -39.5 {Tags:[m9],Color:6b}
+console summon sheep 6.5 100 -39.5 {Tags:[m9],Color:9b}
+console summon zombie 10.5 100 -39.5 {Tags:[m9],equipment:{head:{id:"minecraft:iron_helmet",count:1}}}
+console summon zombie 14.5 100 -39.5 {Tags:[m9]}
+console summon zombie 18.5 100 -39.5 {Tags:[m9]}
+console summon zombie -10.5 100 -34.5 {Tags:[m9]}
+console summon skeleton -6.5 100 -34.5 {Tags:[m9]}
+console summon skeleton -2.5 100 -34.5 {Tags:[m9]}
+console summon skeleton 2.5 100 -34.5 {Tags:[m9]}
+console summon armor_stand -12.5 100 -24.5 {Rotation:[180f,0f],Tags:[m9]}
+console summon item -8.5 100 -22.5 {Item:{id:"minecraft:diamond",count:2},PickupDelay:32767,Tags:[m9]}
+console summon item -6.5 100 -22.5 {Item:{id:"minecraft:dirt",count:1},PickupDelay:32767,Tags:[m9]}
+console tp ${NAME} -10.5 100 -18.5 200 20
+wait 3
+wait-meshes
+wait-entities 20
+look 200 25
+wait 1
+screenshot ${OUT}/20-start.png
+entity-frame t0
+append ${OUT}/companion.in look 90 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 180 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 270 0
+append ${OUT}/companion.in walk f 60
+wait 20
+entity-frame t1min
+append ${OUT}/companion.in look 180 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 270 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 0 0
+append ${OUT}/companion.in walk f 60
+wait 20
+entity-frame t2min
+append ${OUT}/companion.in look 270 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 0 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 90 0
+append ${OUT}/companion.in walk f 60
+wait 20
+entity-frame t3min
+look 150 30
+wait 1
+screenshot ${OUT}/21-3min.png
+append ${OUT}/companion.in look 0 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 90 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 180 0
+append ${OUT}/companion.in walk f 60
+wait 20
+entity-frame t4min
+append ${OUT}/companion.in look 90 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 180 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 270 0
+append ${OUT}/companion.in walk f 60
+wait 20
+entity-frame t5min
+append ${OUT}/companion.in look 180 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 270 0
+append ${OUT}/companion.in walk f 60
+wait 20
+append ${OUT}/companion.in look 0 0
+append ${OUT}/companion.in walk f 60
+wait 20
+entity-frame t6min
+look 200 25
+wait 1
+screenshot ${OUT}/22-end.png
+console execute as @e[tag=m9] run data merge entity @s {NoAI:1b}
+wait 4
+entity-query long-end
+wait 8
+entity-frame end
+console kill @e[tag=m9]
+console kill @e[type=item]
+console fill -14 103 -44 20 103 -22 minecraft:air
+console fill -15 100 -49 21 101 -15 minecraft:air
+console gamerule spawn_mobs true
+wait 1
+mark done

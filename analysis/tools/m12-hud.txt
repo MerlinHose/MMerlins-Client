@@ -1,0 +1,15 @@
+# M12 HUD-Prüfung (docs/49 §4): Hilfezeile des Inventars bei 1280 px Fensterbreite (M8-Fehler: abgeschnitten).
+# Aufruf: bash analysis/tools/m6-run.sh analysis/tools/m12-hud.txt m12-hud "--width 1280 --height 720"
+server-console ${CONSOLE}
+wait-play
+console gamemode survival ${NAME}
+wait 3
+wait-meshes
+hud-dump closed
+inventory open
+wait 2
+hud-dump inventory-open
+screenshot ${OUT}/hud-inventory-1280.png
+inventory close
+wait 1
+console gamemode creative ${NAME}

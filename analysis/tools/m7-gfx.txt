@@ -1,0 +1,318 @@
+# M7 Grafiktest (docs/29 §3): Auswahlrahmen, Fadenkreuz, Hotbar, Abbau/Platzieren über die Grafiksteuerung, Inventarfenster.
+# Platzhalter ${CONSOLE}, ${OUT}, ${NAME} setzt m6-run.sh. Serverprüfungen: "say CHECK <name>" + "execute if block …".
+server-console ${CONSOLE}
+wait-play
+mark joined
+console gamemode survival ${NAME}
+console clear ${NAME}
+console forceload add -32 -48 47 31
+console fill 28 99 -36 46 99 -24 minecraft:stone
+console fill 28 100 -36 46 104 -24 minecraft:air
+console setblock 30 100 -30 minecraft:dirt
+console setblock 32 100 -30 minecraft:oak_fence
+console setblock 34 100 -30 minecraft:oak_stairs[facing=north]
+console setblock 36 100 -30 minecraft:short_grass
+console setblock 36 99 -30 minecraft:grass_block
+console setblock 38 100 -30 minecraft:lever[face=floor,facing=south]
+wait 2
+console tp ${NAME} 30.5 100 -27.5 180 0
+wait 3
+wait-meshes
+# --- Auswahlrahmen auf verschiedenen Formen
+look-at 30.5 100.5 -29.5
+wait 0.5
+screenshot ${OUT}/20-select-dirt.png
+mark select-dirt
+console tp ${NAME} 32.5 100 -27.5 180 0
+wait 1.5
+look-at 32.5 100.5 -29.6
+wait 0.5
+screenshot ${OUT}/21-select-fence.png
+mark select-fence
+console tp ${NAME} 34.5 100 -27.5 180 0
+wait 1.5
+look-at 34.5 100.3 -29.5
+wait 0.5
+screenshot ${OUT}/22-select-stairs.png
+console tp ${NAME} 36.5 100 -27.5 180 0
+wait 1.5
+look-at 36.5 100.3 -29.5
+wait 0.5
+screenshot ${OUT}/23-select-grass.png
+mark select-grass
+# --- Abbau mit der Maussteuerung (Überleben, Hand): Erde, Fortschrittsbalken bei halber Zeit
+console tp ${NAME} 30.5 100 -27.5 180 0
+wait 1.5
+look-at 30.5 100.5 -29.5
+wait 0.3
+attack 0.3
+wait 0.3
+attack-start
+wait 0.4
+screenshot ${OUT}/24-breaking.png
+wait 0.8
+attack-stop
+wait 0.5
+console say CHECK gfx_dirt_broken
+console execute if block 30 100 -30 minecraft:air
+mark dirt-broken
+# --- Hotbar: Gegenstände geben, Platz wechseln, platzieren
+console kill @e[type=item]
+console clear ${NAME}
+console item replace entity ${NAME} hotbar.0 with minecraft:oak_planks 8
+console item replace entity ${NAME} hotbar.1 with minecraft:torch 5
+wait 1.5
+slot 2
+wait 0.5
+screenshot ${OUT}/25-hotbar-torch.png
+slot 1
+wait 0.5
+look-at 30.5 100.0 -28.5
+wait 0.3
+use
+wait 1
+console say CHECK gfx_planks_placed
+console execute if block 30 100 -29 minecraft:oak_planks
+console say CHECK gfx_planks_count (8 → 7)
+console clear ${NAME} minecraft:oak_planks 0
+screenshot ${OUT}/26-placed.png
+# --- Hebel benutzen (leere Hand)
+slot 9
+console tp ${NAME} 38.5 100 -27.5 180 0
+wait 1.5
+look-at 38.5 100.2 -29.5
+wait 0.3
+use
+wait 1
+console say CHECK gfx_lever
+console execute if block 38 100 -30 minecraft:lever[powered=true]
+# --- Inventarfenster (nur Anzeige)
+inventory open
+wait 1
+screenshot ${OUT}/27-inventory.png
+inventory close
+wait 0.5
+mark inventory-closed
+# --- Leckprüfung: 20 Zyklen Platzieren/Abbauen (Kreativ) und Inventar öffnen/schließen an derselben Stelle
+console gamemode creative ${NAME}
+console tp ${NAME} 31.5 100 -26.5 180 0
+wait 2
+slot 1
+wait 0.5
+mark leak-start
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+look-at 31.5 100.0 -28.5
+use
+wait 0.4
+look-at 31.5 100.5 -28.7
+attack 0.3
+wait 0.3
+inventory open
+wait 0.2
+inventory close
+wait 0.2
+wait 2
+mark leak-end
+console say CHECK gfx_leak_cycles_block_removed
+console execute if block 31 100 -29 minecraft:air
+console gamemode survival ${NAME}
+wait 1
+# --- Bildrate mit HUD und Auswahl (10 s Blick über die Fläche)
+console tp ${NAME} 37.5 100 -25.5 160 20
+wait 2
+mark perf-start
+wait 10
+mark perf-end
+console say CHECK gfx_selected_slot
+console data get entity ${NAME} SelectedItemSlot
+wait 3
+mark end

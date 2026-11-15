@@ -1,0 +1,204 @@
+# Entity-Typen und synchronisierte Datenfelder Minecraft 26.3 / Protokoll 777 - Quelle: EntityExtractor (Server-JAR, Laufzeit)
+T	0	minecraft:acacia_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	1	minecraft:acacia_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	2	minecraft:allay	0.35	0.6	0.36	false	8	2	true	creature
+T	3	minecraft:area_effect_cloud	6.0	0.5	0.425	false	10	2147483647	true	misc
+T	4	minecraft:armadillo	0.7	0.65	0.26	false	10	3	true	creature
+T	5	minecraft:armor_stand	0.5	1.975	1.7775	false	10	3	true	misc
+T	6	minecraft:arrow	0.5	0.5	0.13	false	4	20	true	misc
+T	7	minecraft:axolotl	0.75	0.42	0.2751	false	10	3	true	axolotls
+T	8	minecraft:bamboo_chest_raft	1.375	0.5625	0.5625	false	10	3	true	misc
+T	9	minecraft:bamboo_raft	1.375	0.5625	0.5625	false	10	3	true	misc
+T	10	minecraft:bat	0.5	0.9	0.45	false	5	3	false	ambient
+T	11	minecraft:bee	0.55	0.5	0.3	false	8	3	true	creature
+T	12	minecraft:birch_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	13	minecraft:birch_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	14	minecraft:blaze	0.6	1.8	1.53	false	8	3	true	monster
+T	15	minecraft:block_display	0.0	0.0	0.0	false	10	1	true	misc
+T	16	minecraft:bogged	0.6	1.99	1.74	false	8	3	true	monster
+T	17	minecraft:breeze	0.6	1.77	1.3452	false	10	3	true	monster
+T	18	minecraft:breeze_wind_charge	0.3125	0.3125	0.0	false	4	10	true	misc
+T	19	minecraft:camel	1.7	2.375	2.275	false	10	3	true	creature
+T	20	minecraft:camel_husk	1.7	2.375	2.275	false	10	3	true	monster
+T	21	minecraft:cat	0.6	0.7	0.35	false	8	3	true	creature
+T	22	minecraft:cave_spider	0.7	0.5	0.45	false	8	3	true	monster
+T	23	minecraft:cherry_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	24	minecraft:cherry_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	25	minecraft:chest_minecart	0.98	0.7	0.595	false	8	3	true	misc
+T	26	minecraft:chicken	0.4	0.7	0.644	false	10	3	true	creature
+T	27	minecraft:cod	0.5	0.3	0.195	false	4	3	true	water_ambient
+T	28	minecraft:copper_golem	0.49	0.98	0.8125	false	10	3	true	misc
+T	29	minecraft:command_block_minecart	0.98	0.7	0.595	false	8	3	true	misc
+T	30	minecraft:cow	0.9	1.4	1.3	false	10	3	true	creature
+T	31	minecraft:creaking	0.9	2.7	2.3	false	8	3	true	monster
+T	32	minecraft:creeper	0.6	1.7	1.445	false	8	3	true	monster
+T	33	minecraft:cushion	1.0	0.25	0.2125	false	10	2147483647	false	misc
+T	34	minecraft:dark_oak_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	35	minecraft:dark_oak_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	36	minecraft:dolphin	0.9	0.6	0.3	false	5	3	true	water_creature
+T	37	minecraft:donkey	1.3964844	1.5	1.425	false	10	3	true	creature
+T	38	minecraft:dragon_fireball	1.0	1.0	0.85	false	4	10	true	misc
+T	39	minecraft:drowned	0.6	1.95	1.74	false	8	3	true	monster
+T	40	minecraft:egg	0.25	0.25	0.2125	false	4	10	true	misc
+T	41	minecraft:elder_guardian	1.9975	1.9975	0.99875	false	10	3	true	monster
+T	42	minecraft:enderman	0.6	2.9	2.55	false	8	3	true	monster
+T	43	minecraft:endermite	0.4	0.3	0.13	false	8	3	true	monster
+T	44	minecraft:ender_dragon	16.0	8.0	6.8	false	10	3	true	monster
+T	45	minecraft:ender_pearl	0.25	0.25	0.2125	false	4	10	true	misc
+T	46	minecraft:end_crystal	2.0	2.0	1.7	false	16	2147483647	false	misc
+T	47	minecraft:evoker	0.6	1.95	1.6575	false	8	3	true	monster
+T	48	minecraft:evoker_fangs	0.5	0.8	0.68	false	6	2	false	misc
+T	49	minecraft:experience_bottle	0.25	0.25	0.2125	false	4	10	true	misc
+T	50	minecraft:experience_orb	0.5	0.5	0.425	false	6	20	true	misc
+T	51	minecraft:eye_of_ender	0.25	0.25	0.2125	false	4	4	true	misc
+T	52	minecraft:falling_block	0.98	0.98	0.83300006	false	10	20	true	misc
+T	53	minecraft:fireball	1.0	1.0	0.85	false	4	10	true	misc
+T	54	minecraft:firework_rocket	0.25	0.25	0.2125	false	4	10	true	misc
+T	55	minecraft:fox	0.6	0.7	0.4	false	8	3	true	creature
+T	56	minecraft:frog	0.5	0.5	0.425	false	10	3	true	creature
+T	57	minecraft:furnace_minecart	0.98	0.7	0.595	false	8	3	true	misc
+T	58	minecraft:ghast	4.0	4.0	2.6	false	10	3	true	monster
+T	59	minecraft:happy_ghast	4.0	4.0	2.6	false	10	3	true	creature
+T	60	minecraft:giant	3.6	12.0	10.44	false	10	3	true	monster
+T	61	minecraft:glow_item_frame	0.5	0.5	0.0	false	10	2147483647	false	misc
+T	62	minecraft:glow_squid	0.8	0.8	0.4	false	10	3	true	underground_water_creature
+T	63	minecraft:goat	0.9	1.3	1.105	false	10	3	true	creature
+T	64	minecraft:guardian	0.85	0.85	0.425	false	8	3	true	monster
+T	65	minecraft:hoglin	1.3964844	1.4	1.19	false	8	3	true	monster
+T	66	minecraft:hopper_minecart	0.98	0.7	0.595	false	8	3	true	misc
+T	67	minecraft:horse	1.3964844	1.6	1.52	false	10	3	true	creature
+T	68	minecraft:husk	0.6	1.95	1.74	false	8	3	true	monster
+T	69	minecraft:illusioner	0.6	1.95	1.6575	false	8	3	true	monster
+T	70	minecraft:interaction	0.0	0.0	0.0	false	10	3	true	misc
+T	71	minecraft:iron_golem	1.4	2.7	2.295	false	10	3	true	misc
+T	72	minecraft:item	0.25	0.25	0.2125	false	6	20	true	misc
+T	73	minecraft:item_display	0.0	0.0	0.0	false	10	1	true	misc
+T	74	minecraft:item_frame	0.5	0.5	0.0	false	10	2147483647	false	misc
+T	75	minecraft:jungle_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	76	minecraft:jungle_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	77	minecraft:leash_knot	0.375	0.5	0.0625	false	10	2147483647	false	misc
+T	78	minecraft:lightning_bolt	0.0	0.0	0.0	false	16	2147483647	true	misc
+T	79	minecraft:llama	0.9	1.87	1.7765	false	10	3	true	creature
+T	80	minecraft:llama_spit	0.25	0.25	0.2125	false	4	10	false	misc
+T	81	minecraft:magma_cube	0.52	0.52	0.325	false	8	3	true	monster
+T	82	minecraft:mangrove_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	83	minecraft:mangrove_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	84	minecraft:mannequin	0.6	1.8	1.62	false	32	2	true	misc
+T	85	minecraft:marker	0.0	0.0	0.0	false	0	3	true	misc
+T	86	minecraft:minecart	0.98	0.7	0.595	false	8	3	true	misc
+T	87	minecraft:mooshroom	0.9	1.4	1.3	false	10	3	true	creature
+T	88	minecraft:mule	1.3964844	1.6	1.52	false	8	3	true	creature
+T	89	minecraft:nautilus	0.875	0.95	0.2751	false	10	3	true	water_creature
+T	90	minecraft:oak_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	91	minecraft:oak_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	92	minecraft:ocelot	0.6	0.7	0.595	false	10	3	true	creature
+T	93	minecraft:ominous_item_spawner	0.25	0.25	0.2125	false	8	3	true	misc
+T	94	minecraft:painting	0.5	0.5	0.425	false	10	2147483647	false	misc
+T	95	minecraft:pale_oak_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	96	minecraft:pale_oak_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	97	minecraft:panda	1.3	1.25	1.0625	false	10	3	true	creature
+T	98	minecraft:parched	0.6	1.99	1.74	false	8	3	true	monster
+T	99	minecraft:parrot	0.5	0.9	0.54	false	8	3	true	creature
+T	100	minecraft:phantom	0.9	0.5	0.175	false	8	3	true	monster
+T	101	minecraft:pig	0.9	0.9	0.765	false	10	3	true	creature
+T	102	minecraft:piglin	0.6	1.95	1.79	false	8	3	true	monster
+T	103	minecraft:piglin_brute	0.6	1.95	1.79	false	8	3	true	monster
+T	104	minecraft:pillager	0.6	1.95	1.6575	false	8	3	true	monster
+T	105	minecraft:polar_bear	1.4	1.4	1.19	false	10	3	true	creature
+T	106	minecraft:poplar_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	107	minecraft:poplar_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	108	minecraft:splash_potion	0.25	0.25	0.2125	false	4	10	true	misc
+T	109	minecraft:lingering_potion	0.25	0.25	0.2125	false	4	10	true	misc
+T	110	minecraft:pufferfish	0.7	0.7	0.455	false	4	3	true	water_ambient
+T	111	minecraft:rabbit	0.49	0.6	0.59	false	8	3	true	creature
+T	112	minecraft:ravager	1.95	2.2	1.8700001	false	10	3	true	monster
+T	113	minecraft:salmon	0.7	0.4	0.26	false	4	3	true	water_ambient
+T	114	minecraft:sheep	0.9	1.3	1.235	false	10	3	true	creature
+T	115	minecraft:shulker	1.0	1.0	0.5	false	10	3	true	monster
+T	116	minecraft:shulker_bullet	0.3125	0.3125	0.265625	false	8	3	true	misc
+T	117	minecraft:silverfish	0.4	0.3	0.13	false	8	3	true	monster
+T	118	minecraft:skeleton	0.6	1.99	1.74	false	8	3	true	monster
+T	119	minecraft:skeleton_horse	1.3964844	1.6	1.52	false	10	3	true	creature
+T	120	minecraft:slime	0.52	0.52	0.325	false	10	3	true	monster
+T	121	minecraft:small_fireball	0.3125	0.3125	0.265625	false	4	10	true	misc
+T	122	minecraft:sniffer	1.9	1.75	1.05	false	10	3	true	creature
+T	123	minecraft:snowball	0.25	0.25	0.2125	false	4	10	true	misc
+T	124	minecraft:snow_golem	0.7	1.9	1.7	false	8	3	true	misc
+T	125	minecraft:spawner_minecart	0.98	0.7	0.595	false	8	3	true	misc
+T	126	minecraft:spectral_arrow	0.5	0.5	0.13	false	4	20	true	misc
+T	127	minecraft:spider	1.4	0.9	0.65	false	8	3	true	monster
+T	128	minecraft:spruce_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	129	minecraft:spruce_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+T	130	minecraft:squid	0.8	0.8	0.4	false	8	3	true	water_creature
+T	131	minecraft:stray	0.6	1.99	1.74	false	8	3	true	monster
+T	132	minecraft:strider	0.9	1.7	1.445	false	10	3	true	creature
+T	133	minecraft:sulfur_cube	0.49	0.49	0.175	false	10	3	true	monster
+T	134	minecraft:tadpole	0.4	0.3	0.19500001	false	10	3	true	creature
+T	135	minecraft:text_display	0.0	0.0	0.0	false	10	1	true	misc
+T	136	minecraft:tnt	0.98	0.98	0.15	false	10	10	true	misc
+T	137	minecraft:tnt_minecart	0.98	0.7	0.595	false	8	3	true	misc
+T	138	minecraft:trader_llama	0.9	1.87	1.7765	false	10	3	true	creature
+T	139	minecraft:trident	0.5	0.5	0.13	false	4	20	true	misc
+T	140	minecraft:tropical_fish	0.5	0.4	0.26	false	4	3	true	water_ambient
+T	141	minecraft:turtle	1.2	0.4	0.34	false	10	3	true	creature
+T	142	minecraft:vex	0.4	0.8	0.51875	false	8	3	true	monster
+T	143	minecraft:villager	0.6	1.95	1.62	false	10	3	true	misc
+T	144	minecraft:vindicator	0.6	1.95	1.6575	false	8	3	true	monster
+T	145	minecraft:wandering_trader	0.6	1.95	1.62	false	10	3	true	creature
+T	146	minecraft:warden	0.9	2.9	2.4650002	false	16	3	true	monster
+T	147	minecraft:wind_charge	0.3125	0.3125	0.0	false	4	10	true	misc
+T	148	minecraft:witch	0.6	1.95	1.62	false	8	3	true	monster
+T	149	minecraft:wither	0.9	3.5	2.9750001	false	10	3	false	monster
+T	150	minecraft:wither_skeleton	0.7	2.4	2.1	false	8	3	true	monster
+T	151	minecraft:wither_skull	0.3125	0.3125	0.265625	false	4	10	true	misc
+T	152	minecraft:wolf	0.6	0.85	0.68	false	10	3	true	creature
+T	153	minecraft:zoglin	1.3964844	1.4	1.19	false	8	3	true	monster
+T	154	minecraft:zombie	0.6	1.95	1.74	false	8	3	true	monster
+T	155	minecraft:zombie_horse	1.3964844	1.6	1.52	false	10	3	true	monster
+T	156	minecraft:zombie_nautilus	0.875	0.95	0.2751	false	10	3	true	monster
+T	157	minecraft:zombie_villager	0.6	1.95	1.74	false	8	3	true	monster
+T	158	minecraft:zombified_piglin	0.6	1.95	1.79	false	8	3	true	monster
+T	159	minecraft:player	0.6	1.8	1.62	false	32	2	false	misc
+T	160	minecraft:fishing_bobber	0.25	0.25	0.2125	false	4	5	true	misc
+D	Entity	DATA_SHARED_FLAGS_ID	0	0
+D	Entity	DATA_AIR_SUPPLY_ID	1	1
+D	Entity	DATA_CUSTOM_NAME	2	6
+D	Entity	DATA_CUSTOM_NAME_VISIBLE	3	8
+D	Entity	DATA_SILENT	4	8
+D	Entity	DATA_NO_GRAVITY	5	8
+D	Entity	DATA_POSE	6	20
+D	Entity	DATA_TICKS_FROZEN	7	1
+D	LivingEntity	DATA_LIVING_ENTITY_FLAGS	8	0
+D	LivingEntity	DATA_HEALTH_ID	9	3
+D	LivingEntity	DATA_EFFECT_PARTICLES	10	17
+D	LivingEntity	DATA_EFFECT_AMBIENCE_ID	11	8
+D	LivingEntity	DATA_ARROW_COUNT_ID	12	1
+D	LivingEntity	DATA_STINGER_COUNT_ID	13	1
+D	LivingEntity	SLEEPING_POS_ID	14	11
+D	Mob	DATA_MOB_FLAGS_ID	15	0
+D	AgeableMob	DATA_BABY_ID	16	8
+D	AgeableMob	AGE_LOCKED	17	8
+D	Pig	DATA_BOOST_TIME	18	1
+D	Pig	DATA_VARIANT_ID	19	28
+D	Pig	DATA_SOUND_VARIANT_ID	20	29
+D	Cow	DATA_VARIANT_ID	18	23
+D	Cow	DATA_SOUND_VARIANT_ID	19	24
+D	Sheep	DATA_WOOL_ID	18	0
+D	Zombie	DATA_BABY_ID	16	8
+D	Zombie	DATA_SPECIAL_TYPE_ID	17	1
+D	Zombie	DATA_DROWNED_CONVERSION_ID	18	8
+D	Skeleton	DATA_STRAY_CONVERSION_ID	16	8
+D	Avatar	DATA_PLAYER_MAIN_HAND	15	42
+D	Avatar	DATA_PLAYER_MODE_CUSTOMISATION	16	0
+D	Player	DATA_PLAYER_ABSORPTION_ID	17	3
+D	Player	DATA_SCORE_ID	18	1
+D	Player	DATA_SHOULDER_PARROT_LEFT	19	19
+D	Player	DATA_SHOULDER_PARROT_RIGHT	20	19
+D	ItemEntity	DATA_ITEM	8	7
+D	ArmorStand	DATA_CLIENT_FLAGS	15	0
+D	ArmorStand	DATA_HEAD_POSE	16	9
+D	ArmorStand	DATA_BODY_POSE	17	9
+D	ArmorStand	DATA_LEFT_ARM_POSE	18	9
+D	ArmorStand	DATA_RIGHT_ARM_POSE	19	9
+D	ArmorStand	DATA_LEFT_LEG_POSE	20	9
+D	ArmorStand	DATA_RIGHT_LEG_POSE	21	9

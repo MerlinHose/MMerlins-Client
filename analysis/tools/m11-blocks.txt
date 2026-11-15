@@ -1,0 +1,72 @@
+# M11-Teststrecke Phase E (docs/45 §4): Eis, Schleim, Honig, Spinnennetz, Seelensand, Beerenstrauch, Blasensäulen, Kombinationen.
+# Format wie m11-fluid.txt. Alle Starts auf festem Boden (Stillstand am Boden), Bewegung in +Z.
+
+build forceload add -32 -48 47 31
+# keine Zufallsticks während der Strecke (Beerenstrauch würde wachsen und dann Schaden verursachen); cleanup stellt den Standard 3 wieder her
+build gamerule random_tick_speed 0
+build fill -24 94 -3 40 99 20 minecraft:stone
+build fill -24 100 -4 40 106 20 minecraft:air
+# Eis-Bahnen (Boden y=99): Eis x=-23, Packeis x=-20, Blaueis x=-17
+build fill -23 99 -3 -23 99 20 minecraft:ice
+build fill -20 99 -3 -20 99 20 minecraft:packed_ice
+build fill -17 99 -3 -17 99 20 minecraft:blue_ice
+# Schleim: Bodenfläche x=-14 ab z=3; Sturz aus 3 Blöcken: Plattform y=100..102 bei z -3..1, Schleim darunter ab z=2
+build fill -14 99 3 -14 99 20 minecraft:slime_block
+build fill -11 100 -3 -11 102 1 minecraft:stone
+build fill -11 99 2 -11 99 12 minecraft:slime_block
+# Honig: Boden x=-8 ab z=3; Honigwand x=-4 (z 2..10, y 100..105) neben Plattform x=-5 (y 100..104, z -3..1)
+build fill -8 99 3 -8 99 20 minecraft:honey_block
+build fill -5 100 -3 -5 104 1 minecraft:stone
+build fill -4 100 2 -4 105 10 minecraft:honey_block
+# Spinnennetze x=-1 bei z 4..6, y 100..101
+build fill -1 100 4 -1 101 6 minecraft:cobweb
+# Seelensand x=2, Seelenerde x=5 (Boden y=99)
+build fill 2 99 -1 2 99 20 minecraft:soul_sand
+build fill 5 99 -1 5 99 20 minecraft:soul_soil
+# Süßbeerensträucher (Alter 0: kein Schaden) auf Erde, x=8, z 4..6
+build fill 8 99 3 8 99 7 minecraft:dirt
+build fill 8 100 4 8 100 6 minecraft:sweet_berry_bush[age=0]
+# Blasensäule aufwärts (Seelensand y=94) x=11 z=5 und abwärts (Magma) x=14 z=5, Wasser y 95..99
+build setblock 11 94 5 minecraft:soul_sand
+build fill 11 95 5 11 99 5 minecraft:water
+build setblock 14 94 5 minecraft:magma_block
+build fill 14 95 5 14 99 5 minecraft:water
+# Kombination: Eis vor einer Schleimfläche (x=17), Netz über Honig (x=20)
+build fill 17 99 -3 17 99 5 minecraft:ice
+build fill 17 99 6 17 99 20 minecraft:slime_block
+build fill 20 99 3 20 99 20 minecraft:honey_block
+build setblock 20 100 6 minecraft:cobweb
+# Kombination: Wasser über Eis (x=23: Eis y=98, Wasser y=99), Leiter im Wasser (x=26: wassergeloggte Leiter y 98..99)
+build fill 23 98 3 23 98 10 minecraft:ice
+build fill 23 99 3 23 99 10 minecraft:water
+build fill 26 98 3 26 99 8 minecraft:water
+build fill 26 98 9 26 103 9 minecraft:stone
+build fill 26 98 8 26 99 8 minecraft:ladder[facing=north,waterlogged=true]
+build fill 26 100 8 26 102 8 minecraft:ladder[facing=north]
+
+scenario ice_walk          -22.5 100 -2.5 0   f:40 -:60
+scenario ice_sprint_jump   -22.5 100 -2.5 0   fp:20 fpj:20 -:40
+scenario packed_ice_walk   -19.5 100 -2.5 0   f:40 -:60
+scenario blue_ice_walk     -16.5 100 -2.5 0   f:40 -:70
+scenario slime_walk        -13.5 100 -2.5 0   f:50 -:15
+scenario slime_jump        -13.5 100 6.5  0   j:40 -:40
+scenario slime_fall        -10.5 103 -1.5 0   f:25 -:80
+scenario slime_fall_sneak  -10.5 103 -1.5 0   f:25 s:40 -:20
+scenario honey_walk         -7.5 100 -2.5 0   f:60 -:15
+scenario honey_jump         -7.5 99.9375 6.5 0 j:30 -:20
+scenario honey_wall_slide   -4.75 105 -1.5 0  f:8 fl:60 l:20 -:10
+scenario cobweb_walk        -0.5 100 -2.5 0   f:80 -:20
+scenario cobweb_jump        -0.5 100 2.5  0   fj:40 -:30
+scenario soul_sand_walk      2.5 100 -2.5 0   f:50 -:15
+scenario soul_soil_walk      5.5 100 -2.5 0   f:50 -:15
+scenario berry_bush_walk     8.5 100 -2.5 0   f:60 -:20
+scenario bubble_up          11.5 100 -2.5 0   f:40 -:60
+scenario bubble_down        14.5 100 -2.5 0   f:40 -:40 j:40
+scenario ice_to_slime       17.5 100 -2.5 0   fp:30 -:40
+scenario honey_web          20.5 100 -2.5 0   f:50 -:20
+scenario water_over_ice     23.5 100 -2.5 0   f:50 -:15
+scenario ladder_in_water    26.5 100 -2.5 0   f:60 -:20 s:10 -:20
+
+cleanup fill -24 94 -3 40 99 20 minecraft:stone
+cleanup fill -24 100 -3 40 106 20 minecraft:air
+cleanup gamerule random_tick_speed 3

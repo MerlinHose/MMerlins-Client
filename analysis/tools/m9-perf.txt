@@ -1,0 +1,144 @@
+# M9 Leistung (docs/37 §4): 10, 50 und 100 KI-Schweine im Blickfeld; nach je 15 s Zähler (FPS, Bildzeit, Entity-CPU, Paket- und Tickzeiten, Heap).
+# Aufruf: M6_DIFFICULTY=easy bash analysis/tools/m6-run.sh analysis/tools/m9-perf.txt <label>
+server-console ${CONSOLE}
+wait-play
+console gamemode creative ${NAME}
+console gamerule spawn_mobs false
+console forceload add -32 -64 47 15
+console kill @e[type=!player]
+console kill @e[type=item]
+console fill -14 99 -48 20 99 -16 minecraft:grass_block
+console fill -14 100 -48 20 106 -16 minecraft:air
+console fill -14 107 -48 20 107 -16 minecraft:glass
+console fill -15 100 -49 21 101 -49 minecraft:oak_fence
+console fill -15 100 -15 21 101 -15 minecraft:oak_fence
+console fill -15 100 -49 -15 101 -15 minecraft:oak_fence
+console fill 21 100 -49 21 101 -15 minecraft:oak_fence
+console fill -14 103 -44 20 103 -22 minecraft:light[level=15]
+console tp ${NAME} 3.5 106 -12.5 180 35
+wait 3
+wait-meshes
+look 180 35
+wait 2
+entity-frame n0
+console summon pig -13.5 100 -47.5 {Tags:[m9]}
+console summon pig -11.5 100 -47.5 {Tags:[m9]}
+console summon pig -9.5 100 -47.5 {Tags:[m9]}
+console summon pig -7.5 100 -47.5 {Tags:[m9]}
+console summon pig -5.5 100 -47.5 {Tags:[m9]}
+console summon pig -3.5 100 -47.5 {Tags:[m9]}
+console summon pig -1.5 100 -47.5 {Tags:[m9]}
+console summon pig 1.5 100 -47.5 {Tags:[m9]}
+console summon pig 3.5 100 -47.5 {Tags:[m9]}
+console summon pig 5.5 100 -47.5 {Tags:[m9]}
+wait-entities 10
+wait 15
+entity-frame n10
+screenshot ${OUT}/30-n10.png
+console summon pig 7.5 100 -47.5 {Tags:[m9]}
+console summon pig 9.5 100 -47.5 {Tags:[m9]}
+console summon pig 11.5 100 -47.5 {Tags:[m9]}
+console summon pig 13.5 100 -47.5 {Tags:[m9]}
+console summon pig 15.5 100 -47.5 {Tags:[m9]}
+console summon pig 17.5 100 -47.5 {Tags:[m9]}
+console summon pig 19.5 100 -47.5 {Tags:[m9]}
+console summon pig -13.5 100 -42.5 {Tags:[m9]}
+console summon pig -11.5 100 -42.5 {Tags:[m9]}
+console summon pig -9.5 100 -42.5 {Tags:[m9]}
+console summon pig -7.5 100 -42.5 {Tags:[m9]}
+console summon pig -5.5 100 -42.5 {Tags:[m9]}
+console summon pig -3.5 100 -42.5 {Tags:[m9]}
+console summon pig -1.5 100 -42.5 {Tags:[m9]}
+console summon pig 1.5 100 -42.5 {Tags:[m9]}
+console summon pig 3.5 100 -42.5 {Tags:[m9]}
+console summon pig 5.5 100 -42.5 {Tags:[m9]}
+console summon pig 7.5 100 -42.5 {Tags:[m9]}
+console summon pig 9.5 100 -42.5 {Tags:[m9]}
+console summon pig 11.5 100 -42.5 {Tags:[m9]}
+console summon pig 13.5 100 -42.5 {Tags:[m9]}
+console summon pig 15.5 100 -42.5 {Tags:[m9]}
+console summon pig 17.5 100 -42.5 {Tags:[m9]}
+console summon pig 19.5 100 -42.5 {Tags:[m9]}
+console summon pig -13.5 100 -37.5 {Tags:[m9]}
+console summon pig -11.5 100 -37.5 {Tags:[m9]}
+console summon pig -9.5 100 -37.5 {Tags:[m9]}
+console summon pig -7.5 100 -37.5 {Tags:[m9]}
+console summon pig -5.5 100 -37.5 {Tags:[m9]}
+console summon pig -3.5 100 -37.5 {Tags:[m9]}
+console summon pig -1.5 100 -37.5 {Tags:[m9]}
+console summon pig 1.5 100 -37.5 {Tags:[m9]}
+console summon pig 3.5 100 -37.5 {Tags:[m9]}
+console summon pig 5.5 100 -37.5 {Tags:[m9]}
+console summon pig 7.5 100 -37.5 {Tags:[m9]}
+console summon pig 9.5 100 -37.5 {Tags:[m9]}
+console summon pig 11.5 100 -37.5 {Tags:[m9]}
+console summon pig 13.5 100 -37.5 {Tags:[m9]}
+console summon pig 15.5 100 -37.5 {Tags:[m9]}
+console summon pig 17.5 100 -37.5 {Tags:[m9]}
+wait-entities 50
+wait 15
+entity-frame n50
+screenshot ${OUT}/31-n50.png
+console summon pig 19.5 100 -37.5 {Tags:[m9]}
+console summon pig -13.5 100 -32.5 {Tags:[m9]}
+console summon pig -11.5 100 -32.5 {Tags:[m9]}
+console summon pig -9.5 100 -32.5 {Tags:[m9]}
+console summon pig -7.5 100 -32.5 {Tags:[m9]}
+console summon pig -5.5 100 -32.5 {Tags:[m9]}
+console summon pig -3.5 100 -32.5 {Tags:[m9]}
+console summon pig -1.5 100 -32.5 {Tags:[m9]}
+console summon pig 1.5 100 -32.5 {Tags:[m9]}
+console summon pig 3.5 100 -32.5 {Tags:[m9]}
+console summon pig 5.5 100 -32.5 {Tags:[m9]}
+console summon pig 7.5 100 -32.5 {Tags:[m9]}
+console summon pig 9.5 100 -32.5 {Tags:[m9]}
+console summon pig 11.5 100 -32.5 {Tags:[m9]}
+console summon pig 13.5 100 -32.5 {Tags:[m9]}
+console summon pig 15.5 100 -32.5 {Tags:[m9]}
+console summon pig 17.5 100 -32.5 {Tags:[m9]}
+console summon pig 19.5 100 -32.5 {Tags:[m9]}
+console summon pig -13.5 100 -27.5 {Tags:[m9]}
+console summon pig -11.5 100 -27.5 {Tags:[m9]}
+console summon pig -9.5 100 -27.5 {Tags:[m9]}
+console summon pig -7.5 100 -27.5 {Tags:[m9]}
+console summon pig -5.5 100 -27.5 {Tags:[m9]}
+console summon pig -3.5 100 -27.5 {Tags:[m9]}
+console summon pig -1.5 100 -27.5 {Tags:[m9]}
+console summon pig 1.5 100 -27.5 {Tags:[m9]}
+console summon pig 3.5 100 -27.5 {Tags:[m9]}
+console summon pig 5.5 100 -27.5 {Tags:[m9]}
+console summon pig 7.5 100 -27.5 {Tags:[m9]}
+console summon pig 9.5 100 -27.5 {Tags:[m9]}
+console summon pig 11.5 100 -27.5 {Tags:[m9]}
+console summon pig 13.5 100 -27.5 {Tags:[m9]}
+console summon pig 15.5 100 -27.5 {Tags:[m9]}
+console summon pig 17.5 100 -27.5 {Tags:[m9]}
+console summon pig 19.5 100 -27.5 {Tags:[m9]}
+console summon pig -13.5 100 -22.5 {Tags:[m9]}
+console summon pig -11.5 100 -22.5 {Tags:[m9]}
+console summon pig -9.5 100 -22.5 {Tags:[m9]}
+console summon pig -7.5 100 -22.5 {Tags:[m9]}
+console summon pig -5.5 100 -22.5 {Tags:[m9]}
+console summon pig -3.5 100 -22.5 {Tags:[m9]}
+console summon pig -1.5 100 -22.5 {Tags:[m9]}
+console summon pig 1.5 100 -22.5 {Tags:[m9]}
+console summon pig 3.5 100 -22.5 {Tags:[m9]}
+console summon pig 5.5 100 -22.5 {Tags:[m9]}
+console summon pig 7.5 100 -22.5 {Tags:[m9]}
+console summon pig 9.5 100 -22.5 {Tags:[m9]}
+console summon pig 11.5 100 -22.5 {Tags:[m9]}
+console summon pig 13.5 100 -22.5 {Tags:[m9]}
+console summon pig 15.5 100 -22.5 {Tags:[m9]}
+wait-entities 100
+wait 15
+entity-frame n100
+screenshot ${OUT}/32-n100.png
+console kill @e[tag=m9]
+console kill @e[type=item]
+wait 3
+entity-frame after-kill
+console fill -14 103 -44 20 103 -22 minecraft:air
+console fill -15 100 -49 21 101 -15 minecraft:air
+console gamerule spawn_mobs true
+wait 1
+mark done
