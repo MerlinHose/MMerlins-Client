@@ -37,7 +37,8 @@ import java.util.logging.SimpleFormatter;
  *   --auth offline|simulation|microsoft M13 (docs/52 §5): Standard offline (bisheriger Testmodus)
  *   --sim-discovery &lt;http://127.0.0.1:port/…&gt;  lokale Simulation der Minecraft-Services (Testdaten)
  *   --sim-uuid &lt;uuid&gt;
- *   --client-id &lt;guid&gt;                  eigene Microsoft-App-Registrierung (öffentlicher Client)
+ *   --client-id &lt;guid&gt;                  eigene Microsoft-App-Registrierung (öffentlicher Client); alternativ Umgebungsvariable
+ *                                       MERLIN_AUTH_CLIENT_ID oder ~/.minecraft-merlin/auth.properties (client-id=…), nie im Repository
  *   --allow-external-auth               ausdrückliche Freigabe der offiziellen Anmeldeendpunkte (docs/50 §6)
  *   --login-method browser|device-code
  * </pre>

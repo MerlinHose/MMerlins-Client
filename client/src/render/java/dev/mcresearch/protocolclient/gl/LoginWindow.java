@@ -67,7 +67,8 @@ final class LoginWindow {
 		JRadioButton offline = new JRadioButton("Offline-Testmodus (lokaler Server mit online-mode=false)", true);
 		JTextField name = new JTextField(o.username(), 16);
 		JRadioButton microsoft = new JRadioButton("Mit Microsoft anmelden");
-		JTextField clientId = new JTextField(o.auth().clientId == null ? "" : o.auth().clientId, 36);
+		String cid = o.auth().resolvedClientId(); // Startoption, MERLIN_AUTH_CLIENT_ID oder ~/.minecraft-merlin/auth.properties
+		JTextField clientId = new JTextField(cid == null ? "" : cid, 36);
 		JCheckBox allow = new JCheckBox("Offizielle Anmeldeendpunkte freigeben (Microsoft, Xbox Live, Minecraft Services)", o.auth().allowExternal);
 		JCheckBox deviceCode = new JCheckBox("Device-Code statt Browser-Weiterleitung", o.auth().method == MicrosoftAccountLogin.Method.DEVICE_CODE);
 		JRadioButton simulation = new JRadioButton("Lokale Simulation (Testdaten, kein offizieller Login)");

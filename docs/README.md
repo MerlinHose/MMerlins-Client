@@ -60,7 +60,7 @@ Analyse der Minecraft-26.3-Entwicklungsumgebung in `research/` als Grundlage fü
 | [50-authentifizierung-und-machbarkeit.md](50-authentifizierung-und-machbarkeit.md) | **M13:** Microsoft OAuth/PKCE, Xbox Live/XSTS, Minecraft Services, Sessionserver, App-Registrierung, Mojang-Freigabe der Client-ID, Endpunkt-Freigabeliste |
 | [51-online-mode-protokoll.md](51-online-mode-protokoll.md) | **M13:** Login-Zustandsautomat, Encryption Request/Response, RSA, AES/CFB8, Session-Hash, Verschlüsselung im Datenstrom, Kompression, join |
 | [52-authentifizierungsarchitektur.md](52-authentifizierungsarchitektur.md) | **M13:** Pakete und Schnittstellen, Anmeldeablauf, Netzwerkregel, Tokenverwaltung, Fehlerbehandlung, grafische Anmeldung |
-| [53-m13-testbericht.md](53-m13-testbericht.md) | Testbericht M13: lokale Protokolltests, Simulation gegen Vanilla-Server, Regression M1–M12, offene externe Voraussetzungen |
+| [53-m13-testbericht.md](53-m13-testbericht.md) | Testbericht M13: lokale Protokolltests, Simulation gegen Vanilla-Server, Vorbereitung (Client-ID-Konfiguration, Entwicklungsmodus), Regression M1–M12 (offen), Checkliste für die auf den letzten Meilenstein verschobene Microsoft-Anmeldung |
 
 **Lesepfad für den späteren eigenen Client:** 01 → 02 (Hauptschleife) → 04 (Eingaben) → 05 + 08 (Verbindung) → 07 (IDs) → 03 (Rendering).
 

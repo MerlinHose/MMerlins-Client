@@ -62,3 +62,8 @@ hs_err_*.log
 # Weitere Laufverzeichnisse der Fabric-Referenzläufe (M7/M10) und Wurzel-Logs
 research/run-*/
 /logs/
+
+# M13: persönliche Anmeldekonfiguration (Client-ID gehört nicht ins Repository; Standardort ist ~/.minecraft-merlin/)
+auth.properties
+*.local.properties
+.minecraft-merlin/

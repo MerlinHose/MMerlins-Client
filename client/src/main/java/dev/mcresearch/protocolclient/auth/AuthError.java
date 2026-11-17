@@ -4,7 +4,7 @@ package dev.mcresearch.protocolclient.auth;
 public enum AuthError {
 	EXTERNAL_NOT_ALLOWED("Externe Anmeldeverbindungen sind nicht freigegeben (Schalter --allow-external-auth fehlt)."),
 	ENDPOINT_NOT_ALLOWED("Der Anmeldedienst nannte einen nicht freigegebenen Endpunkt; Anmeldung abgebrochen."),
-	NO_CLIENT_ID("Keine Client-ID der eigenen Microsoft-App-Registrierung angegeben (--client-id)."),
+	NO_CLIENT_ID("Keine Client-ID der eigenen Microsoft-App-Registrierung angegeben (--client-id, MERLIN_AUTH_CLIENT_ID oder ~/.minecraft-merlin/auth.properties)."),
 	USER_CANCELLED("Anmeldung abgebrochen."),
 	TIMEOUT("Zeitüberschreitung bei der Anmeldung."),
 	STATE_MISMATCH("Ungültige Antwort des Browsers (state stimmt nicht überein); Anmeldung verworfen."),

@@ -80,8 +80,15 @@ public final class LoginFactory {
 			}
 		}
 
+		/** Client-ID aus Startoption, Umgebung oder Benutzerdatei ({@link ClientIdConfig}); nie aus dem Quellcode. */
+		public String resolvedClientId() {
+			return ClientIdConfig.resolve(this.clientId);
+		}
+
 		public Options options(final String username) {
-			return new Options(this.mode, username, this.clientId, this.allowExternal, this.method, this.simulationDiscovery, this.simulationUuid);
+			// Nur im Microsoft-Modus nachschlagen: Offline- und Simulationsmodus lesen keine Benutzerkonfiguration.
+			String id = "microsoft".equals(this.mode) ? resolvedClientId() : this.clientId;
+			return new Options(this.mode, username, id, this.allowExternal, this.method, this.simulationDiscovery, this.simulationUuid);
 		}
 	}
 
