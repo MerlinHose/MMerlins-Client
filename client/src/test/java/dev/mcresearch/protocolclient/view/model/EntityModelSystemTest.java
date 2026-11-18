@@ -179,6 +179,37 @@ class EntityModelSystemTest {
 		assertEquals("entity/pig/pig_temperate", EntityLooks.look(spawn(m, 4, PIG, 19, 9), context(vars)).layers().getFirst().texture());
 	}
 
+	/**
+	 * Fehler „schwarze gezähmte Katze mit Tabby-Textur“ (docs/58 §2.2): Vanilla 26.3 definiert die Standardvariante der Katze als
+	 * {@code minecraft:black}; der Server überträgt nur Abweichungen vom Standard, eine schwarze Katze also ohne Variantenfeld.
+	 */
+	@Test
+	void missingVariantFieldMeansTheVanillaDefaultVariant() {
+		EntityVariants vars = new EntityVariants();
+		vars.setRegistry("minecraft:cat_variant", List.of("minecraft:tabby", "minecraft:black", "minecraft:calico"), List.of(
+			Map.of("asset_id", "minecraft:entity/cat/cat_tabby", "baby_asset_id", "minecraft:entity/cat/cat_tabby_baby"),
+			Map.of("asset_id", "minecraft:entity/cat/cat_black", "baby_asset_id", "minecraft:entity/cat/cat_black_baby"),
+			Map.of("asset_id", "minecraft:entity/cat/cat_calico", "baby_asset_id", "minecraft:entity/cat/cat_calico_baby")));
+		vars.setRegistry("minecraft:wolf_variant", List.of("minecraft:ashen", "minecraft:pale"), List.of(
+			Map.of("assets", Map.of("wild", "minecraft:entity/wolf/wolf_ashen", "tame", "minecraft:entity/wolf/wolf_ashen_tame", "angry", "minecraft:entity/wolf/wolf_ashen_angry")),
+			Map.of("assets", Map.of("wild", "minecraft:entity/wolf/wolf", "tame", "minecraft:entity/wolf/wolf_tame", "angry", "minecraft:entity/wolf/wolf_angry"))));
+		EntityManager m = new EntityManager();
+		// gezähmte schwarze Katze mit Halsband (Tame-Flag 0x04, Halsbandfarbe 11) – kein Feld 20
+		EntityLooks.Look black = EntityLooks.look(spawn(m, 1, CAT, 18, (byte) 0x04, 23, 11), context(vars));
+		assertEquals("entity/cat/cat_black", black.layers().getFirst().texture());
+		assertEquals("entity/cat/cat_collar", black.layers().get(1).texture());
+		assertEquals("entity/cat/cat_black_baby", EntityLooks.look(spawn(m, 2, CAT, 16, true), context(vars)).layers().getFirst().texture());
+		assertEquals("entity/cat/cat_calico", EntityLooks.look(spawn(m, 3, CAT, 20, 2), context(vars)).layers().getFirst().texture());
+		assertEquals("entity/cat/cat_tabby", EntityLooks.look(spawn(m, 4, CAT, 20, 0), context(vars)).layers().getFirst().texture());
+		// Wolf ohne Feld 23: Standard pale (nicht der erste Registereintrag)
+		assertEquals("entity/wolf/wolf_tame", EntityLooks.look(spawn(m, 5, WOLF, 18, (byte) 0x04), context(vars)).layers().getFirst().texture());
+		// Standardname fehlt im Register: irgendein Eintrag (VariantUtils#getDefaultOrAny) – hier der erste
+		assertEquals(0, vars.defaultId("minecraft:wolf_variant", "minecraft:missing"));
+		assertEquals(-1, vars.defaultId("minecraft:pig_variant", "minecraft:temperate"));
+		// ohne Register (Known Packs nicht synchron): Rückfalltextur ist ebenfalls schwarz
+		assertEquals("entity/cat/cat_black", EntityLooks.look(spawn(m, 6, CAT), context(null)).layers().getFirst().texture());
+	}
+
 	@Test
 	void layersForSheepHorseVillagerCreeperSpider() {
 		EntityManager m = new EntityManager();

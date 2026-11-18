@@ -67,6 +67,20 @@ public final class EntityVariants {
 		return l == null || id < 0 || id >= l.size() ? null : l.get(id);
 	}
 
+	/**
+	 * Registry-ID der Standardvariante: Der Server überträgt beim Erscheinen nur Datenfelder, die vom Standardwert abweichen
+	 * ({@code SynchedEntityData#getNonDefaultValues}); fehlt das Variantenfeld, gilt der in {@code defineSynchedData} gesetzte Standard
+	 * ({@code VariantUtils#getDefaultOrAny}: Eintrag {@code defaultName}, sonst irgendein Eintrag – hier der erste). −1, wenn das Register fehlt.
+	 */
+	public int defaultId(final String registry, final String defaultName) {
+		List<String> l = this.names.get(registry);
+		if (l == null || l.isEmpty()) {
+			return -1;
+		}
+		int i = l.indexOf(defaultName);
+		return i >= 0 ? i : 0;
+	}
+
 	public int size(final String registry) {
 		List<String> l = this.names.get(registry);
 		return l == null ? 0 : l.size();

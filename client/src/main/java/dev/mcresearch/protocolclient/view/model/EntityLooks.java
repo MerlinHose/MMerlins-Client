@@ -83,7 +83,7 @@ public final class EntityLooks {
 		List<Layer> l = new ArrayList<>();
 		switch (type) {
 			case "pig" -> {
-				EntityVariants.Variant var = variant(c, "minecraft:pig_variant", v.data().get(19));
+				EntityVariants.Variant var = variant(c, "minecraft:pig_variant", v.data().get(19), "minecraft:temperate");
 				String model = baby ? "minecraft:pig_baby#main" : "cold".equals(model(var)) ? "minecraft:cold_pig#main" : "minecraft:pig#main";
 				l.add(new Layer(model, tex(var, baby, "entity/pig/pig_temperate")));
 				if (!baby && !empty(v.equipment()[ClientEntity.SLOT_SADDLE])) {
@@ -92,7 +92,7 @@ public final class EntityLooks {
 				return look("quadruped", l);
 			}
 			case "cow" -> {
-				EntityVariants.Variant var = variant(c, "minecraft:cow_variant", v.data().get(18));
+				EntityVariants.Variant var = variant(c, "minecraft:cow_variant", v.data().get(18), "minecraft:temperate");
 				String m = model(var);
 				String prefix = "warm".equals(m) ? "warm_cow" : "cold".equals(m) ? "cold_cow" : "cow";
 				l.add(new Layer("minecraft:" + prefix + (baby ? "_baby" : "") + "#main", tex(var, baby, "entity/cow/cow_temperate")));
@@ -113,13 +113,13 @@ public final class EntityLooks {
 				return look("sheep", l);
 			}
 			case "chicken" -> {
-				EntityVariants.Variant var = variant(c, "minecraft:chicken_variant", v.data().get(18));
+				EntityVariants.Variant var = variant(c, "minecraft:chicken_variant", v.data().get(18), "minecraft:temperate");
 				String model = baby ? "minecraft:chicken_baby#main" : "cold".equals(model(var)) ? "minecraft:cold_chicken#main" : "minecraft:chicken#main";
 				l.add(new Layer(model, tex(var, baby, "entity/chicken/chicken_temperate")));
 				return look("chicken", l);
 			}
 			case "wolf" -> {
-				EntityVariants.Variant var = variant(c, "minecraft:wolf_variant", v.data().get(23));
+				EntityVariants.Variant var = variant(c, "minecraft:wolf_variant", v.data().get(23), "minecraft:pale");
 				int flags = byteData(v, 18);
 				boolean tame = (flags & 0x04) != 0;
 				boolean angry = angry(v, 22, c);
@@ -139,8 +139,8 @@ public final class EntityLooks {
 				return look("wolf", l);
 			}
 			case "cat" -> {
-				EntityVariants.Variant var = variant(c, "minecraft:cat_variant", v.data().get(20));
-				l.add(new Layer(baby ? "minecraft:cat_baby#main" : "minecraft:cat#main", tex(var, baby, "entity/cat/cat_tabby")));
+				EntityVariants.Variant var = variant(c, "minecraft:cat_variant", v.data().get(20), "minecraft:black");
+				l.add(new Layer(baby ? "minecraft:cat_baby#main" : "minecraft:cat#main", tex(var, baby, "entity/cat/cat_black")));
 				if ((byteData(v, 18) & 0x04) != 0) {
 					l.add(new Layer(baby ? "minecraft:cat_baby#collar" : "minecraft:cat#collar", baby ? "entity/cat/cat_collar_baby" : "entity/cat/cat_collar",
 						0xFF000000 | DYE[Math.floorMod(intData(v, 23, 14), 16)], Kind.CUTOUT));
@@ -407,11 +407,16 @@ public final class EntityLooks {
 		return s == null || s.isEmpty();
 	}
 
-	private static EntityVariants.Variant variant(final Context c, final String registry, final Object id) {
-		if (c.variants() == null || !(id instanceof Integer i)) {
+	/**
+	 * Variante zum Datenfeld; fehlt das Feld (Server sendet nur Abweichungen vom Standard), gilt die Vanilla-Standardvariante
+	 * {@code defaultName} (z. B. Katze {@code minecraft:black}, Wolf {@code minecraft:pale}, sonst {@code minecraft:temperate}).
+	 */
+	private static EntityVariants.Variant variant(final Context c, final String registry, final Object id, final String defaultName) {
+		if (c.variants() == null) {
 			return null;
 		}
-		return c.variants().variant(registry, i, c.fallback());
+		int i = id instanceof Integer n ? n : c.variants().defaultId(registry, defaultName);
+		return i < 0 ? null : c.variants().variant(registry, i, c.fallback());
 	}
 
 	private static String model(final EntityVariants.Variant v) {

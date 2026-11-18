@@ -137,8 +137,10 @@ screenshot ${OUT}/08-boats-passengers.png
 ride-dump boats-passengers
 look-dump boats
 # --- eigenes Boot: einsteigen per Rechtsklick, rudern, Kollision mit dem Beckenrand, aussteigen per Schleichen
-console tp ${NAME} 211.5 100.2 -23.5 0 30
-wait 1
+# fester Standblock am Floß: look-at erst nach dem Absetzen (Lauf gfx1: Spieler sank im Wasser, Strahl lief unter dem Floß durch)
+console setblock 211 99 -23 minecraft:stone
+console tp ${NAME} 211.5 100 -22.5 0 30
+wait 1.5
 look-at 211.5 99.9 -20.5
 wait 0.5
 entity-target boat
