@@ -3,13 +3,10 @@
 **Status: M14 ist teilweise abgeschlossen.**
 
 - **Erledigt:**
-  - Code und Unit-Tests sind fertig: 457 Tests, alle grün.
-  - Der Tick-Vergleich der Fahrzeuge gegen den unveränderten Vanilla-Client läuft.
-  - 11 von 16 Szenarien sind bitgenau gleich.
-- **Offen:**
-  - Einige Abweichungen im Fahrzeugvergleich sind noch nicht geklärt (§3.3).
-  - Der Fahrzeugtest ist deshalb noch rot.
-  - Nach der Vorgabe „erst nach erfolgreichem Fahrzeugvergleich weiter“ wurden Bildvergleich, Grafiktest, Leistungsmessung und die Regression M1–M14 **nicht** ausgeführt (§5).
+  - Der Tick-Vergleich der Fahrzeuge gegen den unveränderten Vanilla-Client ist grün: 16/16 Szenarien und 1125/1125 Ticks bitgenau (§3).
+  - 459 Unit-Tests sind grün.
+- **Bildvergleich:** Er wurde ausgeführt und zeigt drei Darstellungsunterschiede, die noch zu beheben sind (§5).
+- **Noch nicht ausgeführt:** Grafiktest mit Pferdeszene, Leistung RD2/RD8 und die Regression M1–M14 (§6). Sie würden durch die anstehenden Renderer-Korrekturen ungültig.
 - **Konsequenz:**
   - Es gibt keinen Merge nach `main`.
   - Die echte Microsoft-Authentifizierung bleibt auf den letzten Meilenstein verschoben.
@@ -18,116 +15,135 @@
 **Rahmen:** Ausschließlich der lokale Vanilla-26.3-Server auf 127.0.0.1 (Protokoll 777, `online-mode=false`).
 
 - **Speicher:** Server mit 1 GB, Vanilla-Referenzclient mit 1,5 GB. Vor jedem Lauf wurden ≥ 3000 MB freier Speicher geprüft.
-- **Netzwerk:** Der Netzwerkmonitor meldet in allen Läufen **0 externe Verbindungen**.
-- **Code und Ressourcen:** Es wurde kein Mojang-Code kopiert; Vanilla-Regeln wurden nur aus den Loom-Quellen gelesen. Laufzeitlogs liegen unter `analysis/runtime-logs/` (nicht versioniert).
+- **Netzwerk:** In allen Läufen **0 externe Verbindungen**.
+- **Code und Ressourcen:** Es wurde kein Mojang-Code kopiert; Vanilla-Regeln wurden aus den Loom-Quellen gelesen. Laufzeitlogs liegen unter `analysis/runtime-logs/` (nicht versioniert).
 
 **Kennzeichnung:**
 - **[G]** gemessen bzw. automatisch geprüft.
-- **[E]** erwartete, begründete Abweichung.
+- **[E]** begründete, nachgewiesene Abweichung.
 - **[O]** offen.
 
 ## 1. Ergebnisübersicht
 
 | Bereich | Ergebnis |
 |---|---|
-| Unit-Tests | **457 grün** [G] (M13: 379 + M12-Nachträge; M14 neu u. a. Modelle, Skins, Passagiere, Fahrzeugphysik, Regressionstests aus §3) |
-| Fahrzeugvergleich gegen Vanilla (Lauf `m14-vehicle6`) | 16 Szenarien; 1125 Ticks verglichen, 1018 bitgenau; **11 Szenarien vollständig bitgenau**, inklusive Absteigen und 9 Folgeticks [G] |
-| Bester Lauf (`m14-vehicle5`) | 1075 von 1125 Ticks bitgenau [G] |
-| Serverkorrekturen beim Fahren | **0** in allen Szenarien [G] |
-| Ein- und Aussteigen | 15 Aufsitzen, 15 Absteigen, Absteige-Tick in allen vergleichbaren Fällen gleich [G] |
-| Grafiklauf `m6-m14-gfx2` (vor dieser Sitzung) | 0 Debug-Boxen; Entladen und Neuladen 66 → 1 → 66 Entities; 60 FPS mit 66 Entities; Spitzenverbrauch 2174 MB [G] |
-| Bildvergleich, Grafiktest (neu), Leistung RD2/RD8, Regression M1–M14 | **nicht ausgeführt** [O] (§5) |
+| Unit-Tests | **459 grün** [G] |
+| Fahrzeugvergleich gegen Vanilla (`m14-vehicle9`) | **16/16 Szenarien, 1125/1125 Ticks bitgenau**, inklusive Absteigen und je 9 Folgeticks; 0 Serverabweichungen, 0 Korrekturen; `VehicleIntegrationTest` grün [G] |
+| Reproduzierbarkeit | Fahrzeugsuite und Diagnose zusammen in 13 Läufen; Vanilla selbst in bis zu 8 Wiederholungen je Szenario verglichen (§4) [G] |
+| Bildvergleich `m14-visual1` (6 Entity-Szenen) | meanΔE 6,57, meanSSIM 0,581. Modelle und Skins stimmen; 3 Darstellungsunterschiede und Szenenrauschen (§5) [G][O] |
+| Grafiktest, Leistung RD2/RD8, Regression M1–M14 | nicht ausgeführt [O] |
 
-## 2. Fahrzeugvergleich: Aufbau
+## 2. Testaufbau Fahrzeugvergleich
 
-- **Werkzeug:** `analysis/tools/m14-vehicle-run.sh <label>`. Der Vanilla-Referenzclient (Fabric-Forschungsmod, `VehicleReferenceClient`, nur Beobachtung und Tastensimulation) und der eigene Client (`VehicleIntegrationTest`) fahren nacheinander dieselben Szenarien aus `analysis/tools/m14-vehicle-course.txt`.
-- **Verglichen wird je Tick:**
+- **Ablauf:** `analysis/tools/m14-vehicle-run.sh <label>`. Der Vanilla-Referenzclient (Fabric-Forschungsmod `VehicleReferenceClient`, nur Beobachtung und Tastensimulation) und der eigene Client (`VehicleIntegrationTest`) fahren nacheinander dieselben Szenarien aus `analysis/tools/m14-vehicle-course.txt`.
+- **Verglichen werden je Tick:**
   - Fahrzeugposition, Geschwindigkeit und Gier
   - `onGround` und horizontale Kollision
-  - Blickrichtung des Spielers
-  - Eingabe
+  - Blickrichtung und Eingabe
 - **Zusätzlich verglichen:**
   - Absteige-Tick und Absteigeposition
-  - je Tick die Spielerposition und -geschwindigkeit in den 9 Ticks nach dem Absteigen
-  - Serverposition und Servergeschwindigkeit des Fahrzeugs am Ende
+  - Spielerposition und -geschwindigkeit in den 9 Ticks nach dem Absteigen
+  - Serverposition und Servergeschwindigkeit des Fahrzeugs
 - **Szenarien:**
   - Boot auf Wasser: geradeaus, Kurven, rückwärts, gegen eine Wand
-  - Boot auf Eis und an Land
+  - Boot auf Eis, Boot an Land, untergetauchtes Boot
   - Floß, Kistenboot
   - Boot gegen Boot
   - Pferd: Gehen, Stufe, Sprung, gegen ein Boot
-  - Lore: Anschieben (serverseitig)
-  - untergetauchtes Boot
+  - Lore (servergesteuert)
   - Spieler läuft gegen ein Boot
+- **Diagnose:**
+  - `analysis/tools/m14-vehicle-diag.txt` enthält nur die betroffenen Szenarien.
+  - Eine Befehlskette (Wiederholungs-Befehlsblock) schreibt in jedem Servertick Spielzeit, Passagierzustand, Schleichzustand sowie Position und Geschwindigkeit von Boot, Spieler und Hindernis (×10⁶) ins Serverlog.
+  - `analysis/tools/m14-diag-table.sh` macht daraus eine Tabelle je Servertick.
+  - Damit wurde der tatsächliche Serverzustand verglichen, nicht nur die Clientsicht.
 
-  Absteigen jeweils per Schleichtaste.
+## 3. Ergebnisse und behobene Fehler
 
-### 2.1 Behobene Fehler im Testaufbau
+### 3.1 Behobene Clientfehler (jeweils mit Ursache aus den Vanilla-26.3-Quellen und Regressionstest)
 
-| Befund | Ursache | Behebung |
+1. **Delta-Basis des eigenen Fahrzeugs.**
+   - Vanilla schreibt `VecDeltaCodec` auch für ein selbst gesteuertes Fahrzeug fort (`ClientPacketListener#handleMoveEntity`, `handleEntityPositionSync`) und setzt die Basis nur aus Paketen.
+   - Unser Client verwarf die Deltas während der Fahrt und setzte die Basis auf die lokale Physikposition. Nach dem Absteigen erschien das Boot deshalb an falscher Stelle (diag1: z = 161,895 statt Server 161,677) und stieß den Spieler weg. Das war die Ursache der Serverabweichung von „2 m“.
+   - Test: `PassengerAndBabyTest#deltaBaseOfTheOwnVehicleFollowsTheServerNotTheLocalPhysics`
+2. **Passagierbewegung.**
+   - `Entity#rideTick` setzt die Geschwindigkeit auf 0 und ruft dann `tick()` auf. Der lokale Spieler ist autoritativ und rechnet `travel` mit seiner Eingabe. `positionRider` setzt danach nur die Position.
+   - Der Absteige-Teleport (`ServerPlayer#teleportTo`) ist `Relative.DELTA`, die Geschwindigkeit bleibt also erhalten.
+   - Gemessen (diag4): vz = 0,017836 in der Luft, 0,01568 unter Wasser bei „vorwärts“. Unser Client setzte sie fest auf 0, deshalb glitt der Spieler nach dem Auswerfen aus dem untergetauchten Boot nicht weiter.
+   - Test: `MovementControllerTest#riderKeepsTheTravelVelocityOfItsLastRideTick`
+3. Aus dem vorigen Stand bestätigt:
+   - Schleichtaste nach dem Absteigen
+   - Status des Boots beim Aufsitzen (`primeStatus`)
+   - Bootsstoß (`inflate(0.2, -0.01, 0.2)`, nach der eigenen Bewegung)
+   - Tickreihenfolge beim Fahren (`tickBeforeOwnVehicle`)
+   - lineare Interpolation von Booten und Loren
+4. **Zurückgenommen:** Eine Änderung an `set_entity_motion` beruhte auf einer falschen Annahme. Das Paket wird beim Auswerfen gar nicht gesendet (Paketlog diag3). Die Änderung und ihr Test wurden entfernt.
+
+### 3.2 Synchronisierter Testaufbau
+
+| Ursache | Nachweis | Maßnahme |
 |---|---|---|
-| Erster Referenzlauf ohne Messwerte | Neues Laufverzeichnis ohne `options.txt` → Barrierefreiheits-Startbildschirm wartete ~56 min auf Eingabe | `run-vehicleref/options.txt` wie die bewährten Referenzläufe; Orchestrator warnt, wenn kein Beitritt nach 300 s |
-| Alle Fahrzeuge blieben nach 0,8 Blöcken hängen | `fill … air` mit 103 125 Blöcken vom Server abgelehnt (Grenze 32 768); Reste alter Läufe standen in der Strecke. Außerdem Steindeckel über dem Becken (Wasser nur bis y 62) | Freiräumen in 4 Teilen; Wasser bis y 63; Boote starten an der Oberfläche |
+| Pferd wandert nach dem Absteigen zufällig (KI) | Serverpferd erhält `set_entity_motion`, Stoß in Folgetick 10 (vehicle7) | Pferde mit `NoAI:1b`; steuerbar bleiben sie über `AbstractHorse#getControllingPassenger` |
+| Skript endete vor dem Absteigen („dismount only own“) | Absteigen erst nach dem letzten Skripttick | 5 Leerticks nach `s:2` |
+| Erkennungstick des Absteigens | Die Referenz lässt Tasten erst am Tickende los | Eigenes Skript verwendet in diesem Tick ebenfalls die Skripteingabe |
+| Freiräumen der Strecke abgelehnt, Steindeckel über dem Becken | `fill` > 32 768 Blöcke | Freiräumen in 4 Teilen, Wasser bis y 63 |
 
-## 3. Fahrzeugvergleich: Ergebnisse
+## 4. Determinismus und zusätzliches Kriterium
 
-### 3.1 Im eigenen Client gefundene und behobene Fehler (jeweils mit Regressionstest)
+Ein Teil der Szenarien hängt vom Server-Timing ab. Das zeigen auch Wiederholungen des **unveränderten Vanilla-Clients**:
 
-1. **Schleichtaste nach dem Absteigen nie losgelassen.** `leaveRiding` setzte den gesendeten Eingabezustand zurück, ohne etwas zu senden. Der Server hielt „Schleichen“ weiter für gedrückt und warf den Spieler beim nächsten Aufsitzen sofort wieder ab. Jetzt bleibt der zuletzt gesendete Zustand erhalten (wie `LocalPlayer#lastSentInput`).
-   - Test: `MovementControllerTest#releasingSneakAfterDismountIsSentToTheServer`
-2. **Boot sprang beim Aufsitzen an die Wasseroberfläche.** `BoatPhysics` begann mit dem Status `IN_AIR`, deshalb griff im ersten Tick die Regel „Übergang aus der Luft“. Der Vanilla-Client berechnet den Status in jedem Tick, auch ohne Steuerung. Neu ist `primeStatus()` beim Aufsitzen. Danach sind alle Wasser-, Floß- und Kistenbootszenarien bitgenau, ebenso das untergetauchte Boot (Sinken, Auswerfen nach 60 Ticks).
-   - Test: `VehiclePhysicsTest#submergedBoatKeepsSinkingAfterMountInsteadOfSnappingToTheSurface`
-3. **Stoß durch Boote zu spät bzw. gar nicht.**
-   - Vanilla stößt über die um `inflate(0.2, -0.01, 0.2)` vergrößerte Bootsbox.
-   - Der lokale Spieler tickt vor den übrigen Entities; der Stoß wirkt also nach der eigenen Bewegung im selben Tick.
-   - Bei Gehskripten war der Stoß bisher ganz abgeschaltet.
-   - Ergebnis: `walk_into_boat` ist bitgenau. Der Spieler steigt wie in Vanilla per Step-up (0,6 > 0,5625) auf das Boot; der frühere Verdacht „vom Boot blockiert“ war also kein Fehler.
-   - Test: `PassengerAndBabyTest#boatPushesWithinItsInflatedBoxButNotAPlayerStandingOnIt`
-4. **Tickreihenfolge beim Fahren.**
-   - Vanilla tickt Entities in Einfügereihenfolge, ein Fahrzeug vor seinem Passagier.
-   - Unser Client interpolierte alle anderen Entities erst nach der eigenen Bewegung. Hindernisse und die servergesteuerte eigene Lore lagen dadurch einen Tick zurück.
-   - Neu: `EntityManager#tickBeforeOwnVehicle()`.
-   - Tests: `PassengerAndBabyTest#entitiesInsertedBeforeTheOwnVehicleAreInterpolatedBeforeItMoves`, `#serverDrivenOwnVehicleIsInterpolatedBeforeItsRider`
-5. **Interpolation von Booten und Loren.**
-   - Vanilla verwendet `LinearInterpolationHandler`: Ein neues Ziel ersetzt das alte, es bleiben 3 Schritte, je Tick wird `pos + 1/rest · (ziel − pos)` gerechnet.
-   - Unser Client arbeitete die Ziele nacheinander ab (Warteschlange).
-   - Neu ist ein linearer Modus mit derselben Rechenreihenfolge (bitgleich zu `Mth.lerp`/`rotLerp`).
-   - Die Vergleichsspur der Lore zeigt jetzt die interpolierte Position statt des Paketwerts.
-   - Test: `EntityInterpolatorTest#linearModeRestartsTowardsTheNewestTargetLikeVanilla`
+- **Absteigen eines fahrenden Boots (Wettlauf):**
+  - Kommt `set_passengers` erst nach Beginn des nächsten Clientticks an, fährt der Client einen Tick länger.
+  - Variante A (Vanilla, diag5/diag6): Der Server hat das `move_vehicle` dieses Ticks schon angenommen (Server = Client = 185,69998760692673).
+  - Variante B (eigener Client, diag7): Der Server ist vorher abgestiegen. Die Clientsicht schwenkt dann über das periodische Positionsupdate (`ServerEntity`: `tickCount % 60`) auf die Serverposition ein.
+- **Auswerfen nach 60 Ticks unter Wasser:** Der Server wirft zu einem festen Servertick aus. Welcher `move_vehicle` bis dahin angekommen ist, hängt von der Paketlaufzeit ab (diag1: Bootsposition von Tick 18, diag3: Tick 19).
+- **Boot gegen geschobenes Boot:**
+  - Der Server bewegt das Hindernis in allen Läufen identisch (Servertabelle).
+  - Wann der Client es sieht, hängt aber von der Tracker-Phase ab (`updateInterval`, `needsSync`, Delta- oder Absolutpaket).
+  - Vanilla in 8 Läufen: Kontakt immer bei Tick 32, Freigabe bei 34 (1×), 36 (3×) oder 37 (4×).
+  - Größte Positionsabweichung zwischen zwei Vanilla-Läufen: 0,6104.
 
-Zuvor in M14 behoben: schwarze Katze als Tabby (fehlendes Variantenfeld → Vanilla-Standardvariante), Rechtsklick auf Floß und Lore (Vorhersage des Interaktionsergebnisses), doppeltes `set_passengers` beim Aufsitzen.
+**Zusätzliches Kriterium.** Es gilt nur für diese nachgewiesen gekoppelten Fälle; die bitgenaue Zählung bleibt unverändert und wird immer berichtet:
 
-### 3.2 Bitgenau gleich wie Vanilla (Lauf `m14-vehicle6`)
+| Fall | Bedingungen |
+|---|---|
+| Absteige-Timing | Alle gemeinsamen Fahrticks bitgenau, Absteige-Tick genau 1 versetzt |
+| Geschobenes Hindernis | Bis einschließlich Kontakt bitgenau, Freigabe im gemessenen Vanilla-Bereich [34, 37], Abweichung ≤ 0,6104 |
+| Zusatztick ohne Annahme durch den Server | Serverposition = vorletzter Fahrtick, und die Clientsicht des Fahrzeugs schwenkt innerhalb von 4 s auf die Serverposition ein |
+| Servergesteuerte Lore | Bis zur ersten Serverbewegung bitgenau; die Endposition ist von der Serverprüfung ausgenommen (Lore rollt nach dem Absteigen weiter) [E] |
 
-| Szenario | Ticks | Absteigen und 9 Folgeticks |
-|---|---|---|
-| boat_water_forward, boat_water_turn | 111, 121 | gleich |
-| boat_wall, boat_land, raft_water_forward, chest_boat_turn | 51, 81, 81, 71 | gleich |
-| horse_walk, horse_step, horse_jump, horse_into_boat | 81, 61, 63, 51 | gleich |
-| boat_ice, boat_submerged | 91, 19 (Fahrt bitgenau) | **abweichend**, siehe §3.3 |
-| walk_into_boat | 40 | – |
+Im abschließenden Lauf `m14-vehicle9` war das Kriterium **nicht nötig**: Alle 16 Szenarien waren streng bitgenau. In `vehicle7` und `vehicle8` griff es bei 3 Szenarien (Absteige-Timing, Boot gegen Boot) mit den oben genannten Nachweisen.
 
-### 3.3 Verbleibende Abweichungen
+### Verlauf
 
-| Szenario | Befund | Einordnung |
-|---|---|---|
-| boat_ice, boat_submerged: nach dem Absteigen | Fahrt und Absteigeposition (boat_ice) sind bitgleich. Danach hat das **Serverboot** in unserem Lauf eine Geschwindigkeit (vz −0,155) und steht am Ende 2,06 Blöcke weiter. In Vanilla stimmen Server- und Clientposition exakt überein. Unser Spieler wird ab Folgetick 3 von diesem Boot gestoßen. | **[O]** Ursache nicht gefunden. Die Paketfolge (Schleichen → ein Tick später `set_passengers` + Teleport, kein `move_vehicle` danach) ist unauffällig. Grund für den roten Fahrzeugtest („server accepted vehicle positions“). |
-| boat_into_boat | Hindernisboot wird serverseitig geschoben. Vanilla kommt in drei Läufen bei Tick 36 frei, unser Client bei Tick 37. Vanilla selbst schwankt zwischen Läufen ab Tick 34 (1e‑5). | **[O]** systematischer Rückstand um einen Tick, Ursache offen |
-| minecart_push | Interpolation jetzt in gleichen Dritteln wie Vanilla. Die serverseitige Bewegung der Lore (Ziele, Absteigeposition 102,5 / 101,5) unterscheidet sich zwischen Läufen. | **[E]** servergesteuert, nicht reproduzierbar; nur die Interpolation ist vergleichbar |
-| „dismount only own“ | Je Lauf ein anderes Szenario: horse_walk (Lauf vehicle3), raft (vehicle4), boat_wall (vehicle5), boat_water_back (vehicle6). Vanilla steigt einen Tick später ab. | **[E]** Paket-Timing: Ob der Server die Schleichtaste im selben Server-Tick verarbeitet, hängt von der Ankunftszeit ab |
+| Lauf | Bitgenaue Szenarien | Bitgenaue Ticks | Bemerkung |
+|---|---|---|---|
+| vehicle4 | 11/16 | 1043/1125 | Ausgangslage |
+| vehicle6 | 11/16 | 1018/1125 | Tickreihenfolge und lineare Interpolation |
+| vehicle7 | 12/16 | 1089/1125 | Delta-Basis, Passagier-`travel` |
+| vehicle8 | 12/16 | 1087/1125 | Pferde ohne KI, Kriterium für 3 Szenarien |
+| **vehicle9** | **16/16** | **1125/1125** | Test grün |
 
-## 4. Prozesse und Ressourcen
+## 5. Bildvergleich `m14-visual1`
 
-- **Speicher:** Spitzenverbrauch der Projekt-JVMs je Fahrzeuglauf 2164–2230 MB; mindestens 3788–4238 MB frei.
-- **Abgebrochener Lauf:** Ein früher Lauf (`vehicle4`, erster Versuch) wurde von Claude Code wegen Speicherdrucks beendet. Danach räumte `analysis/tools/m12-cleanup.ps1` auf: 0 Projektprozesse übrig, Server über die Konsole gestoppt, Konfiguration wiederhergestellt. Fremde Prozesse wurden nicht beendet, der Speicherschutz nicht umgangen.
-- **Serverkonfiguration nach jedem Lauf:** `difficulty=easy`, `network-compression-threshold=-1`, `online-mode=false`.
+- **Aufbau:** 6 Szenen mit Haustieren, Pferden und Kaninchen, Monstern, Dorfbewohnern und Nutztieren, Humanoiden sowie Fahrzeugen mit Passagieren. Der Vanilla-Referenzclient und der eigene Grafikclient nehmen dieselbe Kameraposition ein.
+- **Ergebnis:**
+  - meanΔE 6,57, meanSSIM 0,581.
+  - 0 offene GL-Objekte beim Beenden, 0 externe Verbindungen.
+  - Modelle, Babyformen, Varianten und Mannequin-Skins (Classic und Slim) stimmen sichtbar überein; die Passagiere sitzen richtig.
 
-## 5. Offene Prüfungen
+| Befund | Einordnung |
+|---|---|
+| Brennende Untote (Tageslicht): Vanilla zeichnet Feuer am Entity, unser Client nicht | **[O]** fehlende Darstellung brennender Entities (`EntityRenderDispatcher`, Feuer-Sprites) |
+| Kistenlore: Vanilla zeigt die Kiste, unser Client einen Würfel mit Holzbretter-Textur | **[O]** bisher dokumentierte Vereinfachung (docs/55 §7); Kistenmodell `minecraft:chest#main` liegt vor |
+| Dorfbewohner: verschränkte Arme bei uns hautfarben, bei Vanilla braune Ärmel | **[O]** Ursache offen; Typ- und Berufsschichten werden gezeichnet |
+| Drops und Partikel aus dem Entfernen der vorherigen Szene, Wolkenstand, Himmelsfarbe | Szenenaufbau: Entfernen ohne Drops und feste Wolkenzeit nötig, bevor die Kennzahlen aussagekräftig sind |
 
-1. Klärung der Abweichungen aus §3.3 (Serverboot nach dem Absteigen, Rückstand bei boat_into_boat). Danach Fahrzeugvergleich grün.
-2. Bildvergleich `m14-visual1`: `M12_SCENES=$PWD/analysis/tools/m14-scenes.txt M12_DIFFICULTY=easy M6_DIFFICULTY=easy bash analysis/tools/m12-visual.sh m14-visual1 both`
-3. Grafiktest mit korrigierter Pferdeszene (`analysis/tools/m14-gfx.txt`, Ritt auf 1,9 s verkürzt): `bash analysis/tools/m14-gfx-run.sh <label>`
-4. Leistung RD2/RD8 mit 10/50/100 Entities (`analysis/tools/m14-perf.txt`, `M6_DIFFICULTY=easy`), Stabilitätslauf, GPU-Freigabe.
-5. Regression M1–M14 nacheinander: `bash analysis/tools/m14-regression.sh [von] [bis]`
+## 6. Offene Prüfungen
 
-Erst danach sind ein Merge nach `main` und die Abschlusskennzeichnung möglich.
+1. Die drei Darstellungsunterschiede aus §5 beheben, die Szenen bereinigen, den Bildvergleich wiederholen.
+2. Grafiktest mit Pferdeszene: `bash analysis/tools/m14-gfx-run.sh <label>`
+3. Leistung RD2/RD8 mit 10/50/100 Entities (`analysis/tools/m14-perf.txt`, `M6_DIFFICULTY=easy`), Stabilitätslauf, GPU-Freigabe.
+4. Regression M1–M14 nacheinander: `bash analysis/tools/m14-regression.sh [von] [bis]`
+
+Erst danach sind die Abschlusskennzeichnung und ein Merge nach `main` möglich.
