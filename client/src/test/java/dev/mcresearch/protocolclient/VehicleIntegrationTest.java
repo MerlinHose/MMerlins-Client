@@ -143,6 +143,15 @@ class VehicleIntegrationTest {
 		}
 	}
 
+	/**
+	 * Größte Positionsabweichung zwischen zwei unveränderten Vanilla-Läufen von boat_into_boat (8 Läufe, paarweise: vehicle4 gegen
+	 * vehicle5 0,6104; Ursache: Tracker-Phase des geschobenen Hindernisses, docs/58 §6.2).
+	 */
+	static final double VANILLA_OBSTACLE_ENVELOPE = 0.6104;
+	/** Freigabetick von boat_into_boat in 8 unveränderten Vanilla-Läufen: 34 (1×), 36 (3×), 37 (4×); Kontakt immer bei Tick 32. */
+	static final int VANILLA_RELEASE_MIN = 34;
+	static final int VANILLA_RELEASE_MAX = 37;
+
 	/** Feldweiser Vergleich einer eigenen Spur (ohne Szenariospalte) mit der Referenz (mit Szenariospalte). */
 	static final class Comparison {
 		int n;
@@ -182,6 +191,72 @@ class VehicleIntegrationTest {
 			}
 		}
 
+		/**
+		 * Zusatzkriterium (docs/58 §6) nur für nachgewiesen servergekoppelte Szenarien; die bitgenaue Zählung oben bleibt unverändert.
+		 * Hindernis vom Server geschoben: Ticks bis einschließlich Kontakt bitgenau, Freigabe (erster Tick ohne Kollision nach dem
+		 * Kontakt) höchstens 1 Tick versetzt, danach Geschwindigkeiten ab der jeweiligen Freigabe bitgleich. Servergesteuertes Fahrzeug:
+		 * Ticks bis zur ersten Serverbewegung bitgenau. Absteigen nach Paketlaufzeit: alle gemeinsamen Fahrticks bitgenau, Absteige-Tick
+		 * genau 1 versetzt.
+		 */
+		static String coupled(final List<String> own, final List<String[]> ref, final boolean obstacle, final boolean serverDriven,
+			final int ownDismount, final int refDismount, final boolean[] ok) {
+			int n = Math.min(own.size(), ref.size());
+			int firstDiff = -1;
+			for (int k = 0; k < n && firstDiff < 0; k++) {
+				Comparison c = new Comparison();
+				c.add(own.get(k).split(" "), ref.get(k));
+				if (c.exactTicks == 0) {
+					firstDiff = k + 1;
+				}
+			}
+			if (obstacle && firstDiff >= 0) { // ohne Tickabweichung gilt die Regel für das Absteige-Timing (horse_into_boat, vehicle8)
+				int contact = -1;
+				for (int k = 0; k < n && contact < 0; k++) {
+					if (ref.get(k)[11].equals("true")) {
+						contact = k + 1;
+					}
+				}
+				int relOwn = release(own.stream().map(g -> g.split(" ")[10]).toList(), contact);
+				int relRef = release(ref.stream().map(r -> r[11]).toList(), contact);
+				// Nach dem Kontakt bleibt das Boot an das vom Server geschobene Hindernis gekoppelt (es holt es mehrfach wieder ein); die
+				// Vanilla-Läufe untereinander weichen dort bis VANILLA_OBSTACLE_ENVELOPE ab (docs/58 §6.2). Kriterium: bis einschließlich
+				// Kontakt bitgenau, Freigabe im gemessenen Vanilla-Bereich, Abweichung innerhalb der gemessenen Vanilla-Streuung.
+				double maxPos = 0;
+				for (int k = 0; k < n; k++) {
+					String[] o = own.get(k).split(" ");
+					for (int i = 0; i < 3; i++) {
+						maxPos = Math.max(maxPos, Math.abs(Double.parseDouble(o[2 + i]) - Double.parseDouble(ref.get(k)[3 + i])));
+					}
+				}
+				ok[0] = contact > 0 && (firstDiff < 0 || firstDiff > contact) && relOwn >= VANILLA_RELEASE_MIN && relOwn <= VANILLA_RELEASE_MAX
+					&& maxPos <= VANILLA_OBSTACLE_ENVELOPE;
+				return String.format(Locale.ROOT, "coupled[obstacle] contact %d first diff %d release own %d / vanilla %d, max|Δpos| %.4f (vanilla envelope %.2f) -> %s",
+					contact, firstDiff, relOwn, relRef, maxPos, VANILLA_OBSTACLE_ENVELOPE, ok[0] ? "OK" : "FAIL");
+			}
+			if (serverDriven) {
+				int firstMove = -1;
+				for (int k = 1; k < n && firstMove < 0; k++) {
+					if (!ref.get(k)[5].equals(ref.get(k - 1)[5]) || !ref.get(k)[3].equals(ref.get(k - 1)[3])) {
+						firstMove = k + 1;
+					}
+				}
+				ok[0] = firstMove > 0 && (firstDiff < 0 || firstDiff >= firstMove);
+				return String.format(Locale.ROOT, "coupled[server-driven] first server move %d first diff %d -> %s", firstMove, firstDiff, ok[0] ? "OK" : "FAIL");
+			}
+			ok[0] = firstDiff < 0 && ownDismount > 0 && refDismount > 0 && Math.abs(ownDismount - refDismount) == 1;
+			return String.format(Locale.ROOT, "coupled[dismount timing] common ticks exact %b dismount own %d / vanilla %d -> %s", firstDiff < 0, ownDismount,
+				refDismount, ok[0] ? "OK" : "FAIL");
+		}
+
+		private static int release(final List<String> hc, final int contact) {
+			for (int k = Math.max(contact, 1); k < hc.size(); k++) {
+				if (hc.get(k).equals("false")) {
+					return k + 1;
+				}
+			}
+			return -1;
+		}
+
 		@Override
 		public String toString() {
 			return String.format(Locale.ROOT, "vanilla ticks %d exact %d first diff %d max|Δpos| %.3e |Δv| %.3e |ΔyRot| %.3e |ΔplayerYRot| %.3e"
@@ -206,6 +281,8 @@ class VehicleIntegrationTest {
 		int exactTicks = 0;
 		int exactScenarios = 0;
 		int serverMismatch = 0;
+		int coupledScenarios = 0;
+		List<String> failedScenarios = new ArrayList<>();
 		try (PacketLog log = PacketLog.open(c.packetLog())) {
 			ClientSession session = new ClientSession(Connection.open(address, PORT, 5000, 30000, log), c);
 			CompletableFuture<ClientSession.Result> result = CompletableFuture.supplyAsync(session::run);
@@ -265,7 +342,28 @@ class VehicleIntegrationTest {
 				double dz = Double.parseDouble(last[4]) - server[2];
 				double serverDiff = Math.sqrt(dx * dx + dy * dy + dz * dz);
 				boolean serverDriven = s.type().endsWith("minecart");
-				if (serverDiff > 0.01 && !serverDriven) {
+				String serverNote = "";
+				if (serverDiff > 0.01 && !serverDriven && ticks.size() >= 2) {
+					// Wettlauf beim Absteigen (docs/58 §6.1): der Server ist vor dem letzten lokalen Fahrtick abgestiegen und hat dessen
+					// move_vehicle nicht mehr angenommen. Dann muss die Serverposition genau dem vorletzten Fahrtick entsprechen und die
+					// Clientsicht des Fahrzeugs über das periodische Positionsupdate (ServerEntity: tickCount % 60) auf den Server einschwenken.
+					String[] prev = ticks.get(ticks.size() - 2).split(" ");
+					double dPrev = 0;
+					for (int i = 0; i < 3; i++) {
+						dPrev = Math.max(dPrev, Math.abs(Double.parseDouble(prev[2 + i]) - server[i]));
+					}
+					int fv = session.movement().formerVehicle();
+					boolean converged = false;
+					for (int i = 0; i < 45 && dPrev < 1e-6 && fv >= 0 && !converged; i++) {
+						Thread.sleep(100);
+						var view = session.entities().view(fv, 1.0F, -1);
+						converged = view != null && Math.abs(view.rz() - server[2]) < 1e-6 && Math.abs(view.rx() - server[0]) < 1e-6;
+					}
+					serverNote = String.format(Locale.ROOT, " [extra local tick: server = previous tick %b, client view converged %b]", dPrev < 1e-6, converged);
+					if (!converged) {
+						serverMismatch++;
+					}
+				} else if (serverDiff > 0.01 && !serverDriven) {
 					serverMismatch++;
 				}
 				// Vergleich mit der Vanilla-Referenz
@@ -326,13 +424,26 @@ class VehicleIntegrationTest {
 					}
 					compared += cmpr.n;
 					exactTicks += cmpr.exactTicks;
-					if (cmpr.exactTicks == cmpr.n && n == ticks.size() && n == refTicks.size() && cmpr.dismountExact) {
+					boolean strict = cmpr.exactTicks == cmpr.n && n == ticks.size() && n == refTicks.size() && cmpr.dismountExact;
+					String extra = "";
+					if (strict) {
 						exactScenarios++;
+					} else {
+						boolean obstacle = obstacles.stream().anyMatch(o -> o.scenario().equals(s.name()));
+						int ownDm = dismountLine == null ? -1 : Integer.parseInt(dismountLine.split(" ")[1]);
+						int refDm = refDismount == null ? -1 : Integer.parseInt(refDismount[2]);
+						boolean[] ok = new boolean[1];
+						extra = "; " + Comparison.coupled(ticks, refTicks, obstacle, serverDriven, ownDm, refDm, ok);
+						if (ok[0]) {
+							coupledScenarios++;
+						} else {
+							failedScenarios.add(s.name());
+						}
 					}
-					cmp = cmpr + String.format(Locale.ROOT, " (ticks own %d / vanilla %d)", ticks.size(), refTicks.size());
+					cmp = cmpr + String.format(Locale.ROOT, " (ticks own %d / vanilla %d)", ticks.size(), refTicks.size()) + extra;
 				}
 				report.add(String.format(Locale.ROOT, "%-20s %-16s end (%.4f %.4f %.4f) server |Δ| %.2e%s motion (%.3e %.3e %.3e) corrections %d; %s", s.name(), s.type(),
-					Double.parseDouble(last[2]), Double.parseDouble(last[3]), Double.parseDouble(last[4]), serverDiff, serverDriven ? " (serverseitig)" : "", serverMotion[0], serverMotion[1], serverMotion[2],
+					Double.parseDouble(last[2]), Double.parseDouble(last[3]), Double.parseDouble(last[4]), serverDiff, (serverDriven ? " (serverseitig)" : "") + serverNote, serverMotion[0], serverMotion[1], serverMotion[2],
 					session.movement().vehicleCorrections() - corrBefore, cmp));
 				if (!s.walk() && session.movement().ridingVehicle() >= 0) {
 					// nicht während der Folge abgestiegen: Schleichtaste wie ein Spieler
@@ -343,7 +454,8 @@ class VehicleIntegrationTest {
 				console.send(List.of("kill @e[tag=m14v]", "kill @e[tag=m14o]"), 600);
 			}
 			report.add(String.format(Locale.ROOT, "summary: %d scenarios, vanilla ticks compared %d, bit-exact ticks %d, bit-exact scenarios %d,"
-				+ " server mismatches %d, own mounts %d dismounts %d, corrections %d", scenarios.size(), compared, exactTicks, exactScenarios, serverMismatch,
+				+ " coupled-criterion scenarios %d, failed %s, server mismatches %d, own mounts %d dismounts %d, corrections %d", scenarios.size(), compared, exactTicks,
+				exactScenarios, coupledScenarios, failedScenarios, serverMismatch,
 				session.entities().stats().ownMounts, session.entities().stats().ownDismounts, session.movement().vehicleCorrections()));
 			session.requestStop("vehicle course done");
 			ClientSession.Result r = result.get(30, TimeUnit.SECONDS);
@@ -353,5 +465,6 @@ class VehicleIntegrationTest {
 			Files.write(Path.of("build", "m14-vehicle-report.txt"), report, StandardCharsets.UTF_8);
 		}
 		assertTrue(serverMismatch == 0, "server accepted vehicle positions: " + report);
+		assertTrue(failedScenarios.isEmpty(), "every scenario bit-exact or (proven server coupling) coupled criterion: " + failedScenarios);
 	}
 }

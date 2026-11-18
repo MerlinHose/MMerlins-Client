@@ -355,4 +355,28 @@ class MovementControllerTest {
 		List<ServerboundPacket> after = this.m.tick();
 		assertTrue(after.stream().anyMatch(p -> p instanceof Serverbound.PlayerInput i && !i.shift()), "release of sneak reaches the server");
 	}
+
+	/**
+	 * Diagnose diag4: Der Vanilla-Passagier rechnet in jedem Fahrtick travel mit seiner Eingabe (Entity#rideTick: deltaMovement = 0,
+	 * tick(), positionRider). Gemessen im Boot an Land, vorwärts: vz 0,017836000462502232, vy −0,0784000015258789. Der Absteige-Teleport
+	 * ist DELTA-relativ, die Geschwindigkeit bleibt (boat_submerged: Spieler gleitet nach dem Auswerfen weiter).
+	 */
+	@Test
+	void riderKeepsTheTravelVelocityOfItsLastRideTick() {
+		spawn();
+		dev.mcresearch.protocolclient.entity.EntityManager em = new dev.mcresearch.protocolclient.entity.EntityManager();
+		em.setOwnId(500);
+		this.m.setEntities(em);
+		em.handle(new Clientbound.AddEntity(77, new java.util.UUID(3, 77), 90, 0.5, 64, 0.5, 0, 0, 0, 0, 0, 0, 0));
+		em.handle(new Clientbound.SetPassengers(77, new int[]{500}));
+		this.m.setManualInput(new PlayerPhysics.Input(true, false, false, false, false, false, false));
+		this.m.tick();
+		this.m.tick();
+		assertEquals(0.017836000462502232, this.player.velocityZ(), 0.0, "vanilla rider velocity (air, forward)");
+		assertEquals(-0.0784000015258789, this.player.velocityY(), 0.0);
+		em.handle(new Clientbound.SetPassengers(77, new int[0]));
+		int delta = Clientbound.PlayerPosition.REL_DELTA_X | Clientbound.PlayerPosition.REL_DELTA_Y | Clientbound.PlayerPosition.REL_DELTA_Z;
+		this.player.apply(new Clientbound.PlayerPosition(2, 0.5, 64, 2.0, 0, 0, 0, 0f, 0f, delta)); // Absteige-Teleport (Relative.DELTA)
+		assertEquals(0.017836000462502232, this.player.velocityZ(), 0.0, "dismount teleport keeps the velocity");
+	}
 }

@@ -1,0 +1,48 @@
+# M14-Diagnose (docs/58 §6): nur boat_ice, boat_submerged, boat_into_boat; Strecke wie m14-vehicle-course.txt.
+# Zusätzlich protokolliert eine Befehlskette (y 50, x 98…115, z 97) jeden Servertick den Serverzustand ins Serverlog:
+# scoreboard m14d, Werte ×1e6: #t Spielzeit, #np Spieler sitzt auf m14v, #sh Spieler schleicht, #bz/#by/#bvz/#bvy Boot,
+# #pz/#py/#pvz Spieler, #oz/#ovz Hindernis (m14o). Ausgabe als "Added 0 to [m14d] for <name> (now <wert>)".
+build forceload add 96 96 175 223
+build fill 98 59 98 172 59 222 minecraft:stone
+build fill 98 60 98 172 70 136 minecraft:air
+build fill 98 60 137 172 70 175 minecraft:air
+build fill 98 60 176 172 70 214 minecraft:air
+build fill 98 60 215 172 70 222 minecraft:air
+build fill 99 60 99 131 63 201 minecraft:stone
+build fill 100 60 100 130 63 200 minecraft:water
+build fill 140 59 100 142 59 220 minecraft:packed_ice
+build fill 154 60 150 166 60 170 minecraft:stone
+vehicle-nbt horse {NoAI:1b,Tame:1b,PersistenceRequired:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},attributes:[{id:"minecraft:movement_speed",base:0.225d},{id:"minecraft:jump_strength",base:0.7d}],Tags:[m14v]}
+build fill 146 60 100 146 60 140 minecraft:rail[shape=north_south]
+obstacle boat_into_boat oak_boat 125.5 63.6 128.5 90
+build scoreboard objectives add m14d dummy
+build setblock 98 50 97 minecraft:repeating_command_block[facing=east]{auto:1b,Command:'execute store result score #t m14d run time query gametime'}
+build setblock 99 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players set #np m14d 0'}
+build setblock 100 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute as @a[limit=1] on vehicle if entity @s[tag=m14v] run scoreboard players set #np m14d 1'}
+build setblock 101 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players set #sh m14d 0'}
+build setblock 102 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute as @a[limit=1] if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{flags:{is_sneaking:true}}} run scoreboard players set #sh m14d 1'}
+build setblock 103 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #bz m14d run data get entity @e[tag=m14v,limit=1] Pos[2] 1000000'}
+build setblock 104 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #by m14d run data get entity @e[tag=m14v,limit=1] Pos[1] 1000000'}
+build setblock 105 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #bvz m14d run data get entity @e[tag=m14v,limit=1] Motion[2] 1000000'}
+build setblock 106 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #bvy m14d run data get entity @e[tag=m14v,limit=1] Motion[1] 1000000'}
+build setblock 107 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #pz m14d run data get entity @a[limit=1] Pos[2] 1000000'}
+build setblock 108 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #py m14d run data get entity @a[limit=1] Pos[1] 1000000'}
+build setblock 109 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #pvz m14d run data get entity @a[limit=1] Motion[2] 1000000'}
+build setblock 110 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #oz m14d run data get entity @e[tag=m14o,limit=1] Pos[2] 1000000'}
+build setblock 111 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'execute store result score #ovz m14d run data get entity @e[tag=m14o,limit=1] Motion[2] 1000000'}
+build setblock 112 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #t m14d 0'}
+build setblock 113 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #np m14d 0'}
+build setblock 114 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #sh m14d 0'}
+build setblock 115 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #bz m14d 0'}
+build setblock 116 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #by m14d 0'}
+build setblock 117 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #bvz m14d 0'}
+build setblock 118 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #bvy m14d 0'}
+build setblock 119 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #pz m14d 0'}
+build setblock 120 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #py m14d 0'}
+build setblock 121 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #pvz m14d 0'}
+build setblock 122 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #oz m14d 0'}
+build setblock 123 50 97 minecraft:chain_command_block[facing=east]{auto:1b,Command:'scoreboard players add #ovz m14d 0'}
+
+vehicle boat_ice oak_boat 141.5 60.0 102.5 0 f:60 -:30 s:2 -:5
+vehicle boat_into_boat oak_boat 125.5 63.6 118.5 0 f:60 -:10 s:2 -:5
+vehicle boat_submerged oak_boat 125.5 61.0 160.5 0 f:40 -:40 s:2 -:5

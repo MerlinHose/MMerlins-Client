@@ -6,7 +6,7 @@
 # Speichergrenzen wie M5–M13: Server 1 GB, Vanilla-Client 1,5 GB; Abbruch unter M14_MIN_FREE_MB (Standard 3000) freiem Speicher.
 set -u
 LABEL="$1"; T="${2:-256}"; ROOT="$(pwd)"; SERVER="$ROOT/server"; OUT="$ROOT/analysis/runtime-logs/m14-$LABEL"
-COURSE="$ROOT/analysis/tools/m14-vehicle-course.txt"; RUN="$ROOT/research/run-vehicleref"; REF="ResearchVeh"
+COURSE="${M14_COURSE:-$ROOT/analysis/tools/m14-vehicle-course.txt}"; RUN="$ROOT/research/run-vehicleref"; REF="ResearchVeh"
 mkdir -p "$OUT" "$RUN"; : > "$OUT/run.txt"
 log() { echo "$(date +%H:%M:%S) $*" | tee -a "$OUT/run.txt"; }
 server_cmd() { echo "$1" >> "$SERVER/console.in"; }
@@ -95,7 +95,7 @@ cat "$OUT/m14-vehicle-report.txt" | tee -a "$OUT/run.txt"
 
 # ---- Aufräumen: Strecke entfernen, Server stoppen ----
 server_cmd "kill @e[tag=m14v]"; server_cmd "kill @e[tag=m14o]"
-for zz in "98 136" "137 175" "176 214" "215 222"; do set -- $zz; server_cmd "fill 98 60 $1 172 70 $2 minecraft:air"; done; server_cmd "fill 98 59 98 172 59 222 minecraft:stone"; server_cmd "forceload remove 96 96 175 223"
+for zz in "98 136" "137 175" "176 214" "215 222"; do set -- $zz; server_cmd "fill 98 60 $1 172 70 $2 minecraft:air"; done; server_cmd "fill 98 59 98 172 59 222 minecraft:stone"; server_cmd "fill 98 50 97 130 50 97 minecraft:stone"; server_cmd "scoreboard objectives remove m14d"; server_cmd "forceload remove 96 96 175 223"
 sleep 2
 server_cmd "stop"
 for i in $(seq 1 60); do grep -q "Stopping server" "$SERVER/logs/stdout.txt" && break; sleep 1; done

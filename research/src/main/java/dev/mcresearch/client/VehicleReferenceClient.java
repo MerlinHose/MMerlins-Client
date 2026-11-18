@@ -154,7 +154,10 @@ public final class VehicleReferenceClient implements ClientModInitializer {
 				Vec3 d = v.getDeltaMovement();
 				this.trace.println(String.join(" ", s.name(), Integer.toString(this.k), s.inputs().get(this.k - 1), Double.toString(v.getX()),
 					Double.toString(v.getY()), Double.toString(v.getZ()), Double.toString(d.x), Double.toString(d.y), Double.toString(d.z),
-					Float.toString(v.getYRot()), Boolean.toString(v.onGround()), Boolean.toString(v.horizontalCollision), Float.toString(player.getYRot())));
+					Float.toString(v.getYRot()), Boolean.toString(v.onGround()), Boolean.toString(v.horizontalCollision), Float.toString(player.getYRot()),
+					// Diagnose: Geschwindigkeit des Spielers als Passagier (rideTick: ZERO, dann travel)
+					v == player ? "-" : Double.toString(player.getDeltaMovement().x), v == player ? "-" : Double.toString(player.getDeltaMovement().y),
+					v == player ? "-" : Double.toString(player.getDeltaMovement().z)));
 				if (this.k < s.inputs().size()) {
 					keys(mc, s.inputs().get(this.k));
 					this.k++;
@@ -170,7 +173,11 @@ public final class VehicleReferenceClient implements ClientModInitializer {
 				Vec3 pd = player.getDeltaMovement();
 				this.trace.println(String.join(" ", this.scenarios.get(this.index).name(), "after", Integer.toString(this.ticksInPhase + 1),
 					Double.toString(player.getX()), Double.toString(player.getY()), Double.toString(player.getZ()), Double.toString(pd.x),
-					Double.toString(pd.y), Double.toString(pd.z), Boolean.toString(player.onGround())));
+					Double.toString(pd.y), Double.toString(pd.z), Boolean.toString(player.onGround()),
+					// Diagnose: früheres Fahrzeug aus Clientsicht (Position, z-Geschwindigkeit)
+					this.lastVehicle == null ? "-" : Double.toString(this.lastVehicle.getX()), this.lastVehicle == null ? "-" : Double.toString(this.lastVehicle.getY()),
+					this.lastVehicle == null ? "-" : Double.toString(this.lastVehicle.getZ()),
+					this.lastVehicle == null ? "-" : Double.toString(this.lastVehicle.getDeltaMovement().z)));
 				if (this.ticksInPhase >= DISMOUNT_TICKS - 1) {
 					Scenario s = this.scenarios.get(this.index);
 					this.trace.println(String.join(" ", s.name(), "dismount", Integer.toString(this.dismountK), Double.toString(player.getX()),

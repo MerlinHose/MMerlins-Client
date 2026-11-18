@@ -213,4 +213,23 @@ class PassengerAndBabyTest {
 		m.tick(); // kein zweiter Schritt
 		assertEquals(seat, m.ownSeatTick()[2], 1e-12);
 	}
+
+	/**
+	 * Diagnose diag1 (boat_ice/boat_submerged): Vanilla schreibt die Delta-Basis ({@code VecDeltaCodec}) auch für das selbst gesteuerte
+	 * Fahrzeug fort und setzt sie nur aus Paketen. Unser Client verwarf die Deltas während der Fahrt und setzte die Basis auf die lokale
+	 * Physikposition – nach dem Absteigen erschien das Boot dadurch an falscher Stelle und stieß den Spieler weg.
+	 */
+	@Test
+	void deltaBaseOfTheOwnVehicleFollowsTheServerNotTheLocalPhysics() {
+		EntityManager m = new EntityManager();
+		m.setOwnId(500);
+		spawn(m, 10, OAK_BOAT, 0.5, 64.0, 0.5, 0);
+		m.handle(new Clientbound.SetPassengers(10, new int[]{500}));
+		m.setLocalVehicle(10, 0.5, 64.0, 3.0, 0, 0); // eigene Physik ist voraus
+		m.handle(new Clientbound.MoveEntity(10, true, false, false, List.of(new Clientbound.DeltaStep(0, (short) 0, (short) 0, (short) 4096)), 0, 0, true));
+		assertEquals(3.0, m.view(10, 1, 0).z(), 1e-12, "own vehicle keeps the local position while riding");
+		m.handle(new Clientbound.SetPassengers(10, new int[0])); // abgestiegen
+		m.handle(new Clientbound.MoveEntity(10, true, false, false, List.of(new Clientbound.DeltaStep(0, (short) 0, (short) 0, (short) 2048)), 0, 0, true));
+		assertEquals(2.0, m.view(10, 1, 0).z(), 1e-12, "server base 0.5 + 1.0 + 0.5, not local 3.0 + 0.5");
+	}
 }

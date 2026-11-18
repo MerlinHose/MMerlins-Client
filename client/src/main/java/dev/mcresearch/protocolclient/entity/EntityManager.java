@@ -315,7 +315,17 @@ public final class EntityManager {
 		}
 		e.updates++;
 		if (e.localControl) {
-			this.stats.ignoredLocal++; // M14: selbst gesteuertes Fahrzeug (ClientPacketListener: isLocalInstanceAuthoritative)
+			// M14: selbst gesteuertes Fahrzeug (ClientPacketListener#handleMoveEntity, isLocalInstanceAuthoritative): Position nicht
+			// übernehmen, die Delta-Basis aber fortschreiben (positionCodec.setBase) – sonst werden die Deltas nach dem Absteigen auf eine
+			// veraltete Basis bezogen und das Fahrzeug erscheint an falscher Stelle (Diagnose diag1, boat_submerged/boat_ice)
+			this.stats.ignoredLocal++;
+			if (p.hasPos()) {
+				for (Clientbound.DeltaStep s : p.steps()) {
+					e.baseX = decodeAxis(e.baseX, s.dx());
+					e.baseY = decodeAxis(e.baseY, s.dy());
+					e.baseZ = decodeAxis(e.baseZ, s.dz());
+				}
+			}
 			return;
 		}
 		e.onGround = p.onGround();
@@ -368,6 +378,11 @@ public final class EntityManager {
 		this.stats.syncPackets++;
 		e.updates++;
 		if (e.localControl) {
+			// handleEntityPositionSync: setBase immer, Position nur ohne eigene Steuerung
+			Clientbound.PathStep last = p.path().getLast();
+			e.baseX = last.x();
+			e.baseY = last.y();
+			e.baseZ = last.z();
 			this.stats.ignoredLocal++;
 			return;
 		}
@@ -565,9 +580,10 @@ public final class EntityManager {
 		if (e == null) {
 			return;
 		}
-		e.x = e.baseX = x;
-		e.y = e.baseY = y;
-		e.z = e.baseZ = z;
+		// nur die Position; die Delta-Basis bleibt die zuletzt vom Server gesendete (VecDeltaCodec wird nur aus Paketen gesetzt)
+		e.x = x;
+		e.y = y;
+		e.z = z;
 		e.yRot = yRot;
 		e.xRot = xRot;
 		e.display.addLocalTarget(x, y, z, yRot, xRot);

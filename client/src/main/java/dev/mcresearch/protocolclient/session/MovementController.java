@@ -681,6 +681,26 @@ public final class MovementController {
 	/** Ticks nach dem Absteigen bis zur Spurzeile {@code dismount k x y z} (Erkennungstick mitgezählt, wie VehicleReferenceClient). */
 	static final int DISMOUNT_TRACE_TICKS = 10;
 	private RideScript dismountScript;
+	/** Diagnose (docs/58 §6): früheres Fahrzeug nach dem Absteigen. */
+	private int formerVehicle = -1;
+
+	/** Diagnose/Test: Entity-ID des zuletzt verlassenen Fahrzeugs (-1: keins). */
+	public synchronized int formerVehicle() {
+		return this.formerVehicle;
+	}
+	/** Skripteingabe des Erkennungsticks beim Absteigen (wie die Referenz, die die Tasten erst am Tickende loslässt). */
+	private PlayerPhysics.Input dismountInput = PlayerPhysics.Input.NONE;
+
+	/** Diagnosefelder der Zeile "after": früheres Fahrzeug aus Clientsicht (Darstellung x y z, Bewegung z, bestätigte z-Position). */
+	private String formerVehicleDiag() {
+		dev.mcresearch.protocolclient.entity.EntityManager.View v = this.entities == null || this.formerVehicle < 0 ? null
+			: this.entities.view(this.formerVehicle, 1.0F, -1);
+		if (v == null) {
+			return "- - - - -";
+		}
+		return String.join(" ", Double.toString(v.rx()), Double.toString(v.ry()), Double.toString(v.rz()), Double.toString(v.motionZ()),
+			Double.toString(v.z()));
+	}
 	private int dismountK;
 	private int dismountWait;
 
@@ -777,7 +797,9 @@ public final class MovementController {
 		if (rs != null && this.rideScriptTick >= 0) {
 			// Absteigen während der Skriptfolge (Schleichtaste): Position DISMOUNT_TRACE_TICKS Ticks später festhalten (wie die Referenz)
 			this.dismountScript = rs;
+			this.formerVehicle = this.ridingVehicle;
 			this.dismountK = rs.lines().size() + 1; // wie die Referenz: Index des ersten nicht mehr gefahrenen Ticks
+			this.dismountInput = this.dismountK - 1 < rs.inputs().size() ? rs.inputs().get(this.dismountK - 1) : PlayerPhysics.Input.NONE;
 			this.dismountWait = 0;
 			this.rideScript = null;
 		}
@@ -803,6 +825,12 @@ public final class MovementController {
 			enterRiding(v);
 		}
 		PlayerPhysics.Input input = this.command == null ? this.manualInput : this.command.input();
+		// Zustand des Passagiers vor diesem Tick (Sitz und Blick aus positionRider des Vortags) für den travel-Schritt in rideTick
+		double riderX = this.player.x();
+		double riderY = this.player.y();
+		double riderZ = this.player.z();
+		float riderYRot = this.player.yRot();
+		float riderXRot = this.player.xRot();
 		RideScript rs = this.rideScript;
 		int scriptIndex = -1;
 		if (rs != null) {
@@ -860,9 +888,24 @@ public final class MovementController {
 			}
 			this.wasJumping = input.jump();
 		}
+		// Entity#rideTick: deltaMovement = 0, dann tick() – der lokale Spieler ist autoritativ und rechnet travel mit seiner Eingabe ab dem
+		// bisherigen Sitz –, danach setzt positionRider nur die Position. Die Geschwindigkeit bleibt und überlebt das Absteigen (der
+		// Absteige-Teleport ist DELTA-relativ). Diagnose diag4: Vanilla-Passagier vorwärts vz 0,017836 (Luft) bzw. 0,01568 (Wasser).
+		double rvx = 0;
+		double rvy = 0;
+		double rvz = 0;
+		if (this.physics != null && this.player.positioned()) {
+			this.physics.setPosition(riderX, riderY, riderZ, 0, 0, 0);
+			this.physics.setYRot(riderYRot);
+			this.physics.setXRot(riderXRot);
+			PlayerPhysics.TickResult tr = this.physics.tick(input);
+			rvx = tr.vx();
+			rvy = tr.vy();
+			rvz = tr.vz();
+		}
 		double[] seat = this.entities.ownSeatTick();
 		if (seat != null) {
-			this.player.setPhysics(seat[0], seat[1], seat[2], 0, 0, 0, false, false);
+			this.player.setPhysics(seat[0], seat[1], seat[2], rvx, rvy, rvz, false, false);
 		}
 		Serverbound.PlayerInput keys = new Serverbound.PlayerInput(input.forward(), input.backward(), input.left(), input.right(), input.jump(),
 			input.sneak(), input.sprint());
@@ -927,6 +970,10 @@ public final class MovementController {
 			leaveRiding();
 		}
 		PlayerPhysics.Input input = this.command == null && this.claim == null ? this.manualInput : PlayerPhysics.Input.NONE;
+		if (this.dismountScript != null && this.dismountWait == 0 && this.command == null && this.claim == null) {
+			// Testskript wie VehicleReferenceClient: im Erkennungstick des Absteigens wirkt noch die Skripteingabe dieses Ticks
+			input = this.dismountInput;
+		}
 		if (this.claim != null) {
 			tickClaim();
 		} else if (this.physics != null) {
@@ -972,7 +1019,7 @@ public final class MovementController {
 			Vec3d pv = this.physics.velocity();
 			ds.lines().add(String.join(" ", "after", Integer.toString(this.dismountWait + 1), Double.toString(this.player.x()),
 				Double.toString(this.player.y()), Double.toString(this.player.z()), Double.toString(pv.x()), Double.toString(pv.y()),
-				Double.toString(pv.z()), Boolean.toString(this.physics.onGround())));
+				Double.toString(pv.z()), Boolean.toString(this.physics.onGround()), formerVehicleDiag()));
 		}
 		if (ds != null && ++this.dismountWait >= DISMOUNT_TRACE_TICKS) {
 			ds.lines().add(String.join(" ", "dismount", Integer.toString(this.dismountK), Double.toString(this.player.x()), Double.toString(this.player.y()),

@@ -20,17 +20,19 @@ build fill 140 59 100 142 59 220 minecraft:packed_ice
 # Pferdestufe: 1 Block hohe Plattform x 154…166, z 150…170
 build fill 154 60 150 166 60 170 minecraft:stone
 
-vehicle-nbt horse {Tame:1b,PersistenceRequired:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},attributes:[{id:"minecraft:movement_speed",base:0.225d},{id:"minecraft:jump_strength",base:0.7d}],Tags:[m14v]}
+# Pferde ohne KI (NoAI): sonst wandert das Pferd nach dem Absteigen zufällig (Vergleich vehicle7, horse_step); steuerbar bleibt es
+# über AbstractHorse#getControllingPassenger (gesattelt + Spieler)
+vehicle-nbt horse {NoAI:1b,Tame:1b,PersistenceRequired:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},attributes:[{id:"minecraft:movement_speed",base:0.225d},{id:"minecraft:jump_strength",base:0.7d}],Tags:[m14v]}
 
-vehicle boat_water_forward oak_boat 115.5 63.6 105.5 0 f:80 -:30 s:2
-vehicle boat_water_turn oak_boat 110.5 63.6 140.5 0 f:20 fl:25 fr:25 l:20 r:10 -:20 s:2
-vehicle boat_water_back oak_boat 120.5 63.6 170.5 180 b:40 -:20 s:2
-vehicle boat_wall oak_boat 115.5 63.6 195.5 0 f:40 -:10 s:2
-vehicle boat_ice oak_boat 141.5 60.0 102.5 0 f:60 -:30 s:2
-vehicle boat_land oak_boat 160.5 60.0 110.5 0 f:40 fl:20 -:20 s:2
-vehicle horse_walk horse 160.5 60.0 125.5 0 f:60 -:20 s:2
-vehicle horse_step horse 160.5 60.0 140.5 0 f:40 -:20 s:2
-vehicle horse_jump horse 168.5 60.0 125.5 0 f:10 fj:12 f:20 -:20 s:2
+vehicle boat_water_forward oak_boat 115.5 63.6 105.5 0 f:80 -:30 s:2 -:5
+vehicle boat_water_turn oak_boat 110.5 63.6 140.5 0 f:20 fl:25 fr:25 l:20 r:10 -:20 s:2 -:5
+vehicle boat_water_back oak_boat 120.5 63.6 170.5 180 b:40 -:20 s:2 -:5
+vehicle boat_wall oak_boat 115.5 63.6 195.5 0 f:40 -:10 s:2 -:5
+vehicle boat_ice oak_boat 141.5 60.0 102.5 0 f:60 -:30 s:2 -:5
+vehicle boat_land oak_boat 160.5 60.0 110.5 0 f:40 fl:20 -:20 s:2 -:5
+vehicle horse_walk horse 160.5 60.0 125.5 0 f:60 -:20 s:2 -:5
+vehicle horse_step horse 160.5 60.0 140.5 0 f:40 -:20 s:2 -:5
+vehicle horse_jump horse 168.5 60.0 125.5 0 f:10 fj:12 f:20 -:20 s:2 -:5
 
 # --- Erweiterung 2026-11-18 (docs/58 §4): Floß, Kistenboot, Lore, Fahrzeug-/Entity-Kollisionen, Absteigen per Schleichen, Laufen gegen Boot
 # Schienen x 146, z 100…140: normale Schienen; die Lore wird vom Server bewegt, Eingabe f schiebt sie an (player_input)
@@ -39,12 +41,12 @@ build fill 146 60 100 146 60 140 minecraft:rail[shape=north_south]
 obstacle boat_into_boat oak_boat 125.5 63.6 128.5 90
 obstacle horse_into_boat oak_boat 160.5 60.0 190.5 90
 obstacle walk_into_boat oak_boat 148.5 60.0 183.5 90
-vehicle raft_water_forward bamboo_raft 105.5 63.6 105.5 0 f:60 -:20 s:2
-vehicle chest_boat_turn birch_chest_boat 105.5 63.6 150.5 0 f:20 fr:30 -:20 s:2
-vehicle boat_into_boat oak_boat 125.5 63.6 118.5 0 f:60 -:10 s:2
-vehicle horse_into_boat horse 160.5 60.0 180.5 0 f:40 -:10 s:2
-vehicle minecart_push minecart 146.5 60.0 102.5 0 f:10 -:60 s:2
+vehicle raft_water_forward bamboo_raft 105.5 63.6 105.5 0 f:60 -:20 s:2 -:5
+vehicle chest_boat_turn birch_chest_boat 105.5 63.6 150.5 0 f:20 fr:30 -:20 s:2 -:5
+vehicle boat_into_boat oak_boat 125.5 63.6 118.5 0 f:60 -:10 s:2 -:5
+vehicle horse_into_boat horse 160.5 60.0 180.5 0 f:40 -:10 s:2 -:5
+vehicle minecart_push minecart 146.5 60.0 102.5 0 f:10 -:60 s:2 -:5
 # walk <name> <x> <y> <z> <gier> <eingaben…>: Spieler ohne Fahrzeug (Boot 0,5625 hoch < Stufenhöhe 0,6 → Vanilla steigt auf)
 # Untergetaucht (2,6 unter der Oberfläche): Vanilla UNDER_WATER → Boot sinkt, Server wirft nach 60 Ticks unter Wasser ab
-vehicle boat_submerged oak_boat 125.5 61.0 160.5 0 f:40 -:40 s:2
+vehicle boat_submerged oak_boat 125.5 61.0 160.5 0 f:40 -:40 s:2 -:5
 walk walk_into_boat 148.5 60.0 180.5 0 f:30 -:10
