@@ -31,8 +31,10 @@ import org.junit.jupiter.api.Test;
 
 /**
  * M14 Phase L (docs/58 §4): Fahrzeugszenarien ({@code m14-vehicle-course.txt}) mit dem eigenen Client gegen den lokalen
- * Vanilla-Server. Je Szenario: Fahrzeug beschwören, aufsitzen, Aufsitz-Tick + 40 Ruheticks, Eingaben; Spur je Tick, Vergleich mit der
- * Vanilla-Referenzspur (falls angegeben) und mit der Serverposition des Fahrzeugs am Ende; Absteigen über die Schleichtaste.
+ * Vanilla-Server. Je Szenario: Hindernisse (Tag m14o) und Fahrzeug (Tag m14v) beschwören, aufsitzen, Aufsitz-Tick + 40 Ruheticks,
+ * Eingaben (Absteigen per Schleichtaste ist Teil der Folge); {@code walk}-Szenarien laufen ohne Fahrzeug. Spur je Tick, Vergleich
+ * aller Felder mit der Vanilla-Referenzspur (Position, Geschwindigkeit, Gier, Bodenkontakt, horizontale Kollision, Blickrichtung,
+ * Absteigetick und -position) und mit der Serverposition am Ende.
  */
 @Tag("integration")
 class VehicleIntegrationTest {
@@ -43,7 +45,10 @@ class VehicleIntegrationTest {
 	private static ServerConsole console;
 	private static Path course;
 
-	record Scenario(String name, String type, double x, double y, double z, float yaw, List<String> inputs) {
+	record Scenario(String name, String type, boolean walk, double x, double y, double z, float yaw, List<String> inputs) {
+	}
+
+	record Obstacle(String scenario, String type, double x, double y, double z, float yaw) {
 	}
 
 	@BeforeAll
@@ -68,16 +73,29 @@ class VehicleIntegrationTest {
 		List<Scenario> out = new ArrayList<>();
 		for (String line : lines) {
 			String[] t = line.trim().split("\\s+");
-			if (t.length >= 8 && t[0].equals("vehicle")) {
+			boolean walk = t.length >= 7 && t[0].equals("walk");
+			if (walk || t.length >= 8 && t[0].equals("vehicle")) {
+				int o = walk ? 0 : 1;
 				List<String> inputs = new ArrayList<>();
-				for (int i = 7; i < t.length; i++) {
+				for (int i = 6 + o; i < t.length; i++) {
 					String[] seg = t[i].split(":");
 					for (int n = 0; n < Integer.parseInt(seg[1]); n++) {
 						inputs.add(seg[0]);
 					}
 				}
-				out.add(new Scenario(t[1], t[2], Double.parseDouble(t[3]), Double.parseDouble(t[4]), Double.parseDouble(t[5]), Float.parseFloat(t[6]),
-					inputs));
+				out.add(new Scenario(t[1], walk ? "walk" : t[2], walk, Double.parseDouble(t[2 + o]), Double.parseDouble(t[3 + o]),
+					Double.parseDouble(t[4 + o]), Float.parseFloat(t[5 + o]), inputs));
+			}
+		}
+		return out;
+	}
+
+	static List<Obstacle> obstacles(final List<String> lines) {
+		List<Obstacle> out = new ArrayList<>();
+		for (String line : lines) {
+			String[] t = line.trim().split("\\s+");
+			if (t.length == 7 && t[0].equals("obstacle")) {
+				out.add(new Obstacle(t[1], t[2], Double.parseDouble(t[3]), Double.parseDouble(t[4]), Double.parseDouble(t[5]), Float.parseFloat(t[6])));
 			}
 		}
 		return out;
@@ -125,86 +143,175 @@ class VehicleIntegrationTest {
 		}
 	}
 
+	/** Feldweiser Vergleich einer eigenen Spur (ohne Szenariospalte) mit der Referenz (mit Szenariospalte). */
+	static final class Comparison {
+		int n;
+		int exactTicks;
+		int firstDiff = -1;
+		double pos;
+		double vel;
+		double yRot;
+		double playerYRot;
+		int groundMismatch;
+		int collisionMismatch;
+		String dismount = "-";
+		boolean dismountExact = true;
+
+		void add(final String[] o, final String[] r) {
+			double dp = 0;
+			double dv = 0;
+			for (int i = 0; i < 3; i++) {
+				dp = Math.max(dp, Math.abs(Double.parseDouble(o[2 + i]) - Double.parseDouble(r[3 + i])));
+				dv = Math.max(dv, Math.abs(Double.parseDouble(o[5 + i]) - Double.parseDouble(r[6 + i])));
+			}
+			double dy = Math.abs(Float.parseFloat(o[8]) - Float.parseFloat(r[9]));
+			double dpy = Math.abs(Float.parseFloat(o[11]) - Float.parseFloat(r[12]));
+			boolean g = o[9].equals(r[10]);
+			boolean h = o[10].equals(r[11]);
+			this.pos = Math.max(this.pos, dp);
+			this.vel = Math.max(this.vel, dv);
+			this.yRot = Math.max(this.yRot, dy);
+			this.playerYRot = Math.max(this.playerYRot, dpy);
+			this.groundMismatch += g ? 0 : 1;
+			this.collisionMismatch += h ? 0 : 1;
+			this.n++;
+			if (dp == 0 && dv == 0 && dy == 0 && dpy == 0 && g && h) {
+				this.exactTicks++;
+			} else if (this.firstDiff < 0) {
+				this.firstDiff = this.n;
+			}
+		}
+
+		@Override
+		public String toString() {
+			return String.format(Locale.ROOT, "vanilla ticks %d exact %d first diff %d max|Δpos| %.3e |Δv| %.3e |ΔyRot| %.3e |ΔplayerYRot| %.3e"
+				+ " ground≠ %d hc≠ %d dismount %s", this.n, this.exactTicks, this.firstDiff, this.pos, this.vel, this.yRot, this.playerYRot,
+				this.groundMismatch, this.collisionMismatch, this.dismount);
+		}
+	}
+
 	@Test
 	void vehicleCourseMatchesServerAndVanillaReference() throws Exception {
 		List<String> lines = Files.readAllLines(course, StandardCharsets.UTF_8);
 		List<String> build = lines.stream().filter(l -> l.startsWith("build ")).map(l -> l.substring(6)).toList();
 		Map<String, String> nbt = nbt(lines);
 		List<Scenario> scenarios = scenarios(lines);
+		List<Obstacle> obstacles = obstacles(lines);
 		Map<String, List<String[]>> reference = loadReference();
 		List<String> trace = new ArrayList<>();
 		List<String> report = new ArrayList<>();
 		SessionConfig c = new SessionConfig("127.0.0.1", PORT, NAME, 2, Duration.ZERO, false, "mcresearch-protocol-client-it", 9f, Duration.ofSeconds(5),
 			SessionConfig.DEFAULT_READ_TIMEOUT, Path.of("build", "integration-vehicle-packets.log"));
 		int compared = 0;
-		int exact = 0;
-		double worst = 0;
+		int exactTicks = 0;
+		int exactScenarios = 0;
 		int serverMismatch = 0;
 		try (PacketLog log = PacketLog.open(c.packetLog())) {
 			ClientSession session = new ClientSession(Connection.open(address, PORT, 5000, 30000, log), c);
 			CompletableFuture<ClientSession.Result> result = CompletableFuture.supplyAsync(session::run);
 			waitFor(() -> session.movement().ready() && session.movement().physics() != null, 20, "ready with physics");
 			console.send(build, 2500);
-			console.send(List.of("gamemode creative " + NAME, "kill @e[tag=m14v]"), 500);
+			console.send(List.of("gamemode creative " + NAME, "kill @e[tag=m14v]", "kill @e[tag=m14o]"), 500);
 			for (Scenario s : scenarios) {
-				console.send(List.of(String.format(Locale.ROOT, "tp %s %s %s %s", NAME, s.x(), s.y() + 2, s.z() - 3)), 800);
-				List<PlayerPhysics.Input> inputs = s.inputs().stream().map(VehicleIntegrationTest::input).toList();
-				CompletableFuture<List<String>> f = session.movement().scheduleRideScript(s.yaw(), SETTLE, inputs, s.inputs());
-				String data = nbt.getOrDefault(s.type(), "{Tags:[m14v]}");
-				data = data.replaceFirst("\\{",String.format(Locale.ROOT, "{Rotation:[%sf,0f],", s.yaw()));
-				console.send(List.of(String.format(Locale.ROOT, "summon %s %s %s %s %s", s.type(), s.x(), s.y(), s.z(), data),
-					"ride " + NAME + " mount @e[tag=m14v,limit=1]"), 0);
-				List<String> got = f.get(60, TimeUnit.SECONDS);
+				long corrBefore = session.movement().vehicleCorrections();
+				List<String> summon = new ArrayList<>();
+				for (Obstacle o : obstacles) {
+					if (o.scenario().equals(s.name())) {
+						summon.add(String.format(Locale.ROOT, "summon %s %s %s %s {Rotation:[%sf,0f],Tags:[m14o]}", o.type(), o.x(), o.y(), o.z(), o.yaw()));
+					}
+				}
+				List<String> got;
+				if (s.walk()) {
+					summon.add(String.format(Locale.ROOT, "tp %s %s %s %s %s 0", NAME, s.x(), s.y(), s.z(), s.yaw()));
+					console.send(summon, 1500);
+					List<PlayerPhysics.Input> inputs = new ArrayList<>();
+					for (int i = 0; i < SETTLE; i++) {
+						inputs.add(PlayerPhysics.Input.NONE);
+					}
+					s.inputs().forEach(k -> inputs.add(input(k)));
+					List<PlayerPhysics.TickResult> rs = session.movement().script(inputs).get(60, TimeUnit.SECONDS);
+					got = new ArrayList<>();
+					float yaw = session.movement().renderState().yaw();
+					for (int k = SETTLE; k < rs.size(); k++) {
+						PlayerPhysics.TickResult r = rs.get(k);
+						got.add(String.join(" ", Integer.toString(k - SETTLE + 1), s.inputs().get(k - SETTLE), Double.toString(r.x()), Double.toString(r.y()),
+							Double.toString(r.z()), Double.toString(r.vx()), Double.toString(r.vy()), Double.toString(r.vz()), Float.toString(yaw),
+							Boolean.toString(r.onGround()), Boolean.toString(r.horizontalCollision()), Float.toString(yaw)));
+					}
+				} else {
+					summon.add(0, String.format(Locale.ROOT, "tp %s %s %s %s", NAME, s.x(), s.y() + 2, s.z() - 3));
+					console.send(summon, 800);
+					List<PlayerPhysics.Input> inputs = s.inputs().stream().map(VehicleIntegrationTest::input).toList();
+					CompletableFuture<List<String>> f = session.movement().scheduleRideScript(s.yaw(), SETTLE, inputs, s.inputs());
+					String data = nbt.getOrDefault(s.type(), "{Tags:[m14v]}");
+					data = data.replaceFirst("\\{", String.format(Locale.ROOT, "{Rotation:[%sf,0f],", s.yaw()));
+					console.send(List.of(String.format(Locale.ROOT, "summon %s %s %s %s %s", s.type(), s.x(), s.y(), s.z(), data),
+						"ride " + NAME + " mount @e[tag=m14v,limit=1]"), 0);
+					got = f.get(60, TimeUnit.SECONDS);
+				}
 				for (String g : got) {
 					trace.add(s.name() + " " + g);
 				}
-				// Serverposition des Fahrzeugs am Ende (move_vehicle angenommen?)
+				List<String> ticks = got.stream().filter(g -> !g.startsWith("dismount ")).toList();
+				String dismountLine = got.stream().filter(g -> g.startsWith("dismount ")).findFirst().orElse(null);
+				// Serverposition am Ende (Fahrzeug bzw. Spieler beim Laufen)
 				Thread.sleep(300);
-				double[] server = console.dataGet("@e[tag=m14v,limit=1]", "Pos");
-				String[] last = got.getLast().split(" ");
+				double[] server = console.dataGet(s.walk() ? NAME : "@e[tag=m14v,limit=1]", "Pos");
+				String[] last = ticks.getLast().split(" ");
 				double dx = Double.parseDouble(last[2]) - server[0];
 				double dy = Double.parseDouble(last[3]) - server[1];
 				double dz = Double.parseDouble(last[4]) - server[2];
 				double serverDiff = Math.sqrt(dx * dx + dy * dy + dz * dz);
-				if (serverDiff > 0.01) {
+				boolean serverDriven = s.type().endsWith("minecart");
+				if (serverDiff > 0.01 && !serverDriven) {
 					serverMismatch++;
 				}
 				// Vergleich mit der Vanilla-Referenz
 				List<String[]> ref = reference.get(s.name());
 				String cmp = "no reference";
 				if (ref != null) {
-					int n = Math.min(ref.size(), got.size());
-					double maxD = 0;
-					int firstDiff = -1;
+					List<String[]> refTicks = ref.stream().filter(r -> !r[1].equals("dismount")).toList();
+					String[] refDismount = ref.stream().filter(r -> r[1].equals("dismount")).findFirst().orElse(null);
+					Comparison cmpr = new Comparison();
+					int n = Math.min(refTicks.size(), ticks.size());
 					for (int k = 0; k < n; k++) {
-						String[] o = got.get(k).split(" ");
-						String[] r = ref.get(k);
-						double d = Math.max(Math.abs(Double.parseDouble(o[2]) - Double.parseDouble(r[3])), Math.max(Math.abs(Double.parseDouble(o[3])
-							- Double.parseDouble(r[4])), Math.abs(Double.parseDouble(o[4]) - Double.parseDouble(r[5]))));
-						if (d > 0 && firstDiff < 0) {
-							firstDiff = k + 1;
+						cmpr.add(ticks.get(k).split(" "), refTicks.get(k));
+					}
+					if (refDismount != null || dismountLine != null) {
+						if (refDismount == null || dismountLine == null) {
+							cmpr.dismount = "only " + (refDismount == null ? "own" : "vanilla");
+							cmpr.dismountExact = false;
+						} else {
+							String[] o = dismountLine.split(" ");
+							double d = 0;
+							for (int i = 0; i < 3; i++) {
+								d = Math.max(d, Math.abs(Double.parseDouble(o[2 + i]) - Double.parseDouble(refDismount[3 + i])));
+							}
+							cmpr.dismountExact = d == 0 && o[1].equals(refDismount[2]);
+							cmpr.dismount = String.format(Locale.ROOT, "tick %s/%s |Δpos| %.3e", o[1], refDismount[2], d);
 						}
-						maxD = Math.max(maxD, d);
-						compared++;
 					}
-					worst = Math.max(worst, maxD);
-					if (maxD == 0 && n == got.size()) {
-						exact++;
+					compared += cmpr.n;
+					exactTicks += cmpr.exactTicks;
+					if (cmpr.exactTicks == cmpr.n && n == ticks.size() && n == refTicks.size() && cmpr.dismountExact) {
+						exactScenarios++;
 					}
-					cmp = String.format(Locale.ROOT, "vanilla ticks %d/%d max|Δpos| %.3e first diff tick %d", n, ref.size(), maxD, firstDiff);
+					cmp = cmpr + String.format(Locale.ROOT, " (ticks own %d / vanilla %d)", ticks.size(), refTicks.size());
 				}
-				report.add(String.format(Locale.ROOT, "%-20s ticks %3d end (%.4f %.4f %.4f) server |Δ| %.2e corrections %d; %s", s.name(), got.size(),
-					Double.parseDouble(last[2]), Double.parseDouble(last[3]), Double.parseDouble(last[4]), serverDiff, session.movement().vehicleCorrections(),
-					cmp));
-				// Absteigen wie ein Spieler: Schleichtaste (player_input shift) → Server setzt ab
-				session.movement().setManualInput(new PlayerPhysics.Input(false, false, false, false, false, true, false));
-				waitFor(() -> session.movement().ridingVehicle() < 0, 10, "dismount via sneak");
-				session.movement().setManualInput(PlayerPhysics.Input.NONE);
-				console.send(List.of("kill @e[tag=m14v]"), 600);
+				report.add(String.format(Locale.ROOT, "%-20s %-16s end (%.4f %.4f %.4f) server |Δ| %.2e%s corrections %d; %s", s.name(), s.type(),
+					Double.parseDouble(last[2]), Double.parseDouble(last[3]), Double.parseDouble(last[4]), serverDiff, serverDriven ? " (serverseitig)" : "",
+					session.movement().vehicleCorrections() - corrBefore, cmp));
+				if (!s.walk() && session.movement().ridingVehicle() >= 0) {
+					// nicht während der Folge abgestiegen: Schleichtaste wie ein Spieler
+					session.movement().setManualInput(new PlayerPhysics.Input(false, false, false, false, false, true, false));
+					waitFor(() -> session.movement().ridingVehicle() < 0, 10, "dismount via sneak");
+					session.movement().setManualInput(PlayerPhysics.Input.NONE);
+				}
+				console.send(List.of("kill @e[tag=m14v]", "kill @e[tag=m14o]"), 600);
 			}
-			report.add(String.format(Locale.ROOT, "summary: %d scenarios, vanilla ticks compared %d, bit-exact %d, worst |Δpos| %.3e, server mismatches %d,"
-				+ " own mounts %d dismounts %d", scenarios.size(), compared, exact, worst, serverMismatch, session.entities().stats().ownMounts,
-				session.entities().stats().ownDismounts));
+			report.add(String.format(Locale.ROOT, "summary: %d scenarios, vanilla ticks compared %d, bit-exact ticks %d, bit-exact scenarios %d,"
+				+ " server mismatches %d, own mounts %d dismounts %d, corrections %d", scenarios.size(), compared, exactTicks, exactScenarios, serverMismatch,
+				session.entities().stats().ownMounts, session.entities().stats().ownDismounts, session.movement().vehicleCorrections()));
 			session.requestStop("vehicle course done");
 			ClientSession.Result r = result.get(30, TimeUnit.SECONDS);
 			assertNull(r.serverDisconnectReason());

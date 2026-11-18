@@ -192,10 +192,10 @@ wait 1.5
 console ride ${NAME} mount @e[tag=horseA,limit=1]
 wait 1
 ride-dump on-horse
-keys f 2
-ride-dump horse-walked
-keys fj 0.6
 keys f 1
+ride-dump horse-walked
+keys fj 0.4
+keys f 0.5
 ride-dump horse-jumped
 console kill @e[tag=horseA]
 wait 1

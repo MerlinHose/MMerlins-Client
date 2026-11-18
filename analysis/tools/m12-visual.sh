@@ -28,7 +28,7 @@ if [ "$MODE" = "vanilla" ] || [ "$MODE" = "both" ]; then
     powershell -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$ROOT/analysis/tools/stopmon.ps1")" -OutDir "$(cygpath -w "$OUT")" > /dev/null 2>&1
   }
   trap restore EXIT
-  sed -i "s/^difficulty=.*/difficulty=peaceful/" "$SERVER/server.properties"
+  sed -i "s/^difficulty=.*/difficulty=${M12_DIFFICULTY:-peaceful}/" "$SERVER/server.properties"
   grep -E "^(network-compression-threshold|difficulty|online-mode|server-ip)=" "$SERVER/server.properties" | tee -a "$OUT/run.txt"
   : > "$SERVER/console.in"; : > "$SERVER/logs/stdout.txt"
   ( cd "$SERVER" && tail -n 0 -f console.in | java -Xms512M -Xmx$SERVER_XMX -Dminecraft.api.discovery.host=http://127.0.0.1:9/discovery \

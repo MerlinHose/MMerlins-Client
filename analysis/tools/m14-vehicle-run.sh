@@ -32,7 +32,7 @@ grep -E "Done \(" "$SERVER/logs/stdout.txt" | tee -a "$OUT/run.txt"
 SERVER_LOG_START=$(wc -l < "$SERVER/logs/latest.log")
 powershell -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$ROOT/analysis/tools/netmon.ps1")" -Seconds 1500 -Out "$(cygpath -w "$OUT/netmon.txt")" > /dev/null 2>&1 &
 grep "^build " "$COURSE" | sed 's/^build //' >> "$SERVER/console.in"; sleep 4
-server_cmd "kill @e[tag=m14v]"
+server_cmd "kill @e[tag=m14v]"; server_cmd "kill @e[tag=m14o]"
 
 # ---- Vanilla-Referenz ----
 log "--- Vanilla reference"
@@ -40,7 +40,9 @@ rm -f "$RUN/logs/latest.log" "$RUN/vehref-trace.txt"
 ( cd "$ROOT/research" && ./gradlew --no-daemon --console=plain -PvehicleRefXmx=${M14_CLIENT_XMX:-1536M} "-PvehicleRefCourse=$(cygpath -m "$COURSE")" runVehicleRef > "$OUT/fabric-gradle.txt" 2>&1 ) &
 GPID=$!
 seen_ready=0; seen_end=0; joined=0
-for i in $(seq 1 2400); do
+for i in $(seq 1 4800); do
+  kill -0 $GPID 2>/dev/null || break
+  [ $joined -eq 0 ] && [ $i -eq 600 ] && log "WARN: reference client not joined after 300 s (Startbildschirm? options.txt in research/run-vehicleref prüfen)"
   sleep 0.5
   [ -f "$RUN/logs/latest.log" ] || continue
   L="$RUN/logs/latest.log"
@@ -50,18 +52,27 @@ for i in $(seq 1 2400); do
     seen_end=$n_end; name=$(grep "\[VEHREF\] END" "$L" | tail -1 | sed -E 's/.*END ([^ ]+) .*/\1/')
     before=$(wc -l < "$SERVER/logs/latest.log"); server_cmd "data get entity @e[tag=m14v,limit=1] Pos"; sleep 0.4
     log "END $name client=$(grep "\[VEHREF\] END" "$L" | tail -1 | sed -E 's/.* at //') server=$(tail -n +$((before + 1)) "$SERVER/logs/latest.log" | grep -o "has the following entity data: .*" | head -1 | sed 's/has the following entity data: //')"
-    server_cmd "ride $REF dismount"; server_cmd "kill @e[tag=m14v]"
+    server_cmd "ride $REF dismount"; server_cmd "kill @e[tag=m14v]"; server_cmd "kill @e[tag=m14o]"
   fi
   n_ready=$(grep -c "\[VEHREF\] READY" "$L")
   if [ "$n_ready" -gt "$seen_ready" ]; then
     seen_ready=$n_ready
     set -- $(grep "\[VEHREF\] READY" "$L" | tail -1 | sed -E 's/.*READY //')
-    nbt=$(grep "^vehicle-nbt $2 " "$COURSE" | sed -E "s/^vehicle-nbt $2 //"); [ -z "$nbt" ] && nbt="{Tags:[m14v]}"
-    nbt=$(echo "$nbt" | sed -E "s/^\{/{Rotation:[${6}f,0f],/")
-    server_cmd "kill @e[tag=m14v]"
-    server_cmd "tp $REF $3 $(awk -v y=$4 'BEGIN{print y+2}') $(awk -v z=$5 'BEGIN{print z-3}')"; sleep 0.8
-    server_cmd "summon $2 $3 $4 $5 $nbt"; server_cmd "ride $REF mount @e[tag=m14v,limit=1]"
-    log "READY $1 -> summon $2 + ride"
+    server_cmd "kill @e[tag=m14v]"; server_cmd "kill @e[tag=m14o]"
+    # Hindernisse des Szenarios (obstacle <szenario> <typ> <x> <y> <z> <gier>)
+    grep "^obstacle $1 " "$COURSE" | while read -r _ _ ot ox oy oz oyaw; do
+      server_cmd "summon $ot $ox $oy $oz {Rotation:[${oyaw}f,0f],Tags:[m14o]}"
+    done
+    if [ "$2" = "walk" ]; then
+      server_cmd "tp $REF $3 $4 $5 $6 0"
+      log "READY $1 -> walk (tp)"
+    else
+      nbt=$(grep "^vehicle-nbt $2 " "$COURSE" | sed -E "s/^vehicle-nbt $2 //"); [ -z "$nbt" ] && nbt="{Tags:[m14v]}"
+      nbt=$(echo "$nbt" | sed -E "s/^\{/{Rotation:[${6}f,0f],/")
+      server_cmd "tp $REF $3 $(awk -v y=$4 'BEGIN{print y+2}') $(awk -v z=$5 'BEGIN{print z-3}')"; sleep 0.8
+      server_cmd "summon $2 $3 $4 $5 $nbt"; server_cmd "ride $REF mount @e[tag=m14v,limit=1]"
+      log "READY $1 -> summon $2 + ride"
+    fi
   fi
   grep -q "\[VEHREF\] DONE" "$L" && { log "DONE"; break; }
 done
@@ -81,8 +92,8 @@ cp "$ROOT/client/build/m14-vehicle-own-trace.txt" "$ROOT/client/build/m14-vehicl
 cat "$OUT/m14-vehicle-report.txt" | tee -a "$OUT/run.txt"
 
 # ---- Aufräumen: Strecke entfernen, Server stoppen ----
-server_cmd "kill @e[tag=m14v]"
-server_cmd "fill 98 60 98 172 70 222 minecraft:air"; server_cmd "fill 98 59 98 172 59 222 minecraft:stone"; server_cmd "forceload remove 96 96 175 223"
+server_cmd "kill @e[tag=m14v]"; server_cmd "kill @e[tag=m14o]"
+for zz in "98 136" "137 175" "176 214" "215 222"; do set -- $zz; server_cmd "fill 98 60 $1 172 70 $2 minecraft:air"; done; server_cmd "fill 98 59 98 172 59 222 minecraft:stone"; server_cmd "forceload remove 96 96 175 223"
 sleep 2
 server_cmd "stop"
 for i in $(seq 1 60); do grep -q "Stopping server" "$SERVER/logs/stdout.txt" && break; sleep 1; done

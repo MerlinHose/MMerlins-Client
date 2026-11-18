@@ -216,4 +216,38 @@ class BlockInteractionTest {
 		this.bi.onServerSelectedSlot(5);
 		assertEquals(List.of("set_carried_item"), names(tick()), "server-set slot is echoed like Vanilla");
 	}
+
+	/**
+	 * M14 (docs/58 §2.1, Lauf m14-gfx2): Ein Rechtsklick auf ein Fahrzeug sendet wie Vanilla genau ein {@code interact}, weil
+	 * Boot/Floß ({@code SUCCESS}) und leere Lore ({@code CONSUME}) clientseitig verbrauchen; mit Schleichen bzw. besetzter Lore folgt die
+	 * Nebenhand (PASS).
+	 */
+	@Test
+	void vehicleRightClickSendsOneInteractUnlessSneaking() {
+		dev.mcresearch.protocolclient.entity.EntityManager m = new dev.mcresearch.protocolclient.entity.EntityManager();
+		m.handle(new dev.mcresearch.protocolclient.protocol.packet.Clientbound.AddEntity(1, new java.util.UUID(3, 1), 9, 0.5, 64, 2.0, 0, 0, 0, 0, 0, 0, 0));
+		m.handle(new dev.mcresearch.protocolclient.protocol.packet.Clientbound.AddEntity(2, new java.util.UUID(3, 2), 86, 0.5, 64, 2.0, 0, 0, 0, 0, 0, 0, 0));
+		m.handle(new dev.mcresearch.protocolclient.protocol.packet.Clientbound.AddEntity(3, new java.util.UUID(3, 3), 114, 9.5, 64, 9.5, 0, 0, 0, 0, 0, 0, 0));
+		this.pitch = 40f;
+		this.bi.setInputAllowed(true);
+		// Floß allein vor dem Spieler
+		java.util.function.Function<Integer, List<ServerboundPacket>> click = id -> {
+			this.bi.useClick();
+			BlockInteraction.Snapshot s = new BlockInteraction.Snapshot(
+				(x, y, z) -> this.world.getOrDefault(dev.mcresearch.protocolclient.protocol.codec.Positions.packBlock(x, y, z), 0), 0.5, 64, 0.5, 0f, this.pitch,
+				true, 4.5, 3.0, BlockInteraction.SURVIVAL, false, List.of(this.hotbar), ItemStack.EMPTY, 1.0, 0.0, 0.2, List.of(m.view(id, 1.0F, 0)));
+			List<ServerboundPacket> out = this.bi.tick(s);
+			for (int i = 0; i < 5; i++) {
+				this.bi.tick(s); // rightClickDelay abbauen
+			}
+			return out;
+		};
+		assertEquals(1, names(click.apply(1)).stream().filter("interact"::equals).count(), "Floß: SUCCESS beendet die Handschleife");
+		this.bi.setSecondaryUse(true);
+		assertEquals(2, names(click.apply(1)).stream().filter("interact"::equals).count(), "Schleichen: AbstractBoat gibt PASS, Nebenhand folgt");
+		this.bi.setSecondaryUse(false);
+		assertEquals(1, names(click.apply(2)).stream().filter("interact"::equals).count(), "leere Lore: CONSUME");
+		m.handle(new dev.mcresearch.protocolclient.protocol.packet.Clientbound.SetPassengers(2, new int[]{3}));
+		assertEquals(2, names(click.apply(2)).stream().filter("interact"::equals).count(), "besetzte Lore: PASS");
+	}
 }

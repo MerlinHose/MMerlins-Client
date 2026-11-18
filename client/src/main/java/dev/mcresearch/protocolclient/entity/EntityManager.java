@@ -432,12 +432,15 @@ public final class EntityManager {
 			}
 			return;
 		}
+		// Vanilla wasPlayerMounted: der Server sendet beim Einsteigen dieselbe Liste doppelt (ServerPlayer#startRiding direkt + Tracker);
+		// bleibt der eigene Spieler auf diesem Fahrzeug, ist das weder Ab- noch Aufsteigen
+		boolean ownStays = this.ownId >= 0 && this.ownVehicle == v.id && java.util.Arrays.stream(p.passengers()).anyMatch(id -> id == this.ownId);
 		for (int old : v.passengers) {
 			ClientEntity o = this.entities.get(old);
 			if (o != null && o.vehicle == v.id) {
 				o.vehicle = -1;
 			}
-			if (old == this.ownId && this.ownVehicle == v.id) {
+			if (old == this.ownId && this.ownVehicle == v.id && !ownStays) {
 				this.ownVehicle = -1;
 				v.localControl = false;
 				this.stats.ownDismounts++;
@@ -528,7 +531,13 @@ public final class EntityManager {
 				continue; // Zuschauer
 			}
 			double[] p = renderPos(e, 1.0F, 0);
-			if (!e.boundingBox(p[0], p[1], p[2]).intersects(playerBox)) {
+			dev.mcresearch.protocolclient.physics.Aabb box = e.boundingBox(p[0], p[1], p[2]);
+			if (boat) {
+				// AbstractBoat#tick: getEntities(getBoundingBox().inflate(0.2F, -0.01F, 0.2F), pushableBy) → push(entity)
+				box = new dev.mcresearch.protocolclient.physics.Aabb(box.minX() - 0.2F, box.minY() + 0.01F, box.minZ() - 0.2F, box.maxX() + 0.2F,
+					box.maxY() - 0.01F, box.maxZ() + 0.2F);
+			}
+			if (!box.intersects(playerBox)) {
 				continue;
 			}
 			double xa = p[0] - px;

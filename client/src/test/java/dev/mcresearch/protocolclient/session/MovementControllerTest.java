@@ -332,4 +332,27 @@ class MovementControllerTest {
 		assertTrue(again.stream().anyMatch(p -> p instanceof Serverbound.PlayerCommand c && c.action() == Serverbound.PlayerCommand.START_SPRINTING),
 			"sprint start is reported again after the reset");
 	}
+
+	/**
+	 * M14: Absteigen per Schleichtaste. Der Server kennt danach weiterhin „Schleichen gedrückt“ (letztes player_input); wie
+	 * {@code LocalPlayer#lastSentInput} darf der Client den gesendeten Zustand beim Absteigen nicht still zurücksetzen, sonst geht das
+	 * Loslassen nie hinaus und der Server wirft den Spieler beim nächsten Aufsitzen sofort wieder ab.
+	 */
+	@Test
+	void releasingSneakAfterDismountIsSentToTheServer() {
+		spawn();
+		dev.mcresearch.protocolclient.entity.EntityManager em = new dev.mcresearch.protocolclient.entity.EntityManager();
+		em.setOwnId(500);
+		this.m.setEntities(em);
+		em.handle(new Clientbound.AddEntity(77, new java.util.UUID(3, 77), 90, 0.5, 64, 0.5, 0, 0, 0, 0, 0, 0, 0)); // Eichenboot
+		em.handle(new Clientbound.SetPassengers(77, new int[]{500}));
+		this.m.tick();
+		this.m.setManualInput(new PlayerPhysics.Input(false, false, false, false, false, true, false));
+		List<ServerboundPacket> sneak = this.m.tick();
+		assertTrue(sneak.stream().anyMatch(p -> p instanceof Serverbound.PlayerInput i && i.shift()), "sneak is sent while riding");
+		em.handle(new Clientbound.SetPassengers(77, new int[0])); // Server: abgestiegen
+		this.m.setManualInput(PlayerPhysics.Input.NONE);
+		List<ServerboundPacket> after = this.m.tick();
+		assertTrue(after.stream().anyMatch(p -> p instanceof Serverbound.PlayerInput i && !i.shift()), "release of sneak reaches the server");
+	}
 }

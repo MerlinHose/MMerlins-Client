@@ -114,4 +114,26 @@ class VehiclePhysicsTest {
 		assertEquals((0.7 * 0.6 - 0.08) * 0.98, j.vy(), 1.0E-4);
 		assertFalse(h2.onGround());
 	}
+
+	/**
+	 * M14 (Fahrzeugvergleich vehicle3): Ein vollständig untergetauchtes Boot sinkt in Vanilla (UNDER_WATER: Auftrieb 0,01 gegen
+	 * Schwerkraft 0,04). Beim Aufsitzen kennt der Vanilla-Client den Status bereits (tick() berechnet ihn auch ohne Steuerung); ohne
+	 * {@link BoatPhysics#primeStatus()} galt der Anfangsstatus IN_AIR und das Boot sprang im ersten Tick an die Oberfläche.
+	 */
+	@Test
+	void submergedBoatKeepsSinkingAfterMountInsteadOfSnappingToTheSurface() {
+		TestWorld w = new TestWorld().floor(58, 20).fill(-20, 59, -20, 20, 63, 20, WATER); // Wasser 59–63, Oberfläche 64
+		BoatPhysics b = boat(w);
+		b.setPosition(0.5, 61.0, 0.5, 0);
+		b.primeStatus();
+		assertEquals(BoatPhysics.Status.UNDER_WATER, b.status());
+		BoatPhysics.TickResult r = b.tick();
+		assertEquals(BoatPhysics.Status.UNDER_WATER, r.status());
+		assertTrue(r.y() < 61.0, "sinks, y=" + r.y());
+		// Gegenprobe ohne primeStatus: Übergang „aus der Luft“ setzt das Boot nach oben (altes Fehlverhalten)
+		BoatPhysics unprimed = boat(w);
+		unprimed.setPosition(0.5, 61.0, 0.5, 0);
+		BoatPhysics.TickResult u = unprimed.tick();
+		assertTrue(u.y() > 62.0, "unprimed y=" + u.y() + " " + u.status()); // getWaterLevelAbove: maxY+1 = 63 → 63 − 0,5625 + 0,101
+	}
 }

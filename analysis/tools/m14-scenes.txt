@@ -1,0 +1,284 @@
+# M14 Entity-Vergleichsszenen (docs/58 §3). Erzeugt von analysis/tools/gen-m14-scenes.js; Format wie m12-scenes.txt.
+# Gebiet x 312..334, z 336..354 im M12-Testgebiet; Entities blicken zur Kamera (Rotation 180), KI aus, unverwundbar.
+build gamerule advance_time false
+build gamerule advance_weather false
+build gamerule random_tick_speed 0
+build gamerule spawn_mobs false
+build time set 6000
+build weather clear
+build forceload add 272 272 359 359
+build kill @e[type=!player,x=272,y=100,z=272,dx=88,dy=100,dz=88]
+build fill 280 140 280 351 145 355 air
+build fill 280 146 280 351 151 355 air
+build fill 280 152 280 351 157 355 air
+build fill 280 158 280 351 163 355 air
+build fill 280 164 280 351 169 355 air
+build fill 280 170 280 351 175 355 air
+build fill 280 176 280 351 180 355 air
+build fill 280 140 280 351 145 355 stone
+build fill 280 146 280 351 148 355 dirt
+build fill 280 149 280 351 149 355 grass_block
+build fillbiome 272 128 272 359 191 359 minecraft:plains
+build setblock 289 150 289 tall_grass[half=lower]
+build setblock 289 151 289 tall_grass[half=upper]
+build setblock 289 150 292 short_grass
+build setblock 289 150 295 poppy
+build setblock 289 150 298 short_grass
+build setblock 289 150 301 dandelion
+build setblock 289 150 304 tall_grass[half=lower]
+build setblock 289 151 304 tall_grass[half=upper]
+build setblock 289 150 307 short_grass
+build setblock 289 150 310 oxeye_daisy
+build setblock 291 150 289 short_grass
+build setblock 291 150 292 cornflower
+build setblock 291 150 295 short_grass
+build setblock 291 150 298 short_grass
+build setblock 291 150 301 tall_grass[half=lower]
+build setblock 291 151 301 tall_grass[half=upper]
+build setblock 291 150 304 short_grass
+build setblock 291 150 307 dandelion
+build setblock 291 150 310 fern
+build setblock 293 150 289 short_grass
+build setblock 293 150 292 oxeye_daisy
+build setblock 293 150 295 short_grass
+build setblock 293 150 298 tall_grass[half=lower]
+build setblock 293 151 298 tall_grass[half=upper]
+build setblock 293 150 301 short_grass
+build setblock 293 150 304 short_grass
+build setblock 293 150 307 poppy
+build setblock 293 150 310 short_grass
+build setblock 295 150 289 dandelion
+build setblock 295 150 292 fern
+build setblock 295 150 295 tall_grass[half=lower]
+build setblock 295 151 295 tall_grass[half=upper]
+build setblock 295 150 298 oxeye_daisy
+build setblock 295 150 301 short_grass
+build setblock 295 150 304 cornflower
+build setblock 295 150 307 short_grass
+build setblock 295 150 310 tall_grass[half=lower]
+build setblock 295 151 310 tall_grass[half=upper]
+build setblock 297 150 289 poppy
+build setblock 297 150 292 tall_grass[half=lower]
+build setblock 297 151 292 tall_grass[half=upper]
+build setblock 297 150 295 dandelion
+build setblock 297 150 298 fern
+build setblock 297 150 301 short_grass
+build setblock 297 150 304 oxeye_daisy
+build setblock 297 150 307 tall_grass[half=lower]
+build setblock 297 151 307 tall_grass[half=upper]
+build setblock 297 150 310 cornflower
+build setblock 299 150 289 tall_grass[half=lower]
+build setblock 299 151 289 tall_grass[half=upper]
+build setblock 299 150 292 short_grass
+build setblock 299 150 295 poppy
+build setblock 299 150 298 short_grass
+build setblock 299 150 301 dandelion
+build setblock 299 150 304 tall_grass[half=lower]
+build setblock 299 151 304 tall_grass[half=upper]
+build setblock 299 150 307 short_grass
+build setblock 299 150 310 oxeye_daisy
+build setblock 301 150 289 short_grass
+build setblock 301 150 292 cornflower
+build setblock 301 150 295 short_grass
+build setblock 301 150 298 short_grass
+build setblock 301 150 301 tall_grass[half=lower]
+build setblock 301 151 301 tall_grass[half=upper]
+build setblock 301 150 304 short_grass
+build setblock 301 150 307 dandelion
+build setblock 301 150 310 fern
+build setblock 303 150 289 short_grass
+build setblock 303 150 292 oxeye_daisy
+build setblock 303 150 295 short_grass
+build setblock 303 150 298 tall_grass[half=lower]
+build setblock 303 151 298 tall_grass[half=upper]
+build setblock 303 150 301 short_grass
+build setblock 303 150 304 short_grass
+build setblock 303 150 307 poppy
+build setblock 303 150 310 short_grass
+build fill 297 153 297 303 154 303 oak_leaves[persistent=true]
+build fill 298 155 298 302 156 302 oak_leaves[persistent=true]
+build fill 299 157 299 301 157 301 oak_leaves[persistent=true]
+build fill 300 150 300 300 156 300 oak_log
+build fill 306 150 288 311 152 293 air
+build fill 306 150 288 311 150 288 stone
+build fill 306 151 288 311 152 288 stone_bricks
+build fill 306 150 289 311 150 289 stone_stairs[facing=south]
+build fill 306 151 289 311 151 289 stone_stairs[facing=south]
+build fill 306 150 290 311 150 290 stone_slab[type=bottom]
+build setblock 308 150 292 stone
+build setblock 309 150 292 stone
+build setblock 309 151 292 stone
+build setblock 306 150 293 oak_slab[type=top]
+build fill 312 149 288 327 157 303 stone hollow
+build setblock 316 152 289 wall_torch[facing=south]
+build setblock 323 152 289 wall_torch[facing=south]
+build setblock 313 152 292 wall_torch[facing=east]
+build fill 320 150 293 321 151 294 cobblestone
+build setblock 318 150 296 stone_stairs[facing=west]
+build fill 288 145 314 299 145 325 stone
+build fill 288 146 314 299 149 325 water
+build fill 302 147 314 307 147 319 stone
+build fill 302 148 314 307 149 319 lava
+build setblock 309 149 317 netherrack
+build setblock 309 150 317 fire
+build fill 312 150 327 327 154 327 white_wool
+build fill 312 151 327 327 151 327 red_wool
+build fill 312 153 327 327 153 327 blue_wool
+build fill 312 150 327 315 154 327 yellow_wool
+build setblock 313 150 322 glass
+build setblock 313 151 322 glass
+build setblock 315 150 322 red_stained_glass
+build setblock 315 151 322 red_stained_glass
+build setblock 317 150 322 blue_stained_glass
+build setblock 317 151 322 blue_stained_glass
+build setblock 319 150 322 glass_pane
+build setblock 319 151 322 glass_pane
+build setblock 321 150 322 ice
+build setblock 321 151 322 ice
+build setblock 323 150 322 slime_block
+build setblock 323 151 322 slime_block
+build setblock 325 150 322 honey_block
+build setblock 325 151 322 honey_block
+build setblock 326 150 322 tinted_glass
+build setblock 326 151 322 tinted_glass
+build fill 313 150 324 314 151 324 oak_leaves[persistent=true]
+build setblock 317 150 324 white_stained_glass
+build setblock 318 150 324 white_stained_glass
+build setblock 289 149 333 water
+build setblock 291 149 333 lava
+build setblock 293 149 333 netherrack
+build setblock 293 150 333 fire
+build fill 295 150 333 298 154 333 obsidian
+build fill 296 151 333 297 153 333 nether_portal[axis=x]
+build setblock 300 150 333 sea_lantern
+build setblock 302 150 333 magma_block
+build setblock 304 150 333 prismarine
+build setblock 306 150 333 campfire[lit=true]
+build fill 344 149 288 345 149 351 water
+build fill 338 150 290 338 152 349 oak_leaves[persistent=true]
+build fill 349 150 290 349 151 349 birch_leaves[persistent=true]
+build setblock 341 150 292 short_grass
+build setblock 347 150 292 fern
+build setblock 341 150 296 short_grass
+build setblock 347 150 296 fern
+build setblock 341 150 300 short_grass
+build setblock 347 150 300 fern
+build setblock 341 150 304 short_grass
+build setblock 347 150 304 fern
+build setblock 341 150 308 short_grass
+build setblock 347 150 308 fern
+build setblock 341 150 312 short_grass
+build setblock 347 150 312 fern
+build setblock 341 150 316 short_grass
+build setblock 347 150 316 fern
+build setblock 341 150 320 short_grass
+build setblock 347 150 320 fern
+build setblock 341 150 324 short_grass
+build setblock 347 150 324 fern
+build setblock 341 150 328 short_grass
+build setblock 347 150 328 fern
+build setblock 341 150 332 short_grass
+build setblock 347 150 332 fern
+build setblock 341 150 336 short_grass
+build setblock 347 150 336 fern
+build setblock 341 150 340 short_grass
+build setblock 347 150 340 fern
+build setblock 341 150 344 short_grass
+build setblock 347 150 344 fern
+build setblock 341 150 348 short_grass
+build setblock 347 150 348 fern
+build fillbiome 336 128 288 351 191 299 minecraft:plains
+build fillbiome 336 128 300 351 191 311 minecraft:swamp
+build fillbiome 336 128 312 351 191 323 minecraft:jungle
+build fillbiome 336 128 324 351 191 335 minecraft:snowy_plains
+build fillbiome 336 128 336 351 191 351 minecraft:desert
+build fill 341 150 284 341 156 284 stone
+build fill 298 150 342 309 153 349 stone hollow
+build fill 299 150 349 308 152 349 air
+build setblock 302 150 345 torch
+build setblock 306 151 343 wall_torch[facing=south]
+build execute in minecraft:the_nether run forceload add -16 -16 15 15
+build execute in minecraft:the_nether run fill -10 88 -10 10 104 10 air
+build execute in minecraft:the_nether run fill -10 88 -10 10 89 10 netherrack
+build execute in minecraft:the_nether run fill -6 89 4 6 89 8 lava
+build execute in minecraft:the_nether run fill -10 89 -10 -6 89 -6 soul_sand
+build execute in minecraft:the_nether run setblock 3 90 -2 netherrack
+build execute in minecraft:the_nether run setblock 3 91 -2 fire
+build execute in minecraft:the_nether run fill -10 90 10 10 96 10 netherrack
+build execute in minecraft:the_nether run setblock -2 90 9 glowstone
+build execute in minecraft:the_nether run fillbiome -16 64 -16 15 127 15 minecraft:nether_wastes
+setup 18-m14-pets kill @e[tag=m14]
+setup 18-m14-pets summon chicken 312.5 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon chicken 314.5 150 342.5 {Age:-24000,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon chicken 316.5 150 342.5 {variant:"minecraft:cold",NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon wolf 318.5 150 342.5 {variant:"minecraft:ashen",NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon wolf 320.5 150 342.5 {Owner:[I;903883492,-1477296760,-1642599272,-1810035978],CollarColor:14b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon wolf 322.5 150 342.5 {Owner:[I;903883492,-1477296760,-1642599272,-1810035978],Sitting:1b,CollarColor:4b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon wolf 324.5 150 342.5 {Age:-24000,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon cat 326.5 150 342.5 {variant:"minecraft:calico",NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon cat 328.5 150 342.5 {variant:"minecraft:black",Owner:[I;903883492,-1477296760,-1642599272,-1810035978],CollarColor:11b,Sitting:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 18-m14-pets summon cat 330.5 150 342.5 {Age:-24000,variant:"minecraft:siamese",NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+scene 18-m14-pets 322.5 150 334.5 0 12 60
+setup 19-m14-horses-rabbits kill @e[tag=m14]
+setup 19-m14-horses-rabbits summon horse 312.5 150 342.5 {Variant:515,Tame:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon horse 315.0 150 342.5 {Variant:4,Tame:1b,equipment:{body:{id:"minecraft:diamond_horse_armor",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon horse 317.5 150 342.5 {Age:-24000,Variant:1,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon rabbit 320.0 150 342.5 {RabbitType:0,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon rabbit 322.5 150 342.5 {RabbitType:2,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon rabbit 325.0 150 342.5 {Age:-24000,RabbitType:1,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon bee 327.5 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon bee 330.0 150 342.5 {HasNectar:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 19-m14-horses-rabbits summon bee 332.5 150 342.5 {Age:-24000,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+scene 19-m14-horses-rabbits 322.5 150 334.5 0 12 60
+setup 20-m14-hostile kill @e[tag=m14]
+setup 20-m14-hostile summon creeper 312.5 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon creeper 315.0 150 342.5 {powered:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon spider 317.5 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon cave_spider 320.0 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon enderman 322.5 150 342.5 {carriedBlockState:{Name:"minecraft:grass_block"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon iron_golem 325.0 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon iron_golem 327.5 150 342.5 {Health:20f,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon drowned 330.0 150 342.5 {equipment:{mainhand:{id:"minecraft:trident",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon drowned 332.5 150 342.5 {IsBaby:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+scene 20-m14-hostile 322.5 150 334.5 0 12 60
+setup 21-m14-villagers-farm kill @e[tag=m14]
+setup 21-m14-villagers-farm summon villager 312.5 150 342.5 {VillagerData:{type:"minecraft:plains",profession:"minecraft:librarian",level:3},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon villager 315.0 150 342.5 {VillagerData:{type:"minecraft:desert",profession:"minecraft:farmer",level:1},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon villager 317.5 150 342.5 {Age:-24000,VillagerData:{type:"minecraft:snow",profession:"minecraft:none",level:1},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon pig 320.0 150 342.5 {variant:"minecraft:cold",NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon pig 322.5 150 342.5 {Age:-24000,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon cow 325.0 150 342.5 {variant:"minecraft:warm",NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon cow 327.5 150 342.5 {Age:-24000,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon sheep 330.0 150 342.5 {Color:11b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 21-m14-villagers-farm summon sheep 332.5 150 342.5 {Age:-24000,Color:6b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+scene 21-m14-villagers-farm 322.5 150 334.5 0 12 60
+setup 22-m14-humanoids kill @e[tag=m14]
+setup 22-m14-humanoids summon zombie 312.5 150 342.5 {equipment:{head:{id:"minecraft:golden_helmet",count:1},chest:{id:"minecraft:iron_chestplate",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon zombie 315.0 150 342.5 {IsBaby:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon skeleton 317.5 150 342.5 {equipment:{mainhand:{id:"minecraft:bow",count:1},feet:{id:"minecraft:diamond_boots",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon mannequin 320.0 150 342.5 {profile:{texture:"minecraft:entity/player/wide/steve",model:"wide"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon mannequin 322.5 150 342.5 {profile:{texture:"minecraft:entity/player/slim/alex",model:"slim"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon mannequin 325.0 150 342.5 {profile:{texture:"minecraft:entity/player/slim/noor",model:"slim"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+scene 22-m14-humanoids 322.5 150 334.5 0 12 60
+setup 23-m14-vehicles kill @e[tag=m14]
+setup 23-m14-vehicles summon oak_boat 314.5 150 342.5 {Invulnerable:1b,Rotation:[90f,0f],Tags:["m14","v0"]}
+setup 23-m14-vehicles summon birch_chest_boat 317.5 150 342.5 {Invulnerable:1b,Rotation:[0f,0f],Tags:["m14","v1"]}
+setup 23-m14-vehicles summon bamboo_raft 320.5 150 342.5 {Invulnerable:1b,Rotation:[90f,0f],Tags:["m14","v2"]}
+setup 23-m14-vehicles summon minecart 323.5 150 342.5 {Invulnerable:1b,Rotation:[0f,0f],Tags:["m14","v3"]}
+setup 23-m14-vehicles summon chest_minecart 326.5 150 342.5 {Invulnerable:1b,Rotation:[90f,0f],Tags:["m14","v4"]}
+setup 23-m14-vehicles summon oak_boat 329.5 150 342.5 {Invulnerable:1b,Rotation:[0f,0f],Tags:["m14","v5"]}
+setup 23-m14-vehicles summon pig 329.5 151 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14","p0"]}
+setup 23-m14-vehicles ride @e[tag=p0,limit=1] mount @e[tag=v5,limit=1]
+setup 23-m14-vehicles summon villager 323.5 151 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14","p1"]}
+setup 23-m14-vehicles ride @e[tag=p1,limit=1] mount @e[tag=v3,limit=1]
+scene 23-m14-vehicles 322.5 150 334.5 0 12 60
+final kill @e[tag=m14]
+final kill @e[tag=m12]
+final forceload remove 272 272 359 359
+final execute in minecraft:the_nether run forceload remove -16 -16 15 15
+final weather clear
+final time set 6000
+final gamerule advance_time true
+final gamerule advance_weather true
+final gamerule random_tick_speed 3
+final gamerule spawn_mobs true

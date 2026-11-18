@@ -84,6 +84,10 @@ class PassengerAndBabyTest {
 		m.setOwnId(500);
 		spawn(m, 1, MINECART, 5, 64, 5, 0);
 		m.handle(new Clientbound.SetPassengers(1, new int[]{500}));
+		// Server sendet beim Einsteigen dieselbe Liste doppelt (ServerPlayer#startRiding + Tracker): kein Ab-/Aufsteigen (Lauf m14-gfx2)
+		m.handle(new Clientbound.SetPassengers(1, new int[]{500}));
+		assertEquals(1, m.stats().ownMounts);
+		assertEquals(0, m.stats().ownDismounts);
 		assertEquals(1, m.ownVehicle());
 		assertEquals(0, m.ownSeatIndex());
 		double[] seat = m.ownSeat(1);
@@ -136,5 +140,26 @@ class PassengerAndBabyTest {
 		m.handle(new Clientbound.RemoveEntities(new int[]{1}));
 		assertEquals(-1, m.view(2, 1, 0).vehicle());
 		assertEquals(2, m.view(3, 1, 0).vehicle());
+	}
+
+	/**
+	 * Vergleich vehicle3 (walk_into_boat): Boote stoßen über ihre um 0,2 horizontal vergrößerte, um 0,01 vertikal verkleinerte Box
+	 * ({@code AbstractBoat#tick}: inflate(0.2F, -0.01F, 0.2F)); Vanilla bremste den Spieler 0,2 Blöcke vor dem Boot um 0,05.
+	 */
+	@Test
+	void boatPushesWithinItsInflatedBoxButNotAPlayerStandingOnIt() {
+		EntityManager m = new EntityManager();
+		spawn(m, 1, OAK_BOAT, 0.0, 64.0, 0.0, 0); // Box z −0,6875…0,6875, y 64…64,5625
+		// Spieler (0,6 × 1,8) mit maxZ −0,8: 0,1125 vor dem Boot → nur in der vergrößerten Box
+		dev.mcresearch.protocolclient.physics.Aabb near = new dev.mcresearch.protocolclient.physics.Aabb(-0.3, 64.0, -1.4, 0.3, 65.8, -0.8);
+		double[] push = m.pushImpulse(near, 0.0, -1.1);
+		assertEquals(0.0, push[0], 1e-12);
+		assertEquals(-0.05, push[1], 1e-6); // dd = √1,1, Richtung vom Boot weg, pow = 1/dd → −0,05
+		// auf dem Boot stehend (minY = Oberkante): vertikal um 0,01 verkleinert → kein Stoß
+		dev.mcresearch.protocolclient.physics.Aabb onTop = new dev.mcresearch.protocolclient.physics.Aabb(-0.3, 64.5625, -0.9, 0.3, 66.3625, -0.3);
+		assertArrayEquals(new double[]{0, 0}, m.pushImpulse(onTop, 0.0, -0.6), 1e-12);
+		// weiter als 0,2 entfernt: kein Stoß
+		dev.mcresearch.protocolclient.physics.Aabb far = new dev.mcresearch.protocolclient.physics.Aabb(-0.3, 64.0, -1.6, 0.3, 65.8, -0.95);
+		assertArrayEquals(new double[]{0, 0}, m.pushImpulse(far, 0.0, -1.25), 1e-12);
 	}
 }

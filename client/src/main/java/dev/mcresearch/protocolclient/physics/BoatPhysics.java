@@ -130,6 +130,16 @@ public final class BoatPhysics {
 		return new Aabb(px - hw, py, pz - hw, px + hw, py + this.height, pz + hw);
 	}
 
+	/**
+	 * Status an der aktuellen Position bestimmen, ohne zu bewegen. Der Vanilla-Client berechnet {@code status = getStatus()} in jedem
+	 * {@code AbstractBoat#tick}, auch solange er das Boot nicht steuert; beim Aufsitzen ist {@code oldStatus} daher der echte Status
+	 * (z. B. IN_WATER oder UNDER_WATER) und nicht IN_AIR. Ohne diesen Aufruf greift im ersten gesteuerten Tick die Regel
+	 * „Übergang aus der Luft“ und setzt das Boot auf die Wasseroberfläche.
+	 */
+	public void primeStatus() {
+		this.status = computeStatus();
+	}
+
 	/** Ein Tick des selbst gesteuerten Boots. */
 	public TickResult tick() {
 		this.ticks++;

@@ -353,6 +353,8 @@ public final class ClientSession {
 		if (w == null || !this.movement.ready()) {
 			return List.of();
 		}
+		dev.mcresearch.protocolclient.physics.PlayerPhysics ph = this.movement.physics();
+		this.interaction.setSecondaryUse(ph != null && ph.shiftKeyDown());
 		ItemStack[] slots = this.inventory.snapshot();
 		List<ItemStack> hotbar = java.util.Arrays.asList(slots).subList(PlayerInventory.HOTBAR_START, PlayerInventory.HOTBAR_START + 9);
 		synchronized (w) {

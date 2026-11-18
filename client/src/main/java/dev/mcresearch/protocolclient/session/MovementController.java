@@ -677,6 +677,11 @@ public final class MovementController {
 		return v == null ? new double[9] : new double[]{v.x(), v.y(), v.z(), v.motionX(), v.motionY(), v.motionZ(), v.yRot(), v.onGround() ? 1 : 0, 0};
 	}
 	private int rideScriptTick;
+	/** Ticks nach dem Absteigen bis zur Spurzeile {@code dismount k x y z} (Erkennungstick mitgezählt, wie VehicleReferenceClient). */
+	static final int DISMOUNT_TRACE_TICKS = 10;
+	private RideScript dismountScript;
+	private int dismountK;
+	private int dismountWait;
 
 	/**
 	 * Fahrzeugskript für den nächsten Aufsitzvorgang: Gier setzen, {@code settle} Ruheticks nach dem Aufsitz-Tick, dann je Tick eine
@@ -746,6 +751,7 @@ public final class MovementController {
 		if (dev.mcresearch.protocolclient.view.model.EntityLooks.isBoat(type)) {
 			this.boat = new dev.mcresearch.protocolclient.physics.BoatPhysics(this.physics.world(), BlockRegistry.get(), v.type().width(), v.type().height());
 			this.boat.setPosition(v.x(), v.y(), v.z(), v.yRot());
+			this.boat.primeStatus();
 		} else if (isHorse(type) && saddled(v)) {
 			this.horse = new dev.mcresearch.protocolclient.physics.HorsePhysics(this.physics.world(), BlockRegistry.get(), v.width(), v.height());
 			this.horse.setPosition(v.x(), v.y(), v.z(), v.yRot(), v.onGround());
@@ -766,11 +772,19 @@ public final class MovementController {
 	}
 
 	private void leaveRiding() {
+		RideScript rs = this.rideScript;
+		if (rs != null && this.rideScriptTick >= 0) {
+			// Absteigen während der Skriptfolge (Schleichtaste): Position DISMOUNT_TRACE_TICKS Ticks später festhalten (wie die Referenz)
+			this.dismountScript = rs;
+			this.dismountK = rs.lines().size() + 1; // wie die Referenz: Index des ersten nicht mehr gefahrenen Ticks
+			this.dismountWait = 0;
+			this.rideScript = null;
+		}
 		this.ridingVehicle = -1;
 		this.boat = null;
 		this.horse = null;
 		syncPhysicsFromPlayer();
-		this.lastInput = Serverbound.PlayerInput.EMPTY;
+		// lastInput bleibt der zuletzt gesendete Zustand (LocalPlayer#lastSentInput): z. B. das Loslassen der Schleichtaste muss noch hinaus
 		this.positionReminder = POSITION_REMINDER_TICKS; // nächstes Positionspaket sofort
 	}
 
@@ -911,15 +925,6 @@ public final class MovementController {
 		if (this.ridingVehicle >= 0) {
 			leaveRiding();
 		}
-		// M14 Phase J: Schieben durch andere Lebewesen und Boote (Entity#push aus deren pushEntities), vor der eigenen Bewegung
-		if (this.entities != null && this.physics != null && this.command == null && this.claim == null) {
-			double[] push = this.entities.pushImpulse(this.physics.boundingBox(), this.physics.x(), this.physics.z());
-			if (push[0] != 0 || push[1] != 0) {
-				Vec3d vel = this.physics.velocity();
-				this.physics.setVelocity(vel.x() + push[0], vel.y(), vel.z() + push[1]);
-				this.pushes++;
-			}
-		}
 		PlayerPhysics.Input input = this.command == null && this.claim == null ? this.manualInput : PlayerPhysics.Input.NONE;
 		if (this.claim != null) {
 			tickClaim();
@@ -935,6 +940,19 @@ public final class MovementController {
 			this.physics.setYRot(this.player.yRot());
 			this.physics.setXRot(this.player.xRot()); // M11: Schwimmrichtung folgt der Blickneigung
 			PlayerPhysics.TickResult r = this.physics.tick(input);
+			// M14 Phase J: Schieben durch andere Lebewesen und Boote (Entity#push aus deren pushEntities/AbstractBoat#tick). Der lokale
+			// Spieler tickt in Vanilla vor den übrigen Entities: der Stoß wirkt nach der eigenen Bewegung im selben Tick und steht in der
+			// Geschwindigkeit am Tickende (Vergleich vehicle3: walk_into_boat). Gilt auch für Skripte, nicht für Claims.
+			if (this.entities != null) {
+				double[] push = this.entities.pushImpulse(this.physics.boundingBox(), this.physics.x(), this.physics.z());
+				if (push[0] != 0 || push[1] != 0) {
+					Vec3d vel = this.physics.velocity();
+					this.physics.setVelocity(vel.x() + push[0], vel.y(), vel.z() + push[1]);
+					this.pushes++;
+					r = new PlayerPhysics.TickResult(r.tick(), r.input(), r.x(), r.y(), r.z(), vel.x() + push[0], vel.y(), vel.z() + push[1], r.onGround(),
+						r.horizontalCollision(), r.verticalCollision(), r.jumped(), r.stepped(), r.touchedUnloaded(), r.unsupported(), r.motion());
+				}
+			}
 			this.player.setPhysics(r.x(), r.y(), r.z(), r.vx(), r.vy(), r.vz(), r.onGround(), r.horizontalCollision());
 			this.trajectory.addLast(r);
 			while (this.trajectory.size() > TRAJECTORY_SIZE) {
@@ -947,6 +965,13 @@ public final class MovementController {
 			this.cameraEyeHeight = this.cameraEyeHeight + (this.physics.eyeHeight() - this.cameraEyeHeight) * 0.5F;
 		}
 		this.lastPhysicsInput = input;
+		RideScript ds = this.dismountScript;
+		if (ds != null && ++this.dismountWait >= DISMOUNT_TRACE_TICKS) {
+			ds.lines().add(String.join(" ", "dismount", Integer.toString(this.dismountK), Double.toString(this.player.x()), Double.toString(this.player.y()),
+				Double.toString(this.player.z())));
+			this.dismountScript = null;
+			ds.future().complete(List.copyOf(ds.lines()));
+		}
 		// LocalPlayer#sendChanges: player_input bei geändertem Tastenzustand, dann sendIsSprintingIfNeeded, dann Positionspaket
 		Serverbound.PlayerInput keys = new Serverbound.PlayerInput(input.forward(), input.backward(), input.left(), input.right(), input.jump(),
 			input.sneak(), input.sprint());

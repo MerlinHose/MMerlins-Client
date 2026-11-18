@@ -68,6 +68,7 @@ public final class BlockInteraction {
 	private boolean attackHeld;
 	private boolean useHeld;
 	private boolean inputAllowed = true; // Vanilla: kein Bildschirm offen und Maus gefangen
+	private boolean secondaryUse; // isSecondaryUseActive = Schleichtaste (M14: Fahrzeug-Interaktion)
 	private int requestedSlot = -1;
 
 	// ---- Spielzustand (Tick-Thread) ----
@@ -112,6 +113,11 @@ public final class BlockInteraction {
 	/** Linksklick (ein Tastendruck, {@code keyAttack.consumeClick}). */
 	public synchronized void attackClick() {
 		this.attackClicks = Math.min(this.attackClicks + 1, 16);
+	}
+
+	/** Schleichtaste gedrückt ({@code Player#isSecondaryUseActive}); von der Sitzung je Tick gesetzt. */
+	public synchronized void setSecondaryUse(final boolean active) {
+		this.secondaryUse = active;
 	}
 
 	/** Rechtsklick (ein Tastendruck, {@code keyUse.consumeClick}). */
@@ -599,6 +605,29 @@ public final class BlockInteraction {
 		return water && eye < by + 8.0 / 9.0;
 	}
 
+	/**
+	 * Clientseitiges Ergebnis von {@code Entity#interact} für Fahrzeuge (Vanilla 26.3, eigenständig nachgebildet):
+	 * Boot/Floß {@code SUCCESS} ohne Schleichen (AbstractBoat; {@code outOfControlTicks} wird nicht modelliert), Kistenboot immer
+	 * verbrauchend (Einsteigen bzw. Kiste öffnen), leere Lore ohne Schleichen {@code CONSUME} (Minecart), Kisten-/Trichterlore
+	 * {@code SUCCESS} (Container-Fahrzeug); sonst PASS.
+	 */
+	private Result predictVehicleInteract(final dev.mcresearch.protocolclient.entity.EntityManager.View v) {
+		String t = v.type().shortName();
+		if (t.endsWith("_chest_boat") || t.endsWith("_chest_raft")) {
+			return Result.SUCCESS;
+		}
+		if (t.endsWith("_boat") || t.endsWith("_raft")) {
+			return this.secondaryUse ? Result.PASS : Result.SUCCESS;
+		}
+		if (t.equals("minecart")) {
+			return !this.secondaryUse && v.passengers().length == 0 ? Result.CONSUME : Result.PASS;
+		}
+		if (t.equals("chest_minecart") || t.equals("hopper_minecart")) {
+			return Result.SUCCESS;
+		}
+		return Result.PASS;
+	}
+
 	private int destroyStage() {
 		return this.isDestroying && this.destroyProgress > 0.0F ? (int) (this.destroyProgress * 10.0F) : -1;
 	}
@@ -623,6 +652,14 @@ public final class BlockInteraction {
 				this.out.add(new Serverbound.Interact(v.id(), hand, this.entityTarget.x() - v.rx(), this.entityTarget.y() - v.ry(), this.entityTarget.z() - v.rz(), false));
 				this.interactsSent++;
 				combat("interact " + v.id() + " hand " + hand);
+				// M14: Fahrzeuge sagen ihr Ergebnis clientseitig voraus; ein verbrauchendes Ergebnis beendet die Schleife (kein zweites interact)
+				Result vr = predictVehicleInteract(v);
+				if (vr == Result.SUCCESS || vr == Result.CONSUME) {
+					if (vr == Result.SUCCESS) {
+						swing(hand, false); // InteractionResult.SUCCESS: Schwung mit SwingSource.CLIENT
+					}
+					return;
+				}
 			}
 			if (blockHit()) {
 				Result r = useItemOn(hand, held);
