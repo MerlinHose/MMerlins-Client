@@ -1,0 +1,29 @@
+# M14-Fahrzeugstrecke (docs/58 §4): Boote (Wasser, Eis, Land, Wand), Pferd (Gehen, Stufe, Sprung). Vanilla-Referenzclient
+# (VehicleReferenceClient) und eigener Client (VehicleIntegrationTest) fahren dieselben Szenarien; Vergleich Tick für Tick.
+# Format: vehicle <name> <entity-typ> <x> <y> <z> <gier> <eingaben…>  (Eingaben wie m5-course: f b l r j s, "-" = keine, n = Ticks)
+#         vehicle-nbt <entity-typ> <NBT>  (zusätzliche Daten beim Beschwören, z. B. Sattel und feste Attribute des Pferdes)
+# Ablauf je Szenario: beschwören (Tag m14v) → /ride … mount → Aufsitz-Tick + 40 Ruheticks → Eingaben → /ride … dismount → entfernen.
+# Gelände bei x 100…175, z 96…223 (abseits der M5–M12-Strecken), Steinboden Oberkante y = 60.
+
+build forceload add 96 96 175 223
+build fill 98 59 98 172 59 222 minecraft:stone
+build fill 98 60 98 172 70 222 minecraft:air
+# Wasserbecken x 100…130, z 100…200, Wasser y 60…62 (Oberfläche 63), Rand aus Stein bis y 63
+build fill 99 60 99 131 63 201 minecraft:stone
+build fill 100 60 100 130 62 200 minecraft:water
+# Eisbahn x 140…142, z 100…220 (Packeis, Oberkante 60)
+build fill 140 59 100 142 59 220 minecraft:packed_ice
+# Pferdestufe: 1 Block hohe Plattform x 154…166, z 150…170
+build fill 154 60 150 166 60 170 minecraft:stone
+
+vehicle-nbt horse {Tame:1b,PersistenceRequired:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},attributes:[{id:"minecraft:movement_speed",base:0.225d},{id:"minecraft:jump_strength",base:0.7d}],Tags:[m14v]}
+
+vehicle boat_water_forward oak_boat 115.5 62.6 105.5 0 f:80 -:30
+vehicle boat_water_turn oak_boat 110.5 62.6 140.5 0 f:20 fl:25 fr:25 l:20 r:10 -:20
+vehicle boat_water_back oak_boat 120.5 62.6 170.5 180 b:40 -:20
+vehicle boat_wall oak_boat 115.5 62.6 195.5 0 f:40 -:10
+vehicle boat_ice oak_boat 141.5 60.0 102.5 0 f:60 -:30
+vehicle boat_land oak_boat 160.5 60.0 110.5 0 f:40 fl:20 -:20
+vehicle horse_walk horse 160.5 60.0 125.5 0 f:60 -:20
+vehicle horse_step horse 160.5 60.0 140.5 0 f:40 -:20
+vehicle horse_jump horse 168.5 60.0 125.5 0 f:10 fj:12 f:20 -:20

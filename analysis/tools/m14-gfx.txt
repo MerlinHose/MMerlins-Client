@@ -1,0 +1,238 @@
+# M14 Grafiktest (docs/58 §3): Mob-Modelle, Babys, Varianten, Skins (Classic/Slim, zweite Schicht, lokale PNG), Ausrüstung,
+# Laufanimation, Passagiere (Boot, Lore, Pferd), eigenes Reiten, Ein-/Aussteigen, Unload/Reload, Entity-Kollision.
+# Platzhalter ${CONSOLE}, ${OUT}, ${NAME} setzt m6-run.sh; Aufruf über m14-gfx-run.sh (M6_DIFFICULTY=easy, M6_COMPANION=ProtoBotM9B,
+# Client-Argument --skins mit einer lokal erzeugten Test-PNG für den Begleiter).
+# Gelände x 200…250, z −70…−10, Grasboden y = 99, Glasdach y = 107, Lichtblöcke (Himmelslicht hell, keine Verbrennung).
+# Alle Test-Entities tragen das Tag m14. ProtoBotGfx (offline) = [I;903883492,-1477296760,-1642599272,-1810035978] (Besitzer).
+server-console ${CONSOLE}
+wait-play
+mark joined
+console gamemode creative ${NAME}
+console gamemode creative ProtoBotM9B
+console gamerule spawn_mobs false
+console forceload add 192 -80 255 -1
+console kill @e[tag=m14]
+console fill 196 99 -72 252 99 -8 minecraft:grass_block
+console fill 196 100 -72 252 106 -8 minecraft:air
+console fill 196 107 -72 252 107 -8 minecraft:glass
+console fill 198 103 -70 250 103 -10 minecraft:light[level=15]
+# --- Szene 1: friedliche Tiere (erwachsen links, Baby rechts daneben), NoAI für ruhige Posen
+console summon chicken 204.5 100 -40.5 {NoAI:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon chicken 205.5 100 -40.5 {NoAI:1b,Age:-24000,Rotation:[180f,0f],Tags:[m14]}
+console summon chicken 206.5 100 -40.5 {NoAI:1b,variant:"minecraft:cold",Rotation:[180f,0f],Tags:[m14]}
+console summon wolf 208.5 100 -40.5 {NoAI:1b,variant:"minecraft:ashen",Rotation:[180f,0f],Tags:[m14]}
+console summon wolf 210.5 100 -40.5 {NoAI:1b,Owner:[I;903883492,-1477296760,-1642599272,-1810035978],CollarColor:14b,Rotation:[180f,0f],Tags:[m14]}
+console summon wolf 212.5 100 -40.5 {NoAI:1b,Owner:[I;903883492,-1477296760,-1642599272,-1810035978],Sitting:1b,CollarColor:4b,Rotation:[180f,0f],Tags:[m14]}
+console summon wolf 213.5 100 -40.5 {NoAI:1b,Age:-24000,Rotation:[180f,0f],Tags:[m14]}
+console summon cat 215.5 100 -40.5 {NoAI:1b,variant:"minecraft:calico",Rotation:[180f,0f],Tags:[m14]}
+console summon cat 216.5 100 -40.5 {NoAI:1b,variant:"minecraft:black",Owner:[I;903883492,-1477296760,-1642599272,-1810035978],CollarColor:11b,Sitting:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon cat 217.5 100 -40.5 {NoAI:1b,Age:-24000,variant:"minecraft:siamese",Rotation:[180f,0f],Tags:[m14]}
+console summon horse 220.5 100 -40.5 {NoAI:1b,Variant:515,Tame:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},Rotation:[180f,0f],Tags:[m14]}
+console summon horse 222.5 100 -40.5 {NoAI:1b,Variant:4,Tame:1b,equipment:{body:{id:"minecraft:diamond_horse_armor",count:1}},Rotation:[180f,0f],Tags:[m14]}
+console summon horse 224.5 100 -40.5 {NoAI:1b,Age:-24000,Variant:1,Rotation:[180f,0f],Tags:[m14]}
+console summon rabbit 226.5 100 -40.5 {NoAI:1b,RabbitType:0,Rotation:[180f,0f],Tags:[m14]}
+console summon rabbit 227.5 100 -40.5 {NoAI:1b,RabbitType:2,Rotation:[180f,0f],Tags:[m14]}
+console summon rabbit 228.5 100 -40.5 {NoAI:1b,Age:-24000,RabbitType:1,Rotation:[180f,0f],Tags:[m14]}
+console summon bee 230.5 100.5 -40.5 {NoAI:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon bee 231.5 100.5 -40.5 {NoAI:1b,HasNectar:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon bee 232.5 100.5 -40.5 {NoAI:1b,Age:-24000,Rotation:[180f,0f],Tags:[m14]}
+# --- Szene 2: neutrale und feindliche Mobs
+console summon creeper 204.5 100 -52.5 {NoAI:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon creeper 206.5 100 -52.5 {NoAI:1b,powered:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon spider 209.5 100 -52.5 {NoAI:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon cave_spider 212.5 100 -52.5 {NoAI:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon enderman 214.5 100 -52.5 {NoAI:1b,carriedBlockState:{Name:"minecraft:grass_block"},Rotation:[180f,0f],Tags:[m14]}
+console summon villager 217.5 100 -52.5 {NoAI:1b,VillagerData:{type:"minecraft:plains",profession:"minecraft:librarian",level:3},Rotation:[180f,0f],Tags:[m14]}
+console summon villager 219.5 100 -52.5 {NoAI:1b,VillagerData:{type:"minecraft:desert",profession:"minecraft:farmer",level:1},Rotation:[180f,0f],Tags:[m14]}
+console summon villager 221.5 100 -52.5 {NoAI:1b,Age:-24000,VillagerData:{type:"minecraft:snow",profession:"minecraft:none",level:1},Rotation:[180f,0f],Tags:[m14]}
+console summon iron_golem 224.5 100 -52.5 {NoAI:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon iron_golem 227.5 100 -52.5 {NoAI:1b,Health:20f,Rotation:[180f,0f],Tags:[m14]}
+console summon drowned 230.5 100 -52.5 {NoAI:1b,equipment:{mainhand:{id:"minecraft:trident",count:1}},Rotation:[180f,0f],Tags:[m14]}
+console summon drowned 232.5 100 -52.5 {NoAI:1b,IsBaby:1b,Rotation:[180f,0f],Tags:[m14]}
+# --- Szene 3: bisherige Typen mit Varianten und Babys
+console summon pig 204.5 100 -64.5 {NoAI:1b,variant:"minecraft:cold",Rotation:[180f,0f],Tags:[m14]}
+console summon pig 206.5 100 -64.5 {NoAI:1b,Age:-24000,Rotation:[180f,0f],Tags:[m14]}
+console summon cow 208.5 100 -64.5 {NoAI:1b,variant:"minecraft:warm",Rotation:[180f,0f],Tags:[m14]}
+console summon cow 210.5 100 -64.5 {NoAI:1b,Age:-24000,Rotation:[180f,0f],Tags:[m14]}
+console summon sheep 212.5 100 -64.5 {NoAI:1b,Color:11b,Rotation:[180f,0f],Tags:[m14]}
+console summon sheep 214.5 100 -64.5 {NoAI:1b,Age:-24000,Color:6b,Rotation:[180f,0f],Tags:[m14]}
+console summon zombie 216.5 100 -64.5 {NoAI:1b,equipment:{head:{id:"minecraft:golden_helmet",count:1},chest:{id:"minecraft:iron_chestplate",count:1}},Rotation:[180f,0f],Tags:[m14]}
+console summon zombie 218.5 100 -64.5 {NoAI:1b,IsBaby:1b,Rotation:[180f,0f],Tags:[m14]}
+console summon skeleton 220.5 100 -64.5 {NoAI:1b,equipment:{mainhand:{id:"minecraft:bow",count:1},feet:{id:"minecraft:diamond_boots",count:1}},Rotation:[180f,0f],Tags:[m14]}
+# --- Szene 4: Spieler-Skins: Mannequins Classic/Slim (Skin-Vorgabe aus dem lokalen JAR), Begleiter mit lokaler PNG und Rüstung
+console summon mannequin 236.5 100 -40.5 {profile:{texture:"minecraft:entity/player/wide/steve",model:"wide"},Rotation:[180f,0f],Tags:[m14]}
+console summon mannequin 238.5 100 -40.5 {profile:{texture:"minecraft:entity/player/slim/alex",model:"slim"},Rotation:[180f,0f],Tags:[m14]}
+console summon mannequin 240.5 100 -40.5 {profile:{texture:"minecraft:entity/player/slim/noor",model:"slim"},Rotation:[180f,0f],Tags:[m14]}
+console tp ProtoBotM9B 242.5 100 -40.5 180 0
+console item replace entity ProtoBotM9B armor.chest with minecraft:golden_chestplate
+console item replace entity ProtoBotM9B weapon.mainhand with minecraft:iron_axe
+# Übersicht Szene 1
+console tp ${NAME} 218.5 101 -33.5 180 10
+wait 3
+wait-meshes
+wait-entities 40
+look 180 12
+wait 1.5
+screenshot ${OUT}/01-passive.png
+look-dump passive
+entity-frame passive
+console tp ${NAME} 218.5 101 -45.5 180 10
+wait 2
+look 180 12
+wait 1
+screenshot ${OUT}/02-hostile.png
+look-dump hostile
+console tp ${NAME} 212.5 101 -57.5 180 10
+wait 2
+look 180 12
+wait 1
+screenshot ${OUT}/03-existing.png
+look-dump existing
+console tp ${NAME} 239.5 101 -36.5 180 8
+wait 2
+look 180 8
+wait 1
+screenshot ${OUT}/04-skins.png
+look-dump skins
+entity-dump skins
+# Nahaufnahmen: Pferd mit Sattel, Baby-Pferd, Enderman mit Block, Dorfbewohner
+console tp ${NAME} 221.5 101 -37.5 180 15
+wait 1.5
+look 180 18
+wait 0.7
+screenshot ${OUT}/05-horses.png
+console tp ${NAME} 216.5 101 -49.5 180 12
+wait 1.5
+look 180 14
+wait 0.7
+screenshot ${OUT}/06-enderman-villagers.png
+# --- Laufanimation: Begleiter läuft, Tiere ohne NoAI
+console summon wolf 246.5 100 -46.5 {Tags:[m14,walker]}
+console summon horse 246.5 100 -50.5 {Tags:[m14,walker]}
+console tp ProtoBotM9B 244.5 100 -60.5 0 0
+append ${OUT}/companion.in walk f 30
+console tp ${NAME} 244.5 101 -40.5 180 10
+wait 0.5
+look 180 12
+wait 0.8
+screenshot ${OUT}/07-walking.png
+wait 2
+look-dump walking
+# --- Szene 5: Boote: Wasserbecken, Begleiter im Boot (fremder Passagier am Sitz, nicht an alter Position)
+console fill 200 98 -28 214 98 -14 minecraft:stone
+console fill 200 99 -28 214 99 -14 minecraft:water
+console summon oak_boat 203.5 99.6 -20.5 {Rotation:[90f,0f],Tags:[m14,boatA]}
+console summon birch_chest_boat 207.5 99.6 -20.5 {Rotation:[0f,0f],Tags:[m14,boatB]}
+console summon bamboo_raft 211.5 99.6 -20.5 {Rotation:[0f,0f],Tags:[m14,boatC]}
+console tp ProtoBotM9B 203.5 100 -24.5 0 0
+wait 1
+console ride ProtoBotM9B mount @e[tag=boatA,limit=1]
+console summon pig 207.5 100 -24.5 {NoAI:1b,Tags:[m14,pigrider]}
+console ride @e[tag=pigrider,limit=1] mount @e[tag=boatB,limit=1]
+console tp ${NAME} 207.5 101 -11.5 180 20
+wait 2
+look 180 22
+wait 1
+screenshot ${OUT}/08-boats-passengers.png
+ride-dump boats-passengers
+look-dump boats
+# --- eigenes Boot: einsteigen per Rechtsklick, rudern, Kollision mit dem Beckenrand, aussteigen per Schleichen
+console tp ${NAME} 211.5 100.2 -23.5 0 30
+wait 1
+look-at 211.5 99.9 -20.5
+wait 0.5
+entity-target boat
+use
+wait 1
+ride-dump mounted-raft
+keys f 2.5
+ride-dump rowing
+screenshot ${OUT}/09-own-raft.png
+keys fl 1.5
+keys f 3
+ride-dump rowed-into-wall
+keys s 0.5
+wait 1
+ride-dump dismounted
+verify after-dismount
+# --- Lore: Schienen mit Antriebsschienen, Begleiter fährt, Spieler fährt selbst
+console fill 220 99 -30 220 99 -12 minecraft:redstone_block
+console fill 220 100 -30 220 100 -12 minecraft:powered_rail[shape=north_south]
+console fill 222 100 -30 222 100 -12 minecraft:rail[shape=north_south]
+console summon minecart 220.5 100.1 -28.5 {Tags:[m14,cartA]}
+console summon chest_minecart 222.5 100.1 -28.5 {Tags:[m14,cartB]}
+console tp ProtoBotM9B 219.5 100 -28.5 0 0
+wait 1
+console ride ProtoBotM9B mount @e[tag=cartA,limit=1]
+console tp ${NAME} 224.5 101 -20.5 90 15
+wait 1.5
+look 90 15
+wait 1
+screenshot ${OUT}/10-minecart-passenger.png
+ride-dump minecart-passenger
+console tp ${NAME} 222.5 100.2 -26.5 180 30
+wait 1
+look-at 222.5 100.4 -28.5
+wait 0.5
+entity-target chest_minecart
+console ride ${NAME} mount @e[tag=cartB,limit=1]
+wait 1
+ride-dump in-chest-minecart
+keys f 2
+ride-dump minecart-pushed
+keys s 0.5
+wait 1
+ride-dump minecart-dismounted
+# --- Pferd: gesattelt, eigener Ritt, Begleiter-Absteigen, Fahrzeug während der Fahrt entfernen
+console summon horse 236.5 100 -24.5 {Tame:1b,PersistenceRequired:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},attributes:[{id:"minecraft:movement_speed",base:0.225d},{id:"minecraft:jump_strength",base:0.7d}],Rotation:[0f,0f],Tags:[m14,horseA]}
+console tp ${NAME} 236.5 100 -26.5 0 0
+wait 1.5
+console ride ${NAME} mount @e[tag=horseA,limit=1]
+wait 1
+ride-dump on-horse
+keys f 2
+ride-dump horse-walked
+keys fj 0.6
+keys f 1
+ride-dump horse-jumped
+console kill @e[tag=horseA]
+wait 1
+ride-dump horse-removed
+verify after-horse-removed
+console ride ProtoBotM9B dismount
+wait 1
+ride-dump companion-dismounted
+# --- Unload/Reload: weit weg (außerhalb der Verfolgungsreichweite) und zurück
+console tp ${NAME} 218.5 101 -33.5 180 10
+wait 1
+entity-frame before-unload
+console tp ${NAME} 218.5 101 400.5 180 10
+wait 3
+entity-frame unloaded
+console tp ${NAME} 218.5 101 -33.5 180 10
+wait 4
+wait-entities 30
+look 180 12
+wait 1
+screenshot ${OUT}/11-reloaded.png
+look-dump reloaded
+entity-frame reloaded
+# --- Entity-Kollision: Boot an Land vor dem Spieler (fest), Schieben durch Lebewesen
+console summon oak_boat 236.5 100 -16.5 {Rotation:[90f,0f],Tags:[m14,landboat]}
+console tp ${NAME} 236.5 100 -19.5 0 0
+wait 1.5
+keys f 1.5
+verify blocked-by-boat
+ride-dump collision
+console summon cow 236.5 100 -64.5 {NoAI:1b,Tags:[m14]}
+console tp ${NAME} 236.7 100 -64.5 0 0
+wait 2
+ride-dump pushed-by-cow
+verify after-push
+# --- Ende
+console kill @e[tag=m14]
+console fill 198 103 -70 250 103 -10 minecraft:air
+console forceload remove 192 -80 255 -1
+console gamerule spawn_mobs true
+wait 1
+mark done

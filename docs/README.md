@@ -61,6 +61,10 @@ Analyse der Minecraft-26.3-Entwicklungsumgebung in `research/` als Grundlage fü
 | [51-online-mode-protokoll.md](51-online-mode-protokoll.md) | **M13:** Login-Zustandsautomat, Encryption Request/Response, RSA, AES/CFB8, Session-Hash, Verschlüsselung im Datenstrom, Kompression, join |
 | [52-authentifizierungsarchitektur.md](52-authentifizierungsarchitektur.md) | **M13:** Pakete und Schnittstellen, Anmeldeablauf, Netzwerkregel, Tokenverwaltung, Fehlerbehandlung, grafische Anmeldung |
 | [53-m13-testbericht.md](53-m13-testbericht.md) | Testbericht M13: lokale Protokolltests, Simulation gegen Vanilla-Server, Vorbereitung (Client-ID-Konfiguration, Entwicklungsmodus), Regression M1–M12 (offen), Checkliste für die auf den letzten Meilenstein verschobene Microsoft-Anmeldung |
+| [54-m14-entity-spezifikation.md](54-m14-entity-spezifikation.md) | M14: Bestandsaufnahme der Entity-Engine, untersuchte Vanilla-26.3-Regeln (Modelle, Varianten, Babys, Animationen, Skins, Passagiere, Fahrzeuge, Kollision), Faktentabellen aus dem lokalen JAR |
+| [55-entity-modelle-und-animationen.md](55-entity-modelle-und-animationen.md) | Hierarchisches Modellsystem, Darstellungspläne je Typ (Varianten, Baby-Modelle, Zusatzschichten), Animationen, Renderer-Transformation, Abweichungen |
+| [56-spieler-skins.md](56-spieler-skins.md) | Classic/Slim, zweite Skin-Schicht, SkinManager (lokale/Standard-Skins, sichere Dekodierung, Cache, Altformat), Mannequin-Profile, vorbereitete Online-Skins |
+| [57-fahrzeuge-und-passagiere.md](57-fahrzeuge-und-passagiere.md) | Fahrzeug- und Passagierprotokoll, Sitzpositionen, Boots- und Pferdephysik, Loren, Entity-Kollisionen und Schieben |
 
 **Lesepfad für den späteren eigenen Client:** 01 → 02 (Hauptschleife) → 04 (Eingaben) → 05 + 08 (Verbindung) → 07 (IDs) → 03 (Rendering).
 

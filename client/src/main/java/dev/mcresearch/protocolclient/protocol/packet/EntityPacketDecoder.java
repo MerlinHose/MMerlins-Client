@@ -275,10 +275,45 @@ final class EntityPacketDecoder {
 				yield List.copyOf(list);
 			}
 			case 33 -> r.readBoolean() ? r.readIdentifier() + "@" + r.readLong() : null;
+			case 41 -> resolvableProfile(r); // M14: Mannequin-Profil (Skin-Vorgabe ohne Netzwerk)
 			case 39 -> new float[]{r.readFloat(), r.readFloat(), r.readFloat()};
 			case 40 -> new float[]{r.readFloat(), r.readFloat(), r.readFloat(), r.readFloat()};
 			default -> serializer >= 21 && serializer <= 32 || serializer >= 35 && serializer <= 38 ? (Object) r.readVarInt() : UNSUPPORTED;
 		};
+	}
+
+	/**
+	 * M14 (docs/56 §3): {@code ResolvableProfile.STREAM_CODEC}: entweder vollständiges Profil (UUID, Name, Eigenschaften) oder
+	 * Teilprofil (optional Name, optional UUID, Eigenschaften), danach die Skin-Vorgabe ({@code PlayerSkin.Patch}: optional Textur, Umhang,
+	 * Elytra als Bezeichner, optional Modell schmal/breit).
+	 */
+	static GameProfile.Resolvable resolvableProfile(final PacketReader r) throws ProtocolException {
+		String name = null;
+		java.util.UUID id = null;
+		if (r.readBoolean()) {
+			id = r.readUuid();
+			name = r.readString(16);
+		} else {
+			name = r.readBoolean() ? r.readString(16) : null;
+			id = r.readBoolean() ? r.readUuid() : null;
+		}
+		int c = r.readCount(16, 3, "profile properties");
+		List<GameProfile.Property> props = new ArrayList<>(c);
+		for (int j = 0; j < c; j++) {
+			String pn = r.readString(64);
+			String pv = r.readString(32767);
+			String sig = r.readBoolean() ? r.readString(1024) : null;
+			props.add(new GameProfile.Property(pn, pv, sig));
+		}
+		String texture = r.readBoolean() ? r.readIdentifier() : null;
+		if (r.readBoolean()) {
+			r.readIdentifier(); // Umhang (nicht dargestellt)
+		}
+		if (r.readBoolean()) {
+			r.readIdentifier(); // Elytra (nicht dargestellt)
+		}
+		Boolean slim = r.readBoolean() ? r.readBoolean() : null;
+		return new GameProfile.Resolvable(name, id, List.copyOf(props), texture, slim);
 	}
 
 	/**

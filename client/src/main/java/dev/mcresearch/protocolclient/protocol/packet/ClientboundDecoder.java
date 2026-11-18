@@ -104,6 +104,7 @@ public final class ClientboundDecoder {
 				case "minecraft:ping" -> new Clientbound.Ping(r.readInt());
 				case "minecraft:login" -> playLogin(r);
 				case "minecraft:player_position" -> playerPosition(r);
+				case "minecraft:move_vehicle" -> new Clientbound.MoveVehicle(r.readDouble(), r.readDouble(), r.readDouble(), r.readFloat(), r.readFloat()); // M14
 				case "minecraft:start_configuration" -> new Clientbound.StartConfiguration();
 				case "minecraft:player_rotation" -> {
 					float yRot = r.readFloat();

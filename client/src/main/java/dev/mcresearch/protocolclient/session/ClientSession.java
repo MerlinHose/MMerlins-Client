@@ -113,6 +113,10 @@ public final class ClientSession {
 	private volatile String dimensionKey;
 	private volatile WorldState world;
 	private final MovementController movement = new MovementController(this.player);
+
+	{
+		this.movement.setEntities(this.entities); // M14: Fahrzeug, Sitz, Entity-Kollision, Schieben
+	}
 	private long lastKeepAliveNanos = -1;
 	private String serverBrand;
 	private int entityId = -1;
@@ -648,6 +652,15 @@ public final class ClientSession {
 				names.add(e.id());
 			}
 			this.levelEnvironment.setClockNames(names);
+		} else if (dev.mcresearch.protocolclient.entity.EntityVariants.REGISTRIES.contains(p.registry())) {
+			// M14: Tiervarianten – IDs = Reihenfolge; Asset-Daten nur ohne Known Packs (sonst lokales Datenpaket, docs/55 §5)
+			List<String> names = new ArrayList<>();
+			List<Object> data = new ArrayList<>();
+			for (Clientbound.RegistryEntry e : p.entries()) {
+				names.add(e.id());
+				data.add(e.hasData() ? e.data() : null);
+			}
+			this.entities.variants().setRegistry(p.registry(), names, data);
 		} else if (p.registry().equals("minecraft:worldgen/biome")) {
 			// Biom-IDs = Reihenfolge der Einträge; Anzahl bestimmt die Bits der globalen Biom-Palette (docs/18 §4.2)
 			List<String> names = new ArrayList<>(p.entries().size());
@@ -689,6 +702,14 @@ public final class ClientSession {
 				for (Clientbound.DataValue v : p.values()) {
 					this.survival.onOwnData(v.index(), v.value());
 					this.movement.onOwnEntityData(v.index(), v.value()); // M11: Sprint-Flag und Pose wie ClientPacketListener
+				}
+				return true;
+			}
+			case Clientbound.MoveVehicle p -> {
+				// M14: Serverkorrektur des selbst gesteuerten Fahrzeugs; wie ClientPacketListener#handleMoveVehicle sofort bestätigen
+				ServerboundPacket ack = this.movement.onServerVehicleMove(p.x(), p.y(), p.z(), p.yRot(), p.xRot());
+				if (ack != null) {
+					send(ack);
 				}
 				return true;
 			}

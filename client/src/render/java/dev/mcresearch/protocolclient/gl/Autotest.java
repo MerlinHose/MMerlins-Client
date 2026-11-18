@@ -410,6 +410,38 @@ final class Autotest implements AutoCloseable {
 					(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) >> 20));
 				done = true;
 			}
+			case "look-dump" -> {
+				// M14: Darstellungsplan je Entity (Modell-Layer, Textur, Farbe, Schichtart) oder DEBUG; GPU-Bestand des Entity-Renderers
+				java.util.Map<Integer, String> looks = new java.util.TreeMap<>(GameView.ENTITY_LOOKS);
+				for (java.util.Map.Entry<Integer, String> e : looks.entrySet()) {
+					GameView.appendReport(this.report, "ELOOK " + s[1].trim() + " " + e.getKey() + " " + e.getValue());
+				}
+				GameView.appendReport(this.report, "EGPU " + s[1].trim() + " " + GameView.ENTITY_GPU + " glResources=" + GlResources.summary());
+				done = true;
+			}
+			case "ride-dump" -> {
+				// M14: Fahrzeug des eigenen Spielers, Sitzposition, Auf-/Absteigen, letzte Fahrzeug-Ticks
+				dev.mcresearch.protocolclient.entity.EntityManager em = session.entities();
+				dev.mcresearch.protocolclient.entity.EntityManager.Stats st = em.stats();
+				double[] seat = em.ownSeat(1.0F);
+				var mv = session.movement();
+				GameView.appendReport(this.report, String.format(java.util.Locale.ROOT,
+					"ERIDE %s vehicle=%d seat=%s player=(%.4f %.4f %.4f) yaw=%.2f mounts=%d dismounts=%d passengerPackets=%d cycles=%d lateLinks=%d ignoredLocal=%d corrections=%d pushes=%d",
+					s[1].trim(), em.ownVehicle(), seat == null ? "-" : String.format(java.util.Locale.ROOT, "(%.4f %.4f %.4f)", seat[0], seat[1], seat[2]),
+					session.player().x(), session.player().y(), session.player().z(), session.player().yRot(), st.ownMounts, st.ownDismounts,
+					st.passengerPackets, st.passengerCycles, st.lateLinks, st.ignoredLocal, mv.vehicleCorrections(), mv.pushes()));
+				java.util.List<String> tr = mv.vehicleTrace();
+				for (String line : tr.subList(Math.max(0, tr.size() - 3), tr.size())) {
+					GameView.appendReport(this.report, "ERIDE " + s[1].trim() + " trace " + line);
+				}
+				for (dev.mcresearch.protocolclient.entity.EntityManager.View v : em.snapshot(1.0F, 0)) {
+					if (v.vehicle() >= 0 || v.passengers().length > 0) {
+						GameView.appendReport(this.report, String.format(java.util.Locale.ROOT, "ERIDE %s entity %d %s vehicle=%d passengers=%s render=(%.4f %.4f %.4f)",
+							s[1].trim(), v.id(), v.type().shortName(), v.vehicle(), java.util.Arrays.toString(v.passengers()), v.rx(), v.ry(), v.rz()));
+					}
+				}
+				done = true;
+			}
 			case "hold" -> {
 				// M11: hold <tasten>|- : Tasten dauerhaft halten (z. B. Schleichen während eines Bildschirmfotos)
 				this.held = PlayerPhysics.Input.parse(s[1].trim());

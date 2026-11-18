@@ -2,11 +2,20 @@ package dev.mcresearch.protocolclient.gl;
 
 import static org.lwjgl.opengl.GL33C.*;
 
+import dev.mcresearch.protocolclient.entity.ClientEntity;
 import dev.mcresearch.protocolclient.entity.EntityManager;
 import dev.mcresearch.protocolclient.view.EntityModels;
 import dev.mcresearch.protocolclient.view.Frustum;
 import dev.mcresearch.protocolclient.view.Mat4;
 import dev.mcresearch.protocolclient.view.MeshBuilder;
+import dev.mcresearch.protocolclient.view.model.EntityAnimators;
+import dev.mcresearch.protocolclient.view.model.EntityLooks;
+import dev.mcresearch.protocolclient.view.model.ModelLibrary;
+import dev.mcresearch.protocolclient.view.model.ModelMesher;
+import dev.mcresearch.protocolclient.view.model.ModelPose;
+import dev.mcresearch.protocolclient.view.skin.SkinManager;
+import dev.mcresearch.protocolclient.world.BlockRegistry;
+import dev.mcresearch.protocolclient.world.BlockState;
 import dev.mcresearch.protocolclient.world.ItemRegistry;
 import dev.mcresearch.protocolclient.world.ItemStack;
 import dev.mcresearch.protocolclient.world.WorldState;
@@ -25,10 +34,12 @@ import java.util.zip.ZipFile;
 import org.lwjgl.system.MemoryUtil;
 
 /**
- * Entity-Rendering (M9, docs/36). Zeichnet die Momentaufnahme des {@link EntityManager} mit eigener Modellgeometrie
- * ({@link EntityModels}) und Texturen, die zur Laufzeit aus dem <b>lokalen</b> Minecraft-JAR gelesen werden (nie in
- * Build-Artefakte kopiert). Je Modellteil gibt es ein einmal hochgeladenes Mesh; pro Bild werden nur Matrizen und Farben gesetzt –
- * keine GPU-Objekte je Bild. Unbekannte Typen und fehlende Texturen erscheinen als magentafarbene Debug-Box in Hitbox-Größe.
+ * Entity-Rendering (M9, docs/36; M14, docs/55). Zeichnet die Momentaufnahme des {@link EntityManager} mit hierarchischen Modellen
+ * ({@link ModelLibrary}, Faktentabelle aus dem lokalen JAR), Posen ({@link EntityAnimators}) und Darstellungsplänen
+ * ({@link EntityLooks}: Varianten, Baby-Modelle, Zusatzschichten). Texturen werden zur Laufzeit aus dem <b>lokalen</b>
+ * Minecraft-JAR gelesen (nie in Build-Artefakte kopiert), Spieler-Skins über den {@link SkinManager}. Je Layer und Teil gibt es
+ * ein einmal hochgeladenes Mesh; pro Bild werden nur Matrizen und Farben gesetzt – keine GPU-Objekte je Bild. Unbekannte Typen und
+ * fehlende Texturen erscheinen als magentafarbene Debug-Box in Hitbox-Größe.
  *
  * <p>Nur Grafikthread. {@link #close()} gibt alle Meshes, Texturen und den Shader frei (GlResources-Zähler).
  */
@@ -37,7 +48,8 @@ final class EntityRenderer implements AutoCloseable {
 	 * M12 (docs/47 §5): Entity-Beleuchtung wie 26.3 – Lightmap an den Lichtkoordinaten der Entity (Augenhöhe, brennend:
 	 * Blocklicht 15) und zwei feste Diffuslichter (Weltraum, Leistung 0,6, Umgebung 0,4). Flächennormale aus den
 	 * Bildschirmableitungen der Weltposition (flach je Fläche, zur Kamera gewandt – entspricht der Außennormale sichtbarer
-	 * Flächen). Nebel wie das Terrain (kugelförmig + zylindrisch).
+	 * Flächen). Nebel wie das Terrain (kugelförmig + zylindrisch). M14: Weiß-Überblendung (Creeper) und Augen-Schichten
+	 * (ohne Licht und Diffusanteil, additiv).
 	 */
 	static final String VERTEX = """
 		#version 330 core
@@ -67,7 +79,9 @@ final class EntityRenderer implements AutoCloseable {
 		uniform sampler2D uLightmap;
 		uniform int uTextured;
 		uniform int uDiffuse;
+		uniform int uEyes;
 		uniform vec4 uTint;
+		uniform float uWhite;
 		uniform ivec2 uLight;
 		uniform vec3 uLight0;
 		uniform vec3 uLight1;
@@ -85,6 +99,12 @@ final class EntityRenderer implements AutoCloseable {
 		void main() {
 		    vec4 c = (uTextured == 1 ? texture(uTex, vUv) : vec4(1.0)) * vColor * uTint;
 		    if (c.a < 0.1) discard;
+		    float fog = max(linearFog(length(vPos), uFogEnvStart, uFogEnvEnd), linearFog(max(length(vPos.xz), abs(vPos.y)), uFogRdStart, uFogRdEnd));
+		    if (uEyes == 1) {
+		        fragColor = vec4(c.rgb * c.a * (1.0 - fog), 1.0);
+		        return;
+		    }
+		    c.rgb = mix(c.rgb, vec3(1.0), uWhite);
 		    if (uDiffuse == 1) {
 		        vec3 n = normalize(cross(dFdx(vPos), dFdy(vPos)));
 		        if (dot(n, vPos) > 0.0) n = -n;
@@ -92,9 +112,8 @@ final class EntityRenderer implements AutoCloseable {
 		        c.rgb *= l;
 		    }
 		    vec2 luv = clamp(vec2(uLight) / 256.0 + 0.5 / 16.0, vec2(0.5 / 16.0), vec2(15.5 / 16.0));
-		    c *= texture(uLightmap, luv);
-		    float fog = max(linearFog(length(vPos), uFogEnvStart, uFogEnvEnd), linearFog(max(length(vPos.xz), abs(vPos.y)), uFogRdStart, uFogRdEnd));
-		    fragColor = vec4(mix(c.rgb, uFogColor, fog), 1.0);
+		    c.rgb *= texture(uLightmap, luv).rgb;
+		    fragColor = vec4(mix(c.rgb, uFogColor, fog), uTint.a < 0.999 ? c.a : 1.0);
 		}
 		""";
 
@@ -112,25 +131,29 @@ final class EntityRenderer implements AutoCloseable {
 		return new float[]{x / l, y / l, z / l};
 	}
 
-	/** Standard-Skins (lokal); Auswahl nach UUID-Hash. Keine Skin-Downloads (docs/36 §5). */
-	private static final String[] SKINS = {"alex", "ari", "efe", "kai", "makena", "noor", "steve", "sunny", "zuri"};
-	/** Wollfarben je Farbindex 0–15 (Textur-Grundfarben der Farbstoffe). */
-	private static final int[] WOOL = {0xF9FFFE, 0xF9801D, 0xC74EBD, 0x3AB3DA, 0xFED83D, 0x80C71F, 0xF38BAA, 0x474F52, 0x9D9D97, 0x169C9C, 0x8932B8,
-		0x3C44AA, 0x835432, 0x5E7C16, 0xB02E26, 0x1D1D21};
 	private static final float RAD = (float) (Math.PI / 180.0);
 
-
-	/** Zähler je Bild (Leistungstest, docs/37 §4). */
-	record FrameInfo(int total, int drawn, int culled, int debugBoxes, int drawCalls, long cpuNanos) {
+	/** Zähler je Bild (Leistungstest, docs/37 §4; M14: Modelle/Teile/Schichten, docs/58). */
+	record FrameInfo(int total, int drawn, int culled, int debugBoxes, int drawCalls, long cpuNanos, int layers, int modelled, long animNanos) {
+		FrameInfo(final int total, final int drawn, final int culled, final int debugBoxes, final int drawCalls, final long cpuNanos) {
+			this(total, drawn, culled, debugBoxes, drawCalls, cpuNanos, 0, 0, 0);
+		}
 	}
 
 	private final ShaderProgram shader = new ShaderProgram(VERTEX, FRAGMENT);
-	private final Path assets;
 	private ZipFile zip;
-	private final Map<EntityModels.Model, Map<EntityModels.Part, GpuMesh>> meshes = new HashMap<>();
+	private final ModelLibrary library = ModelLibrary.get();
+	private final SkinManager skins;
+	/** Meshes je Modell-Layer und Teilindex (null = Teil ohne Quader). */
+	private final Map<String, GpuMesh[]> meshes = new HashMap<>();
+	/** Wiederverwendete Posen je Modell-Layer (nur Grafikthread). */
+	private final Map<String, ModelPose> poses = new HashMap<>();
 	private final Map<String, Integer> textures = new HashMap<>();
 	private final Set<String> missingTextures = new HashSet<>();
-	private final Map<Integer, float[]> walk = new HashMap<>(); // id → {Phase, Stärke}
+	private final Map<String, String> hats = new HashMap<>();
+	private final Map<String, Map<?, ?>> variantJson = new HashMap<>();
+	/** Schwimmanteil je Entity (+0,09 je Tick in Schwimmpose, wie {@code LivingEntity#updateSwimAmount}). */
+	private final Map<Integer, float[]> swim = new HashMap<>();
 	/** M10: einfache Trefferpartikel (Position, Geschwindigkeit, Restlebensdauer in Ticks), höchstens MAX_PARTICLES. */
 	private static final int MAX_PARTICLES = 400;
 	private final java.util.ArrayList<float[]> particles = new java.util.ArrayList<>();
@@ -139,21 +162,34 @@ final class EntityRenderer implements AutoCloseable {
 	private long particlesSpawned;
 	private final GpuMesh debugCube;
 	private final GpuMesh itemQuad;
-	/** Würfel 0…16 mit der ganzen Textur auf jeder Seite (Block-Items am Boden). */
+	/** Würfel 0…16 mit der ganzen Textur auf jeder Seite (Block-Items am Boden, Blockinhalte). */
 	private final GpuMesh texCube;
 	private final ItemRegistry items = ItemRegistry.get();
 	private FrameInfo last = new FrameInfo(0, 0, 0, 0, 0, 0);
 	private long lastFrameNanos = -1;
 	private int drawCalls;
+	private int layerCount;
+	private long animNanos;
+	private EntityLooks.Context context;
+	/** M14: Kurzbeschreibung des Darstellungsplans je Entity im letzten Bild (Testausgabe look-dump). */
+	private final java.util.Map<Integer, String> looks = new java.util.concurrent.ConcurrentHashMap<>();
+
+	java.util.Map<Integer, String> looks() {
+		return java.util.Map.copyOf(this.looks);
+	}
 
 	EntityRenderer(final Path assets) {
-		this.assets = assets;
+		this(assets, null);
+	}
+
+	EntityRenderer(final Path assets, final Path skinDir) {
 		try {
 			this.zip = assets == null ? null : new ZipFile(assets.toFile());
 		} catch (IOException e) {
 			this.zip = null;
 			System.out.println("[GL] entity textures unavailable: " + e.getMessage());
 		}
+		this.skins = new SkinManager(this.zip == null ? null : assets, skinDir);
 		this.debugCube = new GpuMesh(EntityModels.partMesh(EntityModels.UNIT_CUBE, EntityModels.UNIT_CUBE.parts().getFirst()));
 		MeshBuilder b = new MeshBuilder(6, 64);
 		int white = MeshBuilder.rgba(255, 255, 255, 255);
@@ -170,13 +206,50 @@ final class EntityRenderer implements AutoCloseable {
 		return this.textures.size();
 	}
 
+	int meshCount() {
+		int n = 0;
+		for (GpuMesh[] m : this.meshes.values()) {
+			for (GpuMesh g : m) {
+				if (g != null) {
+					n++;
+				}
+			}
+		}
+		return n;
+	}
+
+	long meshBytes() {
+		long n = 0;
+		for (GpuMesh[] m : this.meshes.values()) {
+			for (GpuMesh g : m) {
+				if (g != null) {
+					n += g.bytes();
+				}
+			}
+		}
+		return n;
+	}
+
+	SkinManager skins() {
+		return this.skins;
+	}
+
 	/** Zeichnet alle Entities; Kamera relativ (wie die Chunks), Nebel wie die Welt. */
 	void draw(final Mat4 viewProj, final Frustum frustum, final double camX, final double camY, final double camZ, final List<EntityManager.View> views,
 		final WorldState world, final float[] fogColor, final float fogStart, final float fogEnd, final long now) {
+		draw(viewProj, frustum, camX, camY, camZ, views, world, fogColor, fogStart, fogEnd, now, null, -1);
+	}
+
+	void draw(final Mat4 viewProj, final Frustum frustum, final double camX, final double camY, final double camZ, final List<EntityManager.View> views,
+		final WorldState world, final float[] fogColor, final float fogStart, final float fogEnd, final long now,
+		final dev.mcresearch.protocolclient.entity.EntityVariants variants, final long gameTime) {
 		long t0 = System.nanoTime();
 		float dtTicks = this.lastFrameNanos < 0 ? 0 : Math.min(5, (now - this.lastFrameNanos) / 50_000_000f);
 		this.lastFrameNanos = now;
 		this.drawCalls = 0;
+		this.layerCount = 0;
+		this.animNanos = 0;
+		this.context = new EntityLooks.Context(variants, this::variantFallback, gameTime, this::villagerHat, this.skins, this.items);
 		this.shader.use();
 		this.shader.set("uViewProj", viewProj);
 		this.shader.set("uTex", 0);
@@ -188,6 +261,8 @@ final class EntityRenderer implements AutoCloseable {
 		this.shader.set("uFogRdEnd", fp[3]);
 		this.shader.set("uLightmap", LightmapGl.UNIT);
 		this.shader.set("uDiffuse", 1);
+		this.shader.set("uEyes", 0);
+		this.shader.set("uWhite", 0f);
 		this.shader.set("uLight0", LIGHT0[0], LIGHT0[1], LIGHT0[2]);
 		float[] l1 = netherLighting ? NETHER_LIGHT1 : LIGHT1;
 		this.shader.set("uLight1", l1[0], l1[1], l1[2]);
@@ -196,9 +271,14 @@ final class EntityRenderer implements AutoCloseable {
 		int drawn = 0;
 		int culled = 0;
 		int debug = 0;
+		int modelled = 0;
 		Set<Integer> seen = new HashSet<>();
 		for (EntityManager.View v : views) {
 			seen.add(v.id());
+			float[] sw = this.swim.computeIfAbsent(v.id(), k -> new float[2]);
+			sw[1] = sw[0];
+			float target = v.pose() == 3 ? 1 : 0;
+			sw[0] = target > sw[0] ? Math.min(1, sw[0] + 0.09f * dtTicks) : Math.max(0, sw[0] - 0.09f * dtTicks);
 			double ox = v.rx() - camX;
 			double oy = v.ry() - camY;
 			double oz = v.rz() - camZ;
@@ -215,18 +295,26 @@ final class EntityRenderer implements AutoCloseable {
 			// Lichtkoordinaten an der Augenposition (getLightProbePosition), brennend: Blocklicht 15; Lightmap im Shader
 			int[] lc = lightCoords(world, v.rx(), v.ry() + v.height() * 0.85, v.rz(), (v.flags() & 0x01) != 0);
 			this.shader.setInt2("uLight", lc[0] * 16, lc[1] * 16);
-			float bright = 1f;
 			Mat4 base = Mat4.translation((float) ox, (float) oy, (float) oz);
-			float[] wk = this.walk.computeIfAbsent(v.id(), k -> new float[2]);
-			float target = (float) Math.min(1.0, v.walkSpeed() * 4.0);
-			wk[1] += (target - wk[1]) * Math.min(1f, dtTicks * 0.4f);
-			wk[0] += (float) (v.walkSpeed() * 4.0) * dtTicks;
-			if (!drawEntity(v, base, bright, wk[0], wk[1])) {
+			boolean ok;
+			if (v.type().shortName().equals("item")) {
+				ok = drawItem(v, base, 1f);
+			} else {
+				ok = drawModelled(v, base, sw[0], world);
+				if (ok) {
+					modelled++;
+				}
+			}
+			if (!ok) {
 				debug++;
-				drawDebug(base, v, bright);
+				drawDebug(base, v, 1f);
+			}
+			if (!ok) {
+				this.looks.put(v.id(), v.type().shortName() + " DEBUG");
 			}
 		}
-		this.walk.keySet().retainAll(seen);
+		this.swim.keySet().retainAll(seen);
+		this.looks.keySet().retainAll(seen);
 		// M10: neue Schadensereignisse (damage_event vom Server) → Partikel an der Körpermitte
 		for (EntityManager.View v : views) {
 			Integer old = this.seenDamage.put(v.id(), v.damageEvents());
@@ -237,7 +325,207 @@ final class EntityRenderer implements AutoCloseable {
 		this.seenDamage.keySet().retainAll(seen);
 		drawParticles(camX, camY, camZ, dtTicks);
 		glEnable(GL_CULL_FACE);
-		this.last = new FrameInfo(views.size(), drawn, culled, debug, this.drawCalls, System.nanoTime() - t0);
+		this.last = new FrameInfo(views.size(), drawn, culled, debug, this.drawCalls, System.nanoTime() - t0, this.layerCount, modelled, this.animNanos);
+	}
+
+	/** Darstellungsplan auflösen und zeichnen; false → Debug-Box. */
+	private boolean drawModelled(final EntityManager.View v, final Mat4 base, final float swimAmount, final WorldState world) {
+		EntityLooks.Look look = EntityLooks.look(v, this.context);
+		if (look == null || look.layers().isEmpty()) {
+			return false;
+		}
+		StringBuilder sb = new StringBuilder(v.type().shortName()).append(" anim=").append(look.animator()).append(v.baby() ? " baby" : "");
+		for (EntityLooks.Layer l : look.layers()) {
+			sb.append(" | ").append(l.model()).append(" ").append(l.texture());
+			if (l.color() != -1) {
+				sb.append(String.format(java.util.Locale.ROOT, " #%08X", l.color()));
+			}
+			if (l.kind() != EntityLooks.Kind.CUTOUT) {
+				sb.append(" ").append(l.kind());
+			}
+		}
+		this.looks.put(v.id(), sb.toString());
+		// Grundschicht muss Modell und Textur haben, sonst Debug-Box (wie bisher bei fehlenden Texturen)
+		EntityLooks.Layer first = look.layers().getFirst();
+		if (this.library.model(first.model()) == null || texture(first.texture()) == null) {
+			return false;
+		}
+		String type = v.type().shortName();
+		float hurt = v.hurtProgress() > 0 ? 1f : 0f;
+		float[] tint = {1f, 1f - 0.45f * hurt, 1f - 0.45f * hurt, 1f};
+		Mat4 rootUnits;
+		if (look.animator().equals("boat")) {
+			rootUnits = base.multiply(Mat4.translation(0, 0.375f, 0)).multiply(Mat4.rotationY((180f - v.rYRot()) * RAD)).multiply(vehicleHurt(v))
+				.multiply(Mat4.scale(-1, -1, 1)).multiply(Mat4.rotationY(90 * RAD));
+		} else if (look.animator().equals("minecart")) {
+			Mat4 m = base.multiply(Mat4.translation(0, 0.375f, 0)).multiply(Mat4.rotationY((180f - v.rYRot()) * RAD)).multiply(Mat4.rotationZ(-v.rXRot()
+				* RAD)).multiply(vehicleHurt(v));
+			if (look.carriedBlock() != null) {
+				int offset = v.data().get(12) instanceof Integer o ? o : 6;
+				drawBlock(look.carriedBlock(), m.multiply(Mat4.scale(0.75f, 0.75f, 0.75f)).multiply(Mat4.translation(-0.5f, (offset - 8) / 16.0f, 0.5f))
+					.multiply(Mat4.rotationY(90 * RAD)), tint);
+			}
+			rootUnits = m.multiply(Mat4.scale(-1, -1, 1));
+		} else {
+			float s = 1f;
+			Double scale = v.attributes().get(ClientEntity.ATTRIBUTE_SCALE);
+			if (scale != null) {
+				s *= scale.floatValue();
+			}
+			Mat4 m = base;
+			if ((type.equals("player") || type.equals("mannequin")) && v.pose() == 5) {
+				m = m.multiply(Mat4.translation(0, s * -2f / 16f, 0)); // Schleichen: Darstellung 2 Pixel tiefer (getRenderOffset)
+			}
+			m = m.multiply(Mat4.scale(s, s, s)).multiply(Mat4.rotationY((180f - v.rYRot()) * RAD));
+			if (type.equals("player") && swimAmount > 0) {
+				float xAngle = swimAmount * (-90f - v.rXRot());
+				m = m.multiply(Mat4.rotationX(xAngle * RAD));
+				if (v.pose() == 3) {
+					m = m.multiply(Mat4.translation(0, -1f, 0.3f));
+				}
+			}
+			rootUnits = m.multiply(Mat4.scale(-1, -1, 1)).multiply(Mat4.scale(look.scaleX(), look.scaleY(), look.scaleZ())).multiply(Mat4.translation(0,
+				-1.501f, 0));
+			if (look.carriedBlock() != null) {
+				drawBlock(look.carriedBlock(), rootUnits.multiply(Mat4.translation(0, 0.6875f, -0.75f)).multiply(Mat4.rotationX(20 * RAD)).multiply(Mat4
+					.rotationY(45 * RAD)).multiply(Mat4.translation(0.25f, 0.1875f, 0.25f)).multiply(Mat4.scale(-0.5f, -0.5f, 0.5f)).multiply(Mat4
+					.rotationY(90 * RAD)), tint);
+			}
+		}
+		Mat4 rootPx = rootUnits.multiply(Mat4.scale(1 / 16f, 1 / 16f, 1 / 16f));
+		long ta = System.nanoTime();
+		EntityAnimators.Input in = new EntityAnimators.Input(v, v.ageTicks() + 0f, swimAmount);
+		this.animNanos += System.nanoTime() - ta;
+		Mat4[] heldPose = null;
+		ModelPose heldModel = null;
+		this.shader.set("uWhite", look.whiteOverlay());
+		for (EntityLooks.Layer layer : look.layers()) {
+			ModelLibrary.Model model = this.library.model(layer.model());
+			Integer tex = texture(layer.texture());
+			if (model == null || tex == null) {
+				continue;
+			}
+			long ts = System.nanoTime();
+			ModelPose pose = this.poses.computeIfAbsent(layer.model(), k -> new ModelPose(model));
+			EntityAnimators.apply(look.animator(), pose, in);
+			if (type.equals("player") || type.equals("mannequin")) {
+				skinLayers(pose, v.skinParts());
+			}
+			Mat4[] mats = pose.matrices();
+			this.animNanos += System.nanoTime() - ts;
+			int c = layer.color();
+			float[] t = {tint[0] * ((c >> 16) & 255) / 255f, tint[1] * ((c >> 8) & 255) / 255f, tint[2] * (c & 255) / 255f, ((c >>> 24) & 255) / 255f};
+			drawLayer(model, pose, mats, rootPx, tex, t, layer.kind());
+			this.layerCount++;
+			if (heldPose == null && look.heldItems()) {
+				heldPose = mats.clone();
+				heldModel = pose;
+			}
+		}
+		this.shader.set("uWhite", 0f);
+		if (heldPose != null) {
+			drawHeldItem(v, rootPx, heldModel, heldPose, tint);
+		}
+		return true;
+	}
+
+	/** Sichtbarkeit der zweiten Skin-Schicht (Datenfeld 16: 0x02 Jacke, 0x04/0x08 Ärmel, 0x10/0x20 Hosenbeine, 0x40 Hut). */
+	static void skinLayers(final ModelPose pose, final int parts) {
+		pose.setVisible("jacket", (parts & 0x02) != 0);
+		pose.setVisible("left_sleeve", (parts & 0x04) != 0);
+		pose.setVisible("right_sleeve", (parts & 0x08) != 0);
+		pose.setVisible("left_pants", (parts & 0x10) != 0);
+		pose.setVisible("right_pants", (parts & 0x20) != 0);
+		pose.setVisible("hat", (parts & 0x40) != 0);
+	}
+
+	/** Schadenswackeln der Fahrzeuge (Datenfeld 8 Treffer-Ticks, 9 Richtung, 10 Schaden). */
+	private static Mat4 vehicleHurt(final EntityManager.View v) {
+		int hurt = v.data().get(8) instanceof Integer h ? h : 0;
+		if (hurt <= 0) {
+			return Mat4.identity();
+		}
+		int dir = v.data().get(9) instanceof Integer d ? d : 1;
+		float damage = v.data().get(10) instanceof Float f ? f : 0f;
+		float angle = (float) Math.sin(hurt) * hurt * damage / 10.0f * dir;
+		return Mat4.rotationX(angle * RAD);
+	}
+
+	private void drawLayer(final ModelLibrary.Model model, final ModelPose pose, final Mat4[] mats, final Mat4 rootPx, final int tex, final float[] tint,
+		final EntityLooks.Kind kind) {
+		GpuMesh[] m = this.meshes.computeIfAbsent(model.layer(), k -> {
+			GpuMesh[] arr = new GpuMesh[model.parts().size()];
+			for (ModelLibrary.Part p : model.parts()) {
+				if (!p.cubes().isEmpty()) {
+					arr[p.index()] = new GpuMesh(ModelMesher.partMesh(model, p));
+				}
+			}
+			return arr;
+		});
+		glBindTexture(GL_TEXTURE_2D, tex);
+		this.shader.set("uTextured", 1);
+		this.shader.set("uTint", tint[0], tint[1], tint[2], kind == EntityLooks.Kind.TRANSLUCENT ? tint[3] : 1f);
+		if (kind == EntityLooks.Kind.EYES) {
+			this.shader.set("uEyes", 1);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+			glDepthMask(false);
+		} else if (kind == EntityLooks.Kind.TRANSLUCENT) {
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glDepthMask(false);
+		}
+		for (ModelLibrary.Part p : model.parts()) {
+			GpuMesh mesh = m[p.index()];
+			if (mesh == null || !pose.effectivelyVisible(p.index())) {
+				continue;
+			}
+			this.shader.set("uModel", rootPx.multiply(mats[p.index()]));
+			mesh.draw();
+			this.drawCalls++;
+		}
+		if (kind != EntityLooks.Kind.CUTOUT) {
+			this.shader.set("uEyes", 0);
+			glDepthMask(true);
+			glDisable(GL_BLEND);
+		}
+	}
+
+	/** Blockinhalt (Enderman-Block, Loren-Inhalt): Würfel 0…1 mit der Blocktextur (vereinfachtes Blockmodell, docs/55 §7). */
+	private void drawBlock(final String block, final Mat4 m, final float[] tint) {
+		String name = null;
+		if (block.startsWith("state:")) {
+			try {
+				BlockState s = BlockRegistry.get().state(Integer.parseInt(block.substring(6)));
+				name = s == null ? null : s.name().replace("minecraft:", "");
+			} catch (RuntimeException e) {
+				name = null;
+			}
+		} else if (block.startsWith("block:")) {
+			name = block.substring(6);
+		}
+		if (name == null) {
+			return;
+		}
+		Integer tex = null;
+		for (String suffix : new String[]{"", "_side", "_front", "_top", "_outside"}) {
+			tex = texture("block/" + name + suffix);
+			if (tex != null) {
+				break;
+			}
+		}
+		if (name.equals("chest")) {
+			tex = texture("block/oak_planks");
+		}
+		if (tex == null) {
+			return;
+		}
+		glBindTexture(GL_TEXTURE_2D, tex);
+		this.shader.set("uTextured", 1);
+		this.shader.set("uTint", tint[0], tint[1], tint[2], 1f);
+		this.shader.set("uModel", m.multiply(Mat4.scale(1 / 16f, 1 / 16f, 1 / 16f)));
+		this.texCube.draw();
+		this.drawCalls++;
 	}
 
 	private static int[] texturedCube() {
@@ -296,6 +584,7 @@ final class EntityRenderer implements AutoCloseable {
 			this.debugCube.draw();
 			this.drawCalls++;
 		}
+		this.shader.set("uDiffuse", 1);
 	}
 
 	long particlesSpawned() {
@@ -317,191 +606,11 @@ final class EntityRenderer implements AutoCloseable {
 		return new int[]{onFire ? 15 : w.renderLight(false, bx, by, bz), w.renderLight(true, bx, by, bz)};
 	}
 
-	/** Liefert false, wenn für den Typ kein Modell oder keine Textur vorhanden ist (dann Debug-Box). */
-	private boolean drawEntity(final EntityManager.View v, final Mat4 base, final float bright, final float phase, final float amount) {
-		String type = v.type().shortName();
-		float hurt = v.hurtProgress() > 0 ? 1f : 0f;
-		float[] tint = {bright, bright * (1 - 0.45f * hurt), bright * (1 - 0.45f * hurt), 1f};
-		switch (type) {
-			case "item" -> {
-				return drawItem(v, base, bright);
-			}
-			case "pig", "cow" -> {
-				String tex = "entity/" + type + "/" + type + "_temperate.png";
-				return drawLiving(v, base, type.equals("pig") ? EntityModels.PIG : EntityModels.COW, tex, tint, phase, amount, false);
-			}
-			case "sheep" -> {
-				if (!drawLiving(v, base, EntityModels.SHEEP, "entity/sheep/sheep.png", tint, phase, amount, false)) {
-					return false;
-				}
-				if ((v.sheepWool() & 0x10) == 0) {
-					int c = WOOL[v.sheepWool() & 15];
-					float[] wt = {tint[0] * ((c >> 16) & 255) / 255f, tint[1] * ((c >> 8) & 255) / 255f, tint[2] * (c & 255) / 255f, 1f};
-					drawLiving(v, base, EntityModels.SHEEP_WOOL, "entity/sheep/sheep_wool.png", wt, phase, amount, false);
-				}
-				return true;
-			}
-			case "zombie" -> {
-				return drawLiving(v, base, EntityModels.ZOMBIE, "entity/zombie/zombie.png", tint, phase, amount, true);
-			}
-			case "skeleton" -> {
-				return drawLiving(v, base, EntityModels.SKELETON, "entity/skeleton/skeleton.png", tint, phase, amount, true);
-			}
-			case "player" -> {
-				int idx = Math.floorMod(v.uuid().hashCode(), SKINS.length * 2);
-				boolean slim = idx >= SKINS.length;
-				String tex = "entity/player/" + (slim ? "slim/" : "wide/") + SKINS[idx % SKINS.length] + ".png";
-				return drawLiving(v, base, slim ? EntityModels.PLAYER_SLIM : EntityModels.PLAYER_WIDE, tex, tint, phase, amount, true);
-			}
-			default -> {
-				return false;
-			}
-		}
-	}
-
-	/** Lebewesen: Körperdrehung, Skalierung (Baby/Attribut), Modellraum → Welt, Teile mit Animation, danach Rüstung und Haupthand. */
-	private boolean drawLiving(final EntityManager.View v, final Mat4 base, final EntityModels.Model model, final String texture, final float[] tint,
-		final float phase, final float amount, final boolean humanoid) {
-		Integer tex = texture(texture);
-		if (tex == null) {
-			return false;
-		}
-		float s = 1f;
-		Double scale = v.attributes().get(30);
-		if (scale != null) {
-			s *= scale.floatValue();
-		}
-		if (v.baby()) {
-			s *= 0.5f; // Baby: verkleinertes Erwachsenenmodell (eigene Baby-Modelle nicht umgesetzt, docs/36 §6)
-		}
-		float body = v.rYRot();
-		Mat4 root = base.multiply(Mat4.rotationY((180f - body) * RAD)).multiply(Mat4.scale(-s, -s, s)).multiply(Mat4.translation(0, -1.501f, 0))
-			.multiply(Mat4.scale(1 / 16f, 1 / 16f, 1 / 16f));
-		Map<String, Mat4> poses = pose(model, v, phase, amount, humanoid);
-		drawModel(model, root, poses, tex, tint);
-		if (humanoid) {
-			drawArmor(v, root, poses, tint);
-			drawHeldItem(v, root, poses, tint);
-		}
-		return true;
-	}
-
-	/** Teilmatrizen (Drehpunkt + Grunddrehung + Animation), Eltern vor Kindern. */
-	private static Map<String, Mat4> pose(final EntityModels.Model model, final EntityManager.View v, final float phase, final float amount,
-		final boolean humanoid) {
-		Map<String, Mat4> out = new HashMap<>();
-		float headYaw = dev.mcresearch.protocolclient.entity.EntityInterpolator.wrapDegrees(v.rHead() - v.rYRot()) * RAD;
-		float pitch = v.rXRot() * RAD;
-		float swingLeg = (float) Math.sin(phase * 0.66) * 1.2f * amount;
-		float swingArm = v.swingProgress() > 0 ? (float) Math.sin(v.swingProgress() * Math.PI) : 0f;
-		boolean zombieArms = v.type().shortName().equals("zombie");
-		for (EntityModels.Part p : model.parts()) {
-			float rx = p.rx(), ry = p.ry(), rz = p.rz();
-			switch (p.name()) {
-				case "head" -> {
-					ry += headYaw;
-					rx += pitch;
-				}
-				case "right_hind_leg", "left_front_leg" -> rx += humanoid ? 0 : swingLeg;
-				case "left_hind_leg", "right_front_leg" -> rx -= humanoid ? 0 : swingLeg;
-				case "right_leg" -> rx += swingLeg;
-				case "left_leg" -> rx -= swingLeg;
-				case "right_arm" -> {
-					rx += zombieArms ? -1.45f : -swingLeg * 0.8f;
-					rx -= swingArm * 1.2f;
-				}
-				case "left_arm" -> rx += zombieArms ? -1.45f : swingLeg * 0.8f;
-				default -> {
-				}
-			}
-			Mat4 local = Mat4.translation(p.px(), p.py(), p.pz()).multiply(Mat4.rotationZ(rz)).multiply(Mat4.rotationY(ry)).multiply(Mat4.rotationX(rx));
-			Mat4 parent = p.parent() == null ? null : out.get(p.parent());
-			out.put(p.name(), parent == null ? local : parent.multiply(local));
-		}
-		return out;
-	}
-
-	private void drawModel(final EntityModels.Model model, final Mat4 root, final Map<String, Mat4> poses, final int tex, final float[] tint) {
-		glBindTexture(GL_TEXTURE_2D, tex);
-		this.shader.set("uTextured", 1);
-		this.shader.set("uTint", tint[0], tint[1], tint[2], tint[3]);
-		Map<EntityModels.Part, GpuMesh> m = this.meshes.computeIfAbsent(model, k -> new HashMap<>());
-		for (EntityModels.Part p : model.parts()) {
-			Mat4 pose = poses.get(p.name());
-			if (pose == null) {
-				continue;
-			}
-			GpuMesh mesh = m.computeIfAbsent(p, k -> new GpuMesh(EntityModels.partMesh(model, k)));
-			this.shader.set("uModel", root.multiply(pose));
-			mesh.draw();
-			this.drawCalls++;
-		}
-	}
-
-	/** Helm/Brust/Stiefel (äußere Schicht) und Hose (innere Schicht) aus {@code equipment/humanoid[_leggings]/<material>.png}. */
-	private void drawArmor(final EntityManager.View v, final Mat4 root, final Map<String, Mat4> poses, final float[] tint) {
-		ItemStack[] eq = v.equipment();
-		String[][] layers = {{"head", "head"}, {"chest", "body right_arm left_arm"}, {"feet", "right_leg left_leg"}};
-		int[] slots = {dev.mcresearch.protocolclient.entity.ClientEntity.SLOT_HEAD, dev.mcresearch.protocolclient.entity.ClientEntity.SLOT_CHEST,
-			dev.mcresearch.protocolclient.entity.ClientEntity.SLOT_FEET};
-		for (int i = 0; i < slots.length; i++) {
-			String mat = material(eq[slots[i]]);
-			if (mat == null) {
-				continue;
-			}
-			Integer tex = texture("entity/equipment/humanoid/" + mat + ".png");
-			if (tex != null) {
-				drawSubset(EntityModels.ARMOR_OUTER, root, poses, tex, tint, Set.of(layers[i][1].split(" ")));
-			}
-		}
-		String legs = material(eq[dev.mcresearch.protocolclient.entity.ClientEntity.SLOT_LEGS]);
-		if (legs != null) {
-			Integer tex = texture("entity/equipment/humanoid_leggings/" + legs + ".png");
-			if (tex != null) {
-				drawSubset(EntityModels.ARMOR_INNER, root, poses, tex, tint, Set.of("body", "right_leg", "left_leg"));
-			}
-		}
-	}
-
-	private void drawSubset(final EntityModels.Model model, final Mat4 root, final Map<String, Mat4> poses, final int tex, final float[] tint,
-		final Set<String> parts) {
-		glBindTexture(GL_TEXTURE_2D, tex);
-		this.shader.set("uTint", tint[0], tint[1], tint[2], tint[3]);
-		Map<EntityModels.Part, GpuMesh> m = this.meshes.computeIfAbsent(model, k -> new HashMap<>());
-		for (EntityModels.Part p : model.parts()) {
-			if (!parts.contains(p.name()) || poses.get(p.name()) == null) {
-				continue;
-			}
-			GpuMesh mesh = m.computeIfAbsent(p, k -> new GpuMesh(EntityModels.partMesh(model, k)));
-			this.shader.set("uModel", root.multiply(poses.get(p.name())));
-			mesh.draw();
-			this.drawCalls++;
-		}
-	}
-
-	/** Material aus dem Itemnamen ({@code iron_helmet} → {@code iron}); null für Nicht-Rüstung. */
-	private String material(final ItemStack s) {
-		if (s == null || s.isEmpty()) {
-			return null;
-		}
-		String n = this.items.name(s.itemId()).replace("minecraft:", "");
-		if (n.equals("turtle_helmet")) {
-			return "turtle_scute";
-		}
-		for (String suffix : new String[]{"_helmet", "_chestplate", "_leggings", "_boots"}) {
-			if (n.endsWith(suffix)) {
-				String m = n.substring(0, n.length() - suffix.length());
-				return m.equals("golden") ? "gold" : m;
-			}
-		}
-		return null;
-	}
-
-	/** Gegenstand der Haupthand als Bild-Quad an der rechten Hand. */
-	private void drawHeldItem(final EntityManager.View v, final Mat4 root, final Map<String, Mat4> poses, final float[] tint) {
-		ItemStack s = v.equipment()[dev.mcresearch.protocolclient.entity.ClientEntity.SLOT_MAINHAND];
-		Mat4 arm = poses.get("right_arm");
-		if (s == null || s.isEmpty() || arm == null) {
+	/** Gegenstand der Haupthand als Bild-Quad an der rechten Hand (vereinfachte Item-Darstellung, docs/36 §4). */
+	private void drawHeldItem(final EntityManager.View v, final Mat4 rootPx, final ModelPose pose, final Mat4[] mats, final float[] tint) {
+		ItemStack s = v.equipment()[ClientEntity.SLOT_MAINHAND];
+		int arm = pose.part("right_arm");
+		if (s == null || s.isEmpty() || arm < 0) {
 			return;
 		}
 		Integer tex = itemTexture(s);
@@ -509,8 +618,9 @@ final class EntityRenderer implements AutoCloseable {
 			return;
 		}
 		glBindTexture(GL_TEXTURE_2D, tex);
+		this.shader.set("uTextured", 1);
 		this.shader.set("uTint", tint[0], tint[1], tint[2], 1f);
-		this.shader.set("uModel", root.multiply(arm).multiply(Mat4.translation(-1, 10, -6)).multiply(Mat4.rotationY((float) (Math.PI / 2)))
+		this.shader.set("uModel", rootPx.multiply(mats[arm]).multiply(Mat4.translation(-1, 10, -6)).multiply(Mat4.rotationY((float) (Math.PI / 2)))
 			.multiply(Mat4.scale(0.7f, 0.7f, 0.7f)));
 		this.itemQuad.draw();
 		this.drawCalls++;
@@ -527,7 +637,7 @@ final class EntityRenderer implements AutoCloseable {
 		float spin = age / 20f;
 		float bob = (float) Math.sin(age / 10f) * 0.1f + 0.1f;
 		this.shader.set("uTint", bright, bright, bright, 1f);
-		Integer itemTex = texture("item/" + name + ".png");
+		Integer itemTex = texture("item/" + name);
 		if (itemTex != null) {
 			glBindTexture(GL_TEXTURE_2D, itemTex);
 			this.shader.set("uTextured", 1);
@@ -537,7 +647,7 @@ final class EntityRenderer implements AutoCloseable {
 			this.drawCalls++;
 			return true;
 		}
-		Integer blockTex = texture("block/" + name + ".png");
+		Integer blockTex = texture("block/" + name);
 		if (blockTex == null) {
 			return false;
 		}
@@ -552,8 +662,8 @@ final class EntityRenderer implements AutoCloseable {
 
 	private Integer itemTexture(final ItemStack s) {
 		String name = this.items.name(s.itemId()).replace("minecraft:", "");
-		Integer t = texture("item/" + name + ".png");
-		return t != null ? t : texture("block/" + name + ".png");
+		Integer t = texture("item/" + name);
+		return t != null ? t : texture("block/" + name);
 	}
 
 	/** Debug-Geometrie: magentafarbene Box in Hitbox-Größe (mindestens 0,25 Block), damit auch unbekannte Typen sichtbar bleiben. */
@@ -567,37 +677,99 @@ final class EntityRenderer implements AutoCloseable {
 		this.drawCalls++;
 	}
 
-	/** Textur aus dem lokalen JAR ({@code assets/minecraft/textures/<pfad>}), einmal hochgeladen; fehlend → null. */
+	/** Rohdaten einer Tiervariante aus dem lokalen Datenpaket ({@code data/minecraft/<register>/<name>.json}), wenn der Server keine sandte. */
+	private Map<?, ?> variantFallback(final String registry, final String entry) {
+		String key = registry + "|" + entry;
+		if (this.variantJson.containsKey(key)) {
+			return this.variantJson.get(key);
+		}
+		Map<?, ?> out = null;
+		if (this.zip != null && registry.startsWith("minecraft:") && entry.startsWith("minecraft:") && entry.substring(10).matches("[a-z0-9_]+")) {
+			ZipEntry e = this.zip.getEntry("data/minecraft/" + registry.substring(10) + "/" + entry.substring(10) + ".json");
+			if (e != null && e.getSize() < 64 * 1024) {
+				try (InputStream in = this.zip.getInputStream(e)) {
+					Object o = dev.mcresearch.protocolclient.protocol.json.MiniJson.parse(new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8));
+					out = o instanceof Map<?, ?> m ? m : null;
+				} catch (IOException ex) {
+					out = null;
+				}
+			}
+		}
+		this.variantJson.put(key, out);
+		return out;
+	}
+
+	/** Hut-Angabe einer Dorfbewohnertextur aus der {@code .mcmeta} ({@code villager.hat}: full/partial), sonst {@code none}. */
+	private String villagerHat(final String texture) {
+		return this.hats.computeIfAbsent(texture, t -> {
+			if (this.zip == null) {
+				return "none";
+			}
+			ZipEntry e = this.zip.getEntry("assets/minecraft/textures/" + t + ".png.mcmeta");
+			if (e == null) {
+				return "none";
+			}
+			try (InputStream in = this.zip.getInputStream(e)) {
+				Object o = dev.mcresearch.protocolclient.protocol.json.MiniJson.parse(new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8));
+				if (o instanceof Map<?, ?> m && m.get("villager") instanceof Map<?, ?> vm && vm.get("hat") instanceof String h) {
+					return h;
+				}
+			} catch (IOException ex) {
+				return "none";
+			}
+			return "none";
+		});
+	}
+
+	/**
+	 * Textur aus dem lokalen JAR ({@code assets/minecraft/textures/<pfad>.png}) oder ein Skin ({@code skin:…}); einmal hochgeladen;
+	 * fehlend → null.
+	 */
 	private Integer texture(final String path) {
+		if (path == null) {
+			return null;
+		}
 		Integer t = this.textures.get(path);
 		if (t != null || this.missingTextures.contains(path)) {
 			return t;
 		}
-		BufferedImage img = null;
-		if (this.zip != null) {
-			ZipEntry e = this.zip.getEntry("assets/minecraft/textures/" + path);
-			if (e != null) {
-				try (InputStream in = this.zip.getInputStream(e)) {
-					img = dev.mcresearch.protocolclient.view.PngImages.read(in);
-				} catch (IOException ex) {
-					img = null;
+		int w;
+		int h;
+		int[] argb;
+		if (path.startsWith("skin:")) {
+			SkinManager.SkinImage img = this.skins.image(path);
+			if (img == null) {
+				this.missingTextures.add(path);
+				return null;
+			}
+			w = img.width();
+			h = img.height();
+			argb = img.argb();
+		} else {
+			BufferedImage img = null;
+			if (this.zip != null) {
+				ZipEntry e = this.zip.getEntry("assets/minecraft/textures/" + path + ".png");
+				if (e != null) {
+					try (InputStream in = this.zip.getInputStream(e)) {
+						img = dev.mcresearch.protocolclient.view.PngImages.read(in);
+					} catch (IOException ex) {
+						img = null;
+					}
 				}
 			}
+			if (img == null) {
+				this.missingTextures.add(path);
+				return null;
+			}
+			w = img.getWidth();
+			h = img.getHeight();
+			argb = img.getRGB(0, 0, w, h, null, 0, w);
 		}
-		if (img == null) {
-			this.missingTextures.add(path);
-			return null;
-		}
-		int w = img.getWidth();
-		int h = img.getHeight();
 		ByteBuffer buf = MemoryUtil.memAlloc(w * h * 4);
 		int id;
 		try {
-			for (int y = 0; y < h; y++) {
-				for (int x = 0; x < w; x++) {
-					int c = img.getRGB(x, y);
-					buf.put((byte) (c >> 16)).put((byte) (c >> 8)).put((byte) c).put((byte) (c >>> 24));
-				}
+			for (int c : argb) {
+				buf.put((byte) (c >> 16)).put((byte) (c >> 8)).put((byte) c).put((byte) (c >>> 24));
 			}
 			buf.flip();
 			id = glGenTextures();
@@ -618,10 +790,15 @@ final class EntityRenderer implements AutoCloseable {
 
 	@Override
 	public void close() {
-		for (Map<EntityModels.Part, GpuMesh> m : this.meshes.values()) {
-			m.values().forEach(GpuMesh::close);
+		for (GpuMesh[] m : this.meshes.values()) {
+			for (GpuMesh g : m) {
+				if (g != null) {
+					g.close();
+				}
+			}
 		}
 		this.meshes.clear();
+		this.poses.clear();
 		for (int t : this.textures.values()) {
 			glDeleteTextures(t);
 			GlResources.deleted("texture");

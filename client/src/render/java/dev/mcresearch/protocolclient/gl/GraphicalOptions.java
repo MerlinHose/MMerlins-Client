@@ -5,7 +5,8 @@ import java.nio.file.Path;
 /** Kommandozeilenoptionen des grafischen Clients (docs/24 §9). */
 public record GraphicalOptions(String host, int port, String username, int width, int height, float fov, boolean vsync, int renderDistance,
 	Path assets, boolean textures, boolean testCube, Path screenshot, long screenshotFrame, double exitAfterSeconds, Path autotest,
-	Path report, Path packetLog, boolean autoRespawn, dev.mcresearch.protocolclient.auth.minecraft.LoginFactory.Parser auth, boolean loginUi) {
+	Path report, Path packetLog, boolean autoRespawn, dev.mcresearch.protocolclient.auth.minecraft.LoginFactory.Parser auth, boolean loginUi,
+	Path skins) {
 
 	public static final int MAX_RENDER_DISTANCE = 8;
 
@@ -30,6 +31,7 @@ public record GraphicalOptions(String host, int port, String username, int width
 		Path packetLog = null;
 		var auth = new dev.mcresearch.protocolclient.auth.minecraft.LoginFactory.Parser(); // M13 (docs/52 §5)
 		boolean loginUi = false;
+		Path skins = null;
 		for (int i = 0; i < args.length; i++) {
 			String a = args[i];
 			int consumed = auth.parse(args, i);
@@ -58,6 +60,7 @@ public record GraphicalOptions(String host, int port, String username, int width
 				case "--report" -> report = Path.of(args[++i]);
 				case "--packet-log" -> packetLog = Path.of(args[++i]);
 				case "--login-ui" -> loginUi = true; // M13: Anmeldefenster vor dem Spielfenster
+				case "--skins" -> skins = Path.of(args[++i]); // M14: lokale PNG-Skins (docs/56)
 				default -> throw new IllegalArgumentException("unknown option " + a);
 			}
 		}
@@ -71,6 +74,6 @@ public record GraphicalOptions(String host, int port, String username, int width
 			throw new IllegalArgumentException("render distance 1.." + MAX_RENDER_DISTANCE);
 		}
 		return new GraphicalOptions(host, port, username, width, height, fov, vsync, renderDistance, assets, textures, testCube, screenshot,
-			screenshotFrame, exitAfter, autotest, report, packetLog, autoRespawn, auth, loginUi);
+			screenshotFrame, exitAfter, autotest, report, packetLog, autoRespawn, auth, loginUi, skins);
 	}
 }

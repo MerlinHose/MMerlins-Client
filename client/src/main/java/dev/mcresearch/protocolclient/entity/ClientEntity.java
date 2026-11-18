@@ -50,6 +50,10 @@ public final class ClientEntity {
 	int confirmedHits;
 	int lastDamageType = -1;
 	long updates;
+	/** M14: clientseitige Animationszustände (Laufen, Flügel, Steigen, Aufblähen …), docs/55 §4. */
+	final EntityAnimationState anim = new EntityAnimationState();
+	/** M14: Position kommt aus der eigenen Fahrzeugphysik (Serverbewegungen werden ignoriert, bis abgestiegen). */
+	boolean localControl;
 
 	ClientEntity(final int id, final UUID uuid, final EntityTypes.Type type, final long spawnTick) {
 		this.id = id;
@@ -166,13 +170,14 @@ public final class ClientEntity {
 		return living() && this.data.get(9) instanceof Float f ? f : null;
 	}
 
-	/** Baby-Flag (Index 16 bei AgeableMob und Zombie); nur für die umgesetzten Typen ausgewertet. */
+	/** Baby-Flag (Index 16 bei AgeableMob und Zombie); nur für die umgesetzten Typen ausgewertet (M14: weitere Tiere, Dorfbewohner, Ertrunkener). */
 	public boolean baby() {
-		return switch (this.type.shortName()) {
-			case "pig", "cow", "sheep", "zombie" -> Boolean.TRUE.equals(this.data.get(16));
-			default -> false;
-		};
+		return BABY_TYPES.contains(this.type.shortName()) && Boolean.TRUE.equals(this.data.get(16));
 	}
+
+	/** Typen mit Baby-Flag an Index 16 (AgeableMob: DATA_BABY_ID; Zombie: eigenes DATA_BABY_ID ebenfalls 16), docs/54 §3. */
+	static final java.util.Set<String> BABY_TYPES = java.util.Set.of("pig", "cow", "sheep", "zombie", "chicken", "wolf", "cat", "ocelot", "horse", "donkey",
+		"mule", "skeleton_horse", "zombie_horse", "rabbit", "bee", "villager", "drowned");
 
 	/** Schaf: Wollbyte Index 18 (Bits 0–3 Farbe, 0x10 geschoren). */
 	public int sheepWool() {
@@ -186,7 +191,7 @@ public final class ClientEntity {
 
 	/** Spieler: sichtbare Skin-Teile (Index 16). */
 	public int skinParts() {
-		return isPlayer() && this.data.get(16) instanceof Byte b ? b & 0xFF : 0x7F;
+		return (isPlayer() || "minecraft:mannequin".equals(this.type.name())) && this.data.get(16) instanceof Byte b ? b & 0xFF : 0x7F; // M14: auch Mannequin (Avatar)
 	}
 
 	public boolean isArmorStand() {
@@ -231,14 +236,15 @@ public final class ClientEntity {
 				h *= 0.5F;
 			}
 		} else if (baby()) {
-			// eigene Baby-Maße der umgesetzten Typen (getDefaultDimensions-Überschreibungen in 26.3), sonst halbe Typmaße
-			float[] b = switch (this.type.shortName()) {
-				case "pig" -> new float[]{0.45F, 0.45F};
-				case "cow" -> new float[]{0.45F, 0.7F};
-				case "sheep" -> new float[]{0.45F, 0.65F};
-				case "zombie" -> new float[]{0.49F, 0.98F};
-				default -> new float[]{w * 0.5F, h * 0.5F};
-			};
+			// eigene Baby-Maße (getDefaultDimensions-Überschreibungen in 26.3, Tabelle B aus EntityExtractor), sonst Typmaße × Baby-Skalierung
+			float[] b = EntityTypes.get().babyDimensions(this.type.shortName());
+			if (b == null) {
+				float f = switch (this.type.shortName()) {
+					case "skeleton_horse", "zombie_horse" -> 0.7F; // ebenfalls eigene Felder; Werte in Tabelle B
+					default -> 0.5F; // getAgeScale (z. B. Biene), Esel/Maultier: Typmaße × 0,5 (AbstractChestedHorse)
+				};
+				b = new float[]{w * f, h * f};
+			}
 			w = b[0];
 			h = b[1];
 		}
@@ -261,6 +267,10 @@ public final class ClientEntity {
 	public boolean pickable(final int ownGameMode) {
 		if (isArmorStand()) {
 			return (armorStandFlags() & 0x10) == 0; // Markierungen sind nicht auswählbar
+		}
+		String t = this.type.shortName();
+		if (t.endsWith("_boat") || t.endsWith("_raft") || t.equals("minecart") || t.endsWith("_minecart")) {
+			return true; // M14: Fahrzeuge sind auswählbar (AbstractBoat/VehicleEntity#isPickable), Einsteigen per Rechtsklick
 		}
 		if (isItem() || !living()) {
 			return false;

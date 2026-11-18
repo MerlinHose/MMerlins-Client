@@ -571,6 +571,51 @@ public final class Serverbound {
 		}
 	}
 
+	/**
+	 * M14 (docs/57 §3): {@code move_vehicle} – Position und Drehung des selbst gesteuerten Fahrzeugs (Boot, gesatteltes Pferd), wie
+	 * {@code ServerboundMoveVehiclePacket#fromEntity}: Position (3 × double), Gier, Neigung, Bodenkontakt.
+	 */
+	public record MoveVehicle(double x, double y, double z, float yRot, float xRot, boolean onGround) implements ServerboundPacket {
+		public MoveVehicle {
+			if (!Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z) || !Float.isFinite(yRot) || !Float.isFinite(xRot)) {
+				throw new IllegalArgumentException("non-finite move_vehicle");
+			}
+		}
+
+		@Override
+		public ProtocolState state() {
+			return ProtocolState.PLAY;
+		}
+
+		@Override
+		public String name() {
+			return "minecraft:move_vehicle";
+		}
+
+		@Override
+		public void write(final PacketWriter out) {
+			out.writeDouble(this.x).writeDouble(this.y).writeDouble(this.z).writeFloat(this.yRot).writeFloat(this.xRot).writeBoolean(this.onGround);
+		}
+	}
+
+	/** M14 (docs/57 §4): {@code paddle_boat} – Ruderzustand links/rechts (jeden Tick des selbst gesteuerten Boots). */
+	public record PaddleBoat(boolean left, boolean right) implements ServerboundPacket {
+		@Override
+		public ProtocolState state() {
+			return ProtocolState.PLAY;
+		}
+
+		@Override
+		public String name() {
+			return "minecraft:paddle_boat";
+		}
+
+		@Override
+		public void write(final PacketWriter out) {
+			out.writeBoolean(this.left).writeBoolean(this.right);
+		}
+	}
+
 	public record ConfigurationAcknowledged() implements ServerboundPacket {
 		@Override
 		public ProtocolState state() {

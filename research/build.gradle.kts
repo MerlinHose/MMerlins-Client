@@ -65,6 +65,27 @@ loom {
 				"--proxyHost", "127.0.0.1", "--proxyPort", "9"
 			)
 		}
+		// M14-Fahrzeugreferenz (docs/58 §4): Vanilla-Client fährt die Fahrzeugszenarien aus analysis/tools/m14-vehicle-course.txt.
+		register("vehicleRef") {
+			client()
+			configName = "Vehicle Reference Client (localhost:25565)"
+			runDir("run-vehicleref")
+			vmArgs(
+				"-Xms512M", "-Xmx" + (project.findProperty("vehicleRefXmx") ?: "1536M"),
+				"-Dmcresearch.vehicleref=" + rootProject.file((project.findProperty("vehicleRefCourse") as String?) ?: "../analysis/tools/m14-vehicle-course.txt").absolutePath,
+				"-Dmcresearch.vehicleref.out=vehref-trace.txt",
+				"-Dminecraft.api.discovery.host=http://127.0.0.1:9/discovery",
+				"-Dhttp.proxyHost=127.0.0.1", "-Dhttp.proxyPort=9",
+				"-Dhttps.proxyHost=127.0.0.1", "-Dhttps.proxyPort=9",
+				"-Dhttp.nonProxyHosts=localhost|127.*|[::1]"
+			)
+			programArgs(
+				"--quickPlayMultiplayer", "localhost:25565",
+				"--offlineDeveloperMode",
+				"--username", "ResearchVeh",
+				"--proxyHost", "127.0.0.1", "--proxyPort", "9"
+			)
+		}
 		register("combatRef") {
 			client()
 			configName = "Combat Reference Client (localhost:25565)"

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Sammelt die Blockformen, die eine Abfragebox schneiden ({@code BlockCollisions}, docs/21 §5.5): Zellen
- * {@code floor(min−1e−7)−1 … floor(max+1e−7)+1}; Randzellen (eine Koordinate auf dem Rand) nur für große Formen,
+ * Sammelt die Blockformen, die eine Abfragebox schneiden ({@code BlockCollisions}, docs/21 Â§5.5): Zellen
+ * {@code floor(minâ1eâ7)â1 â¦ floor(max+1eâ7)+1}; Randzellen (eine Koordinate auf dem Rand) nur fÃ¼r groÃe Formen,
  * Kanten/Ecken (zwei/drei) nie. Aufgenommen wird eine Form, wenn sie die Abfragebox mit positivem Volumen schneidet.
  *
- * <p><b>Ungeladene Chunks:</b> Vanilla liefert dort keine Formen (der Spieler könnte hineinfallen). Dieser Client
+ * <p><b>Ungeladene Chunks:</b> Vanilla liefert dort keine Formen (der Spieler kÃ¶nnte hineinfallen). Dieser Client
  * behandelt jede Zelle eines ungeladenen Chunks als vollen Block und meldet das ({@link Result#touchedUnloaded()}),
- * damit Bewegungen dort anhalten statt eine vom Server abweichende Position zu erzeugen (docs/22 §5).
+ * damit Bewegungen dort anhalten statt eine vom Server abweichende Position zu erzeugen (docs/22 Â§5).
  */
 public final class CollisionWorld {
 	/** Eine gefundene Form mit ihrer Blockposition (Form in Weltkoordinaten). */
@@ -22,6 +22,12 @@ public final class CollisionWorld {
 
 	private final BlockView view;
 	private final ShapeRegistry registry;
+	/**
+	 * M14 Phase J (docs/57 §6): Kollisionsboxen anderer Entities ({@code Level#getEntityCollisions}: {@code canBeCollidedWith} – Boote,
+	 * Shulker), außer dem eigenen Fahrzeug. Werden wie in {@code Entity#collide} vor den Blockformen in die Kollisionsliste
+	 * aufgenommen; {@link #hits} (Blöcke unter/in der Hitbox) bleibt blockbasiert.
+	 */
+	private volatile java.util.function.Supplier<List<Aabb>> entityBoxes = List::of;
 
 	public CollisionWorld(final BlockView view, final ShapeRegistry registry) {
 		this.view = view;
@@ -36,9 +42,18 @@ public final class CollisionWorld {
 		return this.view;
 	}
 
+	public void setEntityBoxes(final java.util.function.Supplier<List<Aabb>> boxes) {
+		this.entityBoxes = boxes == null ? List::of : boxes;
+	}
+
 	public Result collisions(final Aabb box, final CollisionContext ctx) {
 		List<Hit> hits = hits(box, ctx);
 		List<Shape> shapes = new ArrayList<>(hits.size());
+		for (Aabb e : this.entityBoxes.get()) {
+			if (e.intersects(box)) {
+				shapes.add(Shape.box(e.minX(), e.minY(), e.minZ(), e.maxX(), e.maxY(), e.maxZ()));
+			}
+		}
 		boolean unloaded = false;
 		for (Hit h : hits) {
 			shapes.add(h.shape());
@@ -64,7 +79,7 @@ public final class CollisionWorld {
 				for (int x = x0; x <= x1; x++) {
 					int border = (x == x0 || x == x1 ? 1 : 0) + (y == y0 || y == y1 ? 1 : 0) + (z == z0 || z == z1 ? 1 : 0);
 					if (border >= 2) {
-						continue; // Kanten nur für moving_piston (Form im Client leer), Ecken nie
+						continue; // Kanten nur fÃ¼r moving_piston (Form im Client leer), Ecken nie
 					}
 					int state = this.view.stateAt(x, y, z);
 					if (state == BlockView.UNLOADED) {

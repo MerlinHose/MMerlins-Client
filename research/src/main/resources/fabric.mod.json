@@ -23,7 +23,8 @@
 			"dev.mcresearch.client.PhysicsReferenceClient",
 			"dev.mcresearch.client.PickReferenceClient",
 			"dev.mcresearch.client.CombatReferenceClient",
-			"dev.mcresearch.client.ScreenshotReferenceClient"
+			"dev.mcresearch.client.ScreenshotReferenceClient",
+			"dev.mcresearch.client.VehicleReferenceClient"
 		]
 	},
 	"mixins": [

@@ -1,165 +1,903 @@
-# Entity-Typen und synchronisierte Datenfelder Minecraft 26.3 / Protokoll 777 - Quelle: EntityExtractor (Server-JAR, Laufzeit)
 T	0	minecraft:acacia_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:acacia_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:acacia_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:acacia_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:acacia_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	1	minecraft:acacia_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:acacia_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:acacia_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:acacia_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:acacia_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	2	minecraft:allay	0.35	0.6	0.36	false	8	2	true	creature
+X	minecraft:allay	PASSENGER	0	0.0	0.6000000238418579	0.0
+X	minecraft:allay	VEHICLE	0	0.0	-0.03999999910593033	0.0
+X	minecraft:allay	NAME_TAG	0	0.0	0.6000000238418579	0.0
+X	minecraft:allay	WARDEN_CHEST	0	0.0	0.30000001192092896	0.0
 T	3	minecraft:area_effect_cloud	6.0	0.5	0.425	false	10	2147483647	true	misc
+X	minecraft:area_effect_cloud	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:area_effect_cloud	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:area_effect_cloud	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:area_effect_cloud	WARDEN_CHEST	0	0.0	0.25	0.0
 T	4	minecraft:armadillo	0.7	0.65	0.26	false	10	3	true	creature
+X	minecraft:armadillo	PASSENGER	0	0.0	0.6499999761581421	0.0
+X	minecraft:armadillo	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:armadillo	NAME_TAG	0	0.0	0.6499999761581421	0.0
+X	minecraft:armadillo	WARDEN_CHEST	0	0.0	0.32499998807907104	0.0
 T	5	minecraft:armor_stand	0.5	1.975	1.7775	false	10	3	true	misc
+X	minecraft:armor_stand	PASSENGER	0	0.0	1.975000023841858	0.0
+X	minecraft:armor_stand	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:armor_stand	NAME_TAG	0	0.0	1.975000023841858	0.0
+X	minecraft:armor_stand	WARDEN_CHEST	0	0.0	0.987500011920929	0.0
 T	6	minecraft:arrow	0.5	0.5	0.13	false	4	20	true	misc
+X	minecraft:arrow	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:arrow	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:arrow	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:arrow	WARDEN_CHEST	0	0.0	0.25	0.0
 T	7	minecraft:axolotl	0.75	0.42	0.2751	false	10	3	true	axolotls
+X	minecraft:axolotl	PASSENGER	0	0.0	0.41999998688697815	0.0
+X	minecraft:axolotl	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:axolotl	NAME_TAG	0	0.0	0.41999998688697815	0.0
+X	minecraft:axolotl	WARDEN_CHEST	0	0.0	0.20999999344348907	0.0
 T	8	minecraft:bamboo_chest_raft	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:bamboo_chest_raft	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:bamboo_chest_raft	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:bamboo_chest_raft	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:bamboo_chest_raft	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	9	minecraft:bamboo_raft	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:bamboo_raft	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:bamboo_raft	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:bamboo_raft	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:bamboo_raft	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	10	minecraft:bat	0.5	0.9	0.45	false	5	3	false	ambient
+X	minecraft:bat	PASSENGER	0	0.0	0.8999999761581421	0.0
+X	minecraft:bat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:bat	NAME_TAG	0	0.0	0.8999999761581421	0.0
+X	minecraft:bat	WARDEN_CHEST	0	0.0	0.44999998807907104	0.0
 T	11	minecraft:bee	0.55	0.5	0.3	false	8	3	true	creature
+X	minecraft:bee	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:bee	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:bee	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:bee	WARDEN_CHEST	0	0.0	0.25	0.0
 T	12	minecraft:birch_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:birch_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:birch_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:birch_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:birch_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	13	minecraft:birch_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:birch_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:birch_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:birch_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:birch_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	14	minecraft:blaze	0.6	1.8	1.53	false	8	3	true	monster
+X	minecraft:blaze	PASSENGER	0	0.0	1.7999999523162842	0.0
+X	minecraft:blaze	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:blaze	NAME_TAG	0	0.0	1.7999999523162842	0.0
+X	minecraft:blaze	WARDEN_CHEST	0	0.0	0.8999999761581421	0.0
 T	15	minecraft:block_display	0.0	0.0	0.0	false	10	1	true	misc
+X	minecraft:block_display	PASSENGER	0	0.0	0.0	0.0
+X	minecraft:block_display	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:block_display	NAME_TAG	0	0.0	0.0	0.0
+X	minecraft:block_display	WARDEN_CHEST	0	0.0	0.0	0.0
 T	16	minecraft:bogged	0.6	1.99	1.74	false	8	3	true	monster
+X	minecraft:bogged	PASSENGER	0	0.0	1.9900000095367432	0.0
+X	minecraft:bogged	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:bogged	NAME_TAG	0	0.0	1.9900000095367432	0.0
+X	minecraft:bogged	WARDEN_CHEST	0	0.0	0.9950000047683716	0.0
 T	17	minecraft:breeze	0.6	1.77	1.3452	false	10	3	true	monster
+X	minecraft:breeze	PASSENGER	0	0.0	1.7699999809265137	0.0
+X	minecraft:breeze	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:breeze	NAME_TAG	0	0.0	1.7699999809265137	0.0
+X	minecraft:breeze	WARDEN_CHEST	0	0.0	0.8849999904632568	0.0
 T	18	minecraft:breeze_wind_charge	0.3125	0.3125	0.0	false	4	10	true	misc
+X	minecraft:breeze_wind_charge	PASSENGER	0	0.0	0.3125	0.0
+X	minecraft:breeze_wind_charge	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:breeze_wind_charge	NAME_TAG	0	0.0	0.3125	0.0
+X	minecraft:breeze_wind_charge	WARDEN_CHEST	0	0.0	0.15625	0.0
 T	19	minecraft:camel	1.7	2.375	2.275	false	10	3	true	creature
+X	minecraft:camel	PASSENGER	0	0.0	2.375	0.0
+X	minecraft:camel	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:camel	NAME_TAG	0	0.0	2.375	0.0
+X	minecraft:camel	WARDEN_CHEST	0	0.0	1.1875	0.0
 T	20	minecraft:camel_husk	1.7	2.375	2.275	false	10	3	true	monster
+X	minecraft:camel_husk	PASSENGER	0	0.0	2.375	0.0
+X	minecraft:camel_husk	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:camel_husk	NAME_TAG	0	0.0	2.375	0.0
+X	minecraft:camel_husk	WARDEN_CHEST	0	0.0	1.1875	0.0
 T	21	minecraft:cat	0.6	0.7	0.35	false	8	3	true	creature
+X	minecraft:cat	PASSENGER	0	0.0	0.512499988079071	0.0
+X	minecraft:cat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:cat	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:cat	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	22	minecraft:cave_spider	0.7	0.5	0.45	false	8	3	true	monster
+X	minecraft:cave_spider	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:cave_spider	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:cave_spider	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:cave_spider	WARDEN_CHEST	0	0.0	0.25	0.0
 T	23	minecraft:cherry_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:cherry_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:cherry_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:cherry_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:cherry_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	24	minecraft:cherry_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:cherry_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:cherry_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:cherry_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:cherry_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	25	minecraft:chest_minecart	0.98	0.7	0.595	false	8	3	true	misc
+X	minecraft:chest_minecart	PASSENGER	0	0.0	0.1875	0.0
+X	minecraft:chest_minecart	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:chest_minecart	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:chest_minecart	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	26	minecraft:chicken	0.4	0.7	0.644	false	10	3	true	creature
+X	minecraft:chicken	PASSENGER	0	0.0	0.7	-0.1
+X	minecraft:chicken	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:chicken	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:chicken	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	27	minecraft:cod	0.5	0.3	0.195	false	4	3	true	water_ambient
+X	minecraft:cod	PASSENGER	0	0.0	0.30000001192092896	0.0
+X	minecraft:cod	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:cod	NAME_TAG	0	0.0	0.30000001192092896	0.0
+X	minecraft:cod	WARDEN_CHEST	0	0.0	0.15000000596046448	0.0
 T	28	minecraft:copper_golem	0.49	0.98	0.8125	false	10	3	true	misc
+X	minecraft:copper_golem	PASSENGER	0	0.0	0.9800000190734863	0.0
+X	minecraft:copper_golem	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:copper_golem	NAME_TAG	0	0.0	0.9800000190734863	0.0
+X	minecraft:copper_golem	WARDEN_CHEST	0	0.0	0.49000000953674316	0.0
 T	29	minecraft:command_block_minecart	0.98	0.7	0.595	false	8	3	true	misc
+X	minecraft:command_block_minecart	PASSENGER	0	0.0	0.1875	0.0
+X	minecraft:command_block_minecart	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:command_block_minecart	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:command_block_minecart	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	30	minecraft:cow	0.9	1.4	1.3	false	10	3	true	creature
+X	minecraft:cow	PASSENGER	0	0.0	1.368749976158142	0.0
+X	minecraft:cow	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:cow	NAME_TAG	0	0.0	1.399999976158142	0.0
+X	minecraft:cow	WARDEN_CHEST	0	0.0	0.699999988079071	0.0
 T	31	minecraft:creaking	0.9	2.7	2.3	false	8	3	true	monster
+X	minecraft:creaking	PASSENGER	0	0.0	2.700000047683716	0.0
+X	minecraft:creaking	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:creaking	NAME_TAG	0	0.0	2.700000047683716	0.0
+X	minecraft:creaking	WARDEN_CHEST	0	0.0	1.350000023841858	0.0
 T	32	minecraft:creeper	0.6	1.7	1.445	false	8	3	true	monster
+X	minecraft:creeper	PASSENGER	0	0.0	1.7000000476837158	0.0
+X	minecraft:creeper	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:creeper	NAME_TAG	0	0.0	1.7000000476837158	0.0
+X	minecraft:creeper	WARDEN_CHEST	0	0.0	0.8500000238418579	0.0
 T	33	minecraft:cushion	1.0	0.25	0.2125	false	10	2147483647	false	misc
+X	minecraft:cushion	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:cushion	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:cushion	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:cushion	WARDEN_CHEST	0	0.0	0.125	0.0
 T	34	minecraft:dark_oak_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:dark_oak_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:dark_oak_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:dark_oak_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:dark_oak_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	35	minecraft:dark_oak_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:dark_oak_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:dark_oak_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:dark_oak_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:dark_oak_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	36	minecraft:dolphin	0.9	0.6	0.3	false	5	3	true	water_creature
+X	minecraft:dolphin	PASSENGER	0	0.0	0.6000000238418579	0.0
+X	minecraft:dolphin	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:dolphin	NAME_TAG	0	0.0	0.6000000238418579	0.0
+X	minecraft:dolphin	WARDEN_CHEST	0	0.0	0.30000001192092896	0.0
 T	37	minecraft:donkey	1.3964844	1.5	1.425	false	10	3	true	creature
+X	minecraft:donkey	PASSENGER	0	0.0	1.1124999523162842	0.0
+X	minecraft:donkey	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:donkey	NAME_TAG	0	0.0	1.5	0.0
+X	minecraft:donkey	WARDEN_CHEST	0	0.0	0.75	0.0
 T	38	minecraft:dragon_fireball	1.0	1.0	0.85	false	4	10	true	misc
+X	minecraft:dragon_fireball	PASSENGER	0	0.0	1.0	0.0
+X	minecraft:dragon_fireball	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:dragon_fireball	NAME_TAG	0	0.0	1.0	0.0
+X	minecraft:dragon_fireball	WARDEN_CHEST	0	0.0	0.5	0.0
 T	39	minecraft:drowned	0.6	1.95	1.74	false	8	3	true	monster
+X	minecraft:drowned	PASSENGER	0	0.0	2.012500047683716	0.0
+X	minecraft:drowned	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:drowned	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:drowned	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	40	minecraft:egg	0.25	0.25	0.2125	false	4	10	true	misc
+X	minecraft:egg	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:egg	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:egg	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:egg	WARDEN_CHEST	0	0.0	0.125	0.0
 T	41	minecraft:elder_guardian	1.9975	1.9975	0.99875	false	10	3	true	monster
+X	minecraft:elder_guardian	PASSENGER	0	0.0	2.3506250381469727	0.0
+X	minecraft:elder_guardian	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:elder_guardian	NAME_TAG	0	0.0	1.997499942779541	0.0
+X	minecraft:elder_guardian	WARDEN_CHEST	0	0.0	0.9987499713897705	0.0
 T	42	minecraft:enderman	0.6	2.9	2.55	false	8	3	true	monster
+X	minecraft:enderman	PASSENGER	0	0.0	2.8062500953674316	0.0
+X	minecraft:enderman	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:enderman	NAME_TAG	0	0.0	2.9000000953674316	0.0
+X	minecraft:enderman	WARDEN_CHEST	0	0.0	1.4500000476837158	0.0
 T	43	minecraft:endermite	0.4	0.3	0.13	false	8	3	true	monster
+X	minecraft:endermite	PASSENGER	0	0.0	0.23749999701976776	0.0
+X	minecraft:endermite	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:endermite	NAME_TAG	0	0.0	0.30000001192092896	0.0
+X	minecraft:endermite	WARDEN_CHEST	0	0.0	0.15000000596046448	0.0
 T	44	minecraft:ender_dragon	16.0	8.0	6.8	false	10	3	true	monster
+X	minecraft:ender_dragon	PASSENGER	0	0.0	3.0	0.0
+X	minecraft:ender_dragon	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:ender_dragon	NAME_TAG	0	0.0	8.0	0.0
+X	minecraft:ender_dragon	WARDEN_CHEST	0	0.0	4.0	0.0
 T	45	minecraft:ender_pearl	0.25	0.25	0.2125	false	4	10	true	misc
+X	minecraft:ender_pearl	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:ender_pearl	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:ender_pearl	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:ender_pearl	WARDEN_CHEST	0	0.0	0.125	0.0
 T	46	minecraft:end_crystal	2.0	2.0	1.7	false	16	2147483647	false	misc
+X	minecraft:end_crystal	PASSENGER	0	0.0	2.0	0.0
+X	minecraft:end_crystal	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:end_crystal	NAME_TAG	0	0.0	2.0	0.0
+X	minecraft:end_crystal	WARDEN_CHEST	0	0.0	1.0	0.0
 T	47	minecraft:evoker	0.6	1.95	1.6575	false	8	3	true	monster
+X	minecraft:evoker	PASSENGER	0	0.0	2.0	0.0
+X	minecraft:evoker	VEHICLE	0	0.0	0.6000000238418579	0.0
+X	minecraft:evoker	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:evoker	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	48	minecraft:evoker_fangs	0.5	0.8	0.68	false	6	2	false	misc
+X	minecraft:evoker_fangs	PASSENGER	0	0.0	0.800000011920929	0.0
+X	minecraft:evoker_fangs	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:evoker_fangs	NAME_TAG	0	0.0	0.800000011920929	0.0
+X	minecraft:evoker_fangs	WARDEN_CHEST	0	0.0	0.4000000059604645	0.0
 T	49	minecraft:experience_bottle	0.25	0.25	0.2125	false	4	10	true	misc
+X	minecraft:experience_bottle	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:experience_bottle	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:experience_bottle	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:experience_bottle	WARDEN_CHEST	0	0.0	0.125	0.0
 T	50	minecraft:experience_orb	0.5	0.5	0.425	false	6	20	true	misc
+X	minecraft:experience_orb	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:experience_orb	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:experience_orb	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:experience_orb	WARDEN_CHEST	0	0.0	0.25	0.0
 T	51	minecraft:eye_of_ender	0.25	0.25	0.2125	false	4	4	true	misc
+X	minecraft:eye_of_ender	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:eye_of_ender	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:eye_of_ender	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:eye_of_ender	WARDEN_CHEST	0	0.0	0.125	0.0
 T	52	minecraft:falling_block	0.98	0.98	0.83300006	false	10	20	true	misc
+X	minecraft:falling_block	PASSENGER	0	0.0	0.9800000190734863	0.0
+X	minecraft:falling_block	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:falling_block	NAME_TAG	0	0.0	0.9800000190734863	0.0
+X	minecraft:falling_block	WARDEN_CHEST	0	0.0	0.49000000953674316	0.0
 T	53	minecraft:fireball	1.0	1.0	0.85	false	4	10	true	misc
+X	minecraft:fireball	PASSENGER	0	0.0	1.0	0.0
+X	minecraft:fireball	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:fireball	NAME_TAG	0	0.0	1.0	0.0
+X	minecraft:fireball	WARDEN_CHEST	0	0.0	0.5	0.0
 T	54	minecraft:firework_rocket	0.25	0.25	0.2125	false	4	10	true	misc
+X	minecraft:firework_rocket	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:firework_rocket	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:firework_rocket	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:firework_rocket	WARDEN_CHEST	0	0.0	0.125	0.0
 T	55	minecraft:fox	0.6	0.7	0.4	false	8	3	true	creature
+X	minecraft:fox	PASSENGER	0	0.0	0.6375	-0.25
+X	minecraft:fox	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:fox	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:fox	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	56	minecraft:frog	0.5	0.5	0.425	false	10	3	true	creature
+X	minecraft:frog	PASSENGER	0	0.0	0.375	-0.25
+X	minecraft:frog	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:frog	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:frog	WARDEN_CHEST	0	0.0	0.25	0.0
 T	57	minecraft:furnace_minecart	0.98	0.7	0.595	false	8	3	true	misc
+X	minecraft:furnace_minecart	PASSENGER	0	0.0	0.1875	0.0
+X	minecraft:furnace_minecart	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:furnace_minecart	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:furnace_minecart	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	58	minecraft:ghast	4.0	4.0	2.6	false	10	3	true	monster
+X	minecraft:ghast	PASSENGER	0	0.0	4.0625	0.0
+X	minecraft:ghast	VEHICLE	0	0.0	-0.5	0.0
+X	minecraft:ghast	NAME_TAG	0	0.0	4.0	0.0
+X	minecraft:ghast	WARDEN_CHEST	0	0.0	2.0	0.0
 T	59	minecraft:happy_ghast	4.0	4.0	2.6	false	10	3	true	creature
+X	minecraft:happy_ghast	PASSENGER	0	0.0	4.0	1.7
+X	minecraft:happy_ghast	PASSENGER	1	-1.7	4.0	0.0
+X	minecraft:happy_ghast	PASSENGER	2	0.0	4.0	-1.7
+X	minecraft:happy_ghast	PASSENGER	3	1.7	4.0	0.0
+X	minecraft:happy_ghast	VEHICLE	0	0.0	-0.5	0.0
+X	minecraft:happy_ghast	NAME_TAG	0	0.0	4.0	0.0
+X	minecraft:happy_ghast	WARDEN_CHEST	0	0.0	2.0	0.0
 T	60	minecraft:giant	3.6	12.0	10.44	false	10	3	true	monster
+X	minecraft:giant	PASSENGER	0	0.0	12.0	0.0
+X	minecraft:giant	VEHICLE	0	0.0	3.75	0.0
+X	minecraft:giant	NAME_TAG	0	0.0	12.0	0.0
+X	minecraft:giant	WARDEN_CHEST	0	0.0	6.0	0.0
 T	61	minecraft:glow_item_frame	0.5	0.5	0.0	false	10	2147483647	false	misc
+X	minecraft:glow_item_frame	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:glow_item_frame	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:glow_item_frame	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:glow_item_frame	WARDEN_CHEST	0	0.0	0.25	0.0
 T	62	minecraft:glow_squid	0.8	0.8	0.4	false	10	3	true	underground_water_creature
+X	minecraft:glow_squid	PASSENGER	0	0.0	0.800000011920929	0.0
+X	minecraft:glow_squid	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:glow_squid	NAME_TAG	0	0.0	0.800000011920929	0.0
+X	minecraft:glow_squid	WARDEN_CHEST	0	0.0	0.4000000059604645	0.0
 T	63	minecraft:goat	0.9	1.3	1.105	false	10	3	true	creature
+X	minecraft:goat	PASSENGER	0	0.0	1.1124999523162842	0.0
+X	minecraft:goat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:goat	NAME_TAG	0	0.0	1.2999999523162842	0.0
+X	minecraft:goat	WARDEN_CHEST	0	0.0	0.6499999761581421	0.0
 T	64	minecraft:guardian	0.85	0.85	0.425	false	8	3	true	monster
+X	minecraft:guardian	PASSENGER	0	0.0	0.9750000238418579	0.0
+X	minecraft:guardian	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:guardian	NAME_TAG	0	0.0	0.8500000238418579	0.0
+X	minecraft:guardian	WARDEN_CHEST	0	0.0	0.42500001192092896	0.0
 T	65	minecraft:hoglin	1.3964844	1.4	1.19	false	8	3	true	monster
+X	minecraft:hoglin	PASSENGER	0	0.0	1.493749976158142	0.0
+X	minecraft:hoglin	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:hoglin	NAME_TAG	0	0.0	1.399999976158142	0.0
+X	minecraft:hoglin	WARDEN_CHEST	0	0.0	0.699999988079071	0.0
 T	66	minecraft:hopper_minecart	0.98	0.7	0.595	false	8	3	true	misc
+X	minecraft:hopper_minecart	PASSENGER	0	0.0	0.1875	0.0
+X	minecraft:hopper_minecart	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:hopper_minecart	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:hopper_minecart	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	67	minecraft:horse	1.3964844	1.6	1.52	false	10	3	true	creature
+X	minecraft:horse	PASSENGER	0	0.0	1.443750023841858	0.0
+X	minecraft:horse	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:horse	NAME_TAG	0	0.0	1.600000023841858	0.0
+X	minecraft:horse	WARDEN_CHEST	0	0.0	0.800000011920929	0.0
 T	68	minecraft:husk	0.6	1.95	1.74	false	8	3	true	monster
+X	minecraft:husk	PASSENGER	0	0.0	2.075000047683716	0.0
+X	minecraft:husk	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:husk	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:husk	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	69	minecraft:illusioner	0.6	1.95	1.6575	false	8	3	true	monster
+X	minecraft:illusioner	PASSENGER	0	0.0	2.0	0.0
+X	minecraft:illusioner	VEHICLE	0	0.0	0.6000000238418579	0.0
+X	minecraft:illusioner	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:illusioner	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	70	minecraft:interaction	0.0	0.0	0.0	false	10	3	true	misc
+X	minecraft:interaction	PASSENGER	0	0.0	0.0	0.0
+X	minecraft:interaction	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:interaction	NAME_TAG	0	0.0	0.0	0.0
+X	minecraft:interaction	WARDEN_CHEST	0	0.0	0.0	0.0
 T	71	minecraft:iron_golem	1.4	2.7	2.295	false	10	3	true	misc
+X	minecraft:iron_golem	PASSENGER	0	0.0	2.700000047683716	0.0
+X	minecraft:iron_golem	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:iron_golem	NAME_TAG	0	0.0	2.700000047683716	0.0
+X	minecraft:iron_golem	WARDEN_CHEST	0	0.0	1.350000023841858	0.0
 T	72	minecraft:item	0.25	0.25	0.2125	false	6	20	true	misc
+X	minecraft:item	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:item	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:item	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:item	WARDEN_CHEST	0	0.0	0.125	0.0
 T	73	minecraft:item_display	0.0	0.0	0.0	false	10	1	true	misc
+X	minecraft:item_display	PASSENGER	0	0.0	0.0	0.0
+X	minecraft:item_display	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:item_display	NAME_TAG	0	0.0	0.0	0.0
+X	minecraft:item_display	WARDEN_CHEST	0	0.0	0.0	0.0
 T	74	minecraft:item_frame	0.5	0.5	0.0	false	10	2147483647	false	misc
+X	minecraft:item_frame	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:item_frame	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:item_frame	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:item_frame	WARDEN_CHEST	0	0.0	0.25	0.0
 T	75	minecraft:jungle_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:jungle_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:jungle_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:jungle_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:jungle_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	76	minecraft:jungle_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:jungle_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:jungle_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:jungle_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:jungle_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	77	minecraft:leash_knot	0.375	0.5	0.0625	false	10	2147483647	false	misc
+X	minecraft:leash_knot	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:leash_knot	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:leash_knot	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:leash_knot	WARDEN_CHEST	0	0.0	0.25	0.0
 T	78	minecraft:lightning_bolt	0.0	0.0	0.0	false	16	2147483647	true	misc
+X	minecraft:lightning_bolt	PASSENGER	0	0.0	0.0	0.0
+X	minecraft:lightning_bolt	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:lightning_bolt	NAME_TAG	0	0.0	0.0	0.0
+X	minecraft:lightning_bolt	WARDEN_CHEST	0	0.0	0.0	0.0
 T	79	minecraft:llama	0.9	1.87	1.7765	false	10	3	true	creature
+X	minecraft:llama	PASSENGER	0	0.0	1.37	-0.3
+X	minecraft:llama	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:llama	NAME_TAG	0	0.0	1.8700000047683716	0.0
+X	minecraft:llama	WARDEN_CHEST	0	0.0	0.9350000023841858	0.0
 T	80	minecraft:llama_spit	0.25	0.25	0.2125	false	4	10	false	misc
+X	minecraft:llama_spit	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:llama_spit	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:llama_spit	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:llama_spit	WARDEN_CHEST	0	0.0	0.125	0.0
 T	81	minecraft:magma_cube	0.52	0.52	0.325	false	8	3	true	monster
+X	minecraft:magma_cube	PASSENGER	0	0.0	0.5199999809265137	0.0
+X	minecraft:magma_cube	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:magma_cube	NAME_TAG	0	0.0	0.5199999809265137	0.0
+X	minecraft:magma_cube	WARDEN_CHEST	0	0.0	0.25999999046325684	0.0
 T	82	minecraft:mangrove_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:mangrove_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:mangrove_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:mangrove_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:mangrove_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	83	minecraft:mangrove_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:mangrove_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:mangrove_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:mangrove_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:mangrove_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	84	minecraft:mannequin	0.6	1.8	1.62	false	32	2	true	misc
+X	minecraft:mannequin	PASSENGER	0	0.0	1.7999999523162842	0.0
+X	minecraft:mannequin	VEHICLE	0	0.0	0.6	0.0
+X	minecraft:mannequin	NAME_TAG	0	0.0	1.7999999523162842	0.0
+X	minecraft:mannequin	WARDEN_CHEST	0	0.0	0.8999999761581421	0.0
 T	85	minecraft:marker	0.0	0.0	0.0	false	0	3	true	misc
+X	minecraft:marker	PASSENGER	0	0.0	0.0	0.0
+X	minecraft:marker	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:marker	NAME_TAG	0	0.0	0.0	0.0
+X	minecraft:marker	WARDEN_CHEST	0	0.0	0.0	0.0
 T	86	minecraft:minecart	0.98	0.7	0.595	false	8	3	true	misc
+X	minecraft:minecart	PASSENGER	0	0.0	0.1875	0.0
+X	minecraft:minecart	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:minecart	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:minecart	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	87	minecraft:mooshroom	0.9	1.4	1.3	false	10	3	true	creature
+X	minecraft:mooshroom	PASSENGER	0	0.0	1.368749976158142	0.0
+X	minecraft:mooshroom	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:mooshroom	NAME_TAG	0	0.0	1.399999976158142	0.0
+X	minecraft:mooshroom	WARDEN_CHEST	0	0.0	0.699999988079071	0.0
 T	88	minecraft:mule	1.3964844	1.6	1.52	false	8	3	true	creature
+X	minecraft:mule	PASSENGER	0	0.0	1.212499976158142	0.0
+X	minecraft:mule	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:mule	NAME_TAG	0	0.0	1.600000023841858	0.0
+X	minecraft:mule	WARDEN_CHEST	0	0.0	0.800000011920929	0.0
 T	89	minecraft:nautilus	0.875	0.95	0.2751	false	10	3	true	water_creature
+X	minecraft:nautilus	PASSENGER	0	0.0	1.1375000476837158	0.0
+X	minecraft:nautilus	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:nautilus	NAME_TAG	0	0.0	0.949999988079071	0.0
+X	minecraft:nautilus	WARDEN_CHEST	0	0.0	0.4749999940395355	0.0
 T	90	minecraft:oak_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:oak_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:oak_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:oak_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:oak_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	91	minecraft:oak_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:oak_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:oak_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:oak_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:oak_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	92	minecraft:ocelot	0.6	0.7	0.595	false	10	3	true	creature
+X	minecraft:ocelot	PASSENGER	0	0.0	0.637499988079071	0.0
+X	minecraft:ocelot	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:ocelot	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:ocelot	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	93	minecraft:ominous_item_spawner	0.25	0.25	0.2125	false	8	3	true	misc
+X	minecraft:ominous_item_spawner	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:ominous_item_spawner	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:ominous_item_spawner	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:ominous_item_spawner	WARDEN_CHEST	0	0.0	0.125	0.0
 T	94	minecraft:painting	0.5	0.5	0.425	false	10	2147483647	false	misc
+X	minecraft:painting	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:painting	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:painting	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:painting	WARDEN_CHEST	0	0.0	0.25	0.0
 T	95	minecraft:pale_oak_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:pale_oak_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:pale_oak_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:pale_oak_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:pale_oak_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	96	minecraft:pale_oak_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:pale_oak_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:pale_oak_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:pale_oak_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:pale_oak_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	97	minecraft:panda	1.3	1.25	1.0625	false	10	3	true	creature
+X	minecraft:panda	PASSENGER	0	0.0	1.25	0.0
+X	minecraft:panda	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:panda	NAME_TAG	0	0.0	1.25	0.0
+X	minecraft:panda	WARDEN_CHEST	0	0.0	0.625	0.0
 T	98	minecraft:parched	0.6	1.99	1.74	false	8	3	true	monster
+X	minecraft:parched	PASSENGER	0	0.0	1.9900000095367432	0.0
+X	minecraft:parched	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:parched	NAME_TAG	0	0.0	1.9900000095367432	0.0
+X	minecraft:parched	WARDEN_CHEST	0	0.0	0.9950000047683716	0.0
 T	99	minecraft:parrot	0.5	0.9	0.54	false	8	3	true	creature
+X	minecraft:parrot	PASSENGER	0	0.0	0.4625000059604645	0.0
+X	minecraft:parrot	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:parrot	NAME_TAG	0	0.0	0.8999999761581421	0.0
+X	minecraft:parrot	WARDEN_CHEST	0	0.0	0.44999998807907104	0.0
 T	100	minecraft:phantom	0.9	0.5	0.175	false	8	3	true	monster
+X	minecraft:phantom	PASSENGER	0	0.0	0.3375000059604645	0.0
+X	minecraft:phantom	VEHICLE	0	0.0	0.125	0.0
+X	minecraft:phantom	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:phantom	WARDEN_CHEST	0	0.0	0.25	0.0
 T	101	minecraft:pig	0.9	0.9	0.765	false	10	3	true	creature
+X	minecraft:pig	PASSENGER	0	0.0	0.8687499761581421	0.0
+X	minecraft:pig	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:pig	NAME_TAG	0	0.0	0.8999999761581421	0.0
+X	minecraft:pig	WARDEN_CHEST	0	0.0	0.44999998807907104	0.0
 T	102	minecraft:piglin	0.6	1.95	1.79	false	8	3	true	monster
+X	minecraft:piglin	PASSENGER	0	0.0	2.012500047683716	0.0
+X	minecraft:piglin	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:piglin	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:piglin	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	103	minecraft:piglin_brute	0.6	1.95	1.79	false	8	3	true	monster
+X	minecraft:piglin_brute	PASSENGER	0	0.0	2.012500047683716	0.0
+X	minecraft:piglin_brute	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:piglin_brute	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:piglin_brute	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	104	minecraft:pillager	0.6	1.95	1.6575	false	8	3	true	monster
+X	minecraft:pillager	PASSENGER	0	0.0	2.0	0.0
+X	minecraft:pillager	VEHICLE	0	0.0	0.6000000238418579	0.0
+X	minecraft:pillager	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:pillager	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	105	minecraft:polar_bear	1.4	1.4	1.19	false	10	3	true	creature
+X	minecraft:polar_bear	PASSENGER	0	0.0	1.399999976158142	0.0
+X	minecraft:polar_bear	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:polar_bear	NAME_TAG	0	0.0	1.399999976158142	0.0
+X	minecraft:polar_bear	WARDEN_CHEST	0	0.0	0.699999988079071	0.0
 T	106	minecraft:poplar_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:poplar_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:poplar_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:poplar_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:poplar_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	107	minecraft:poplar_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:poplar_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:poplar_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:poplar_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:poplar_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	108	minecraft:splash_potion	0.25	0.25	0.2125	false	4	10	true	misc
+X	minecraft:splash_potion	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:splash_potion	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:splash_potion	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:splash_potion	WARDEN_CHEST	0	0.0	0.125	0.0
 T	109	minecraft:lingering_potion	0.25	0.25	0.2125	false	4	10	true	misc
+X	minecraft:lingering_potion	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:lingering_potion	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:lingering_potion	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:lingering_potion	WARDEN_CHEST	0	0.0	0.125	0.0
 T	110	minecraft:pufferfish	0.7	0.7	0.455	false	4	3	true	water_ambient
+X	minecraft:pufferfish	PASSENGER	0	0.0	0.699999988079071	0.0
+X	minecraft:pufferfish	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:pufferfish	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:pufferfish	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	111	minecraft:rabbit	0.49	0.6	0.59	false	8	3	true	creature
+X	minecraft:rabbit	PASSENGER	0	0.0	0.6000000238418579	0.0
+X	minecraft:rabbit	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:rabbit	NAME_TAG	0	0.0	0.6000000238418579	0.0
+X	minecraft:rabbit	WARDEN_CHEST	0	0.0	0.30000001192092896	0.0
 T	112	minecraft:ravager	1.95	2.2	1.8700001	false	10	3	true	monster
+X	minecraft:ravager	PASSENGER	0	0.0	2.2625	-0.0625
+X	minecraft:ravager	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:ravager	NAME_TAG	0	0.0	2.200000047683716	0.0
+X	minecraft:ravager	WARDEN_CHEST	0	0.0	1.100000023841858	0.0
 T	113	minecraft:salmon	0.7	0.4	0.26	false	4	3	true	water_ambient
+X	minecraft:salmon	PASSENGER	0	0.0	0.4000000059604645	0.0
+X	minecraft:salmon	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:salmon	NAME_TAG	0	0.0	0.4000000059604645	0.0
+X	minecraft:salmon	WARDEN_CHEST	0	0.0	0.20000000298023224	0.0
 T	114	minecraft:sheep	0.9	1.3	1.235	false	10	3	true	creature
+X	minecraft:sheep	PASSENGER	0	0.0	1.2374999523162842	0.0
+X	minecraft:sheep	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:sheep	NAME_TAG	0	0.0	1.2999999523162842	0.0
+X	minecraft:sheep	WARDEN_CHEST	0	0.0	0.6499999761581421	0.0
 T	115	minecraft:shulker	1.0	1.0	0.5	false	10	3	true	monster
+X	minecraft:shulker	PASSENGER	0	0.0	1.0	0.0
+X	minecraft:shulker	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:shulker	NAME_TAG	0	0.0	1.0	0.0
+X	minecraft:shulker	WARDEN_CHEST	0	0.0	0.5	0.0
 T	116	minecraft:shulker_bullet	0.3125	0.3125	0.265625	false	8	3	true	misc
+X	minecraft:shulker_bullet	PASSENGER	0	0.0	0.3125	0.0
+X	minecraft:shulker_bullet	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:shulker_bullet	NAME_TAG	0	0.0	0.3125	0.0
+X	minecraft:shulker_bullet	WARDEN_CHEST	0	0.0	0.15625	0.0
 T	117	minecraft:silverfish	0.4	0.3	0.13	false	8	3	true	monster
+X	minecraft:silverfish	PASSENGER	0	0.0	0.23749999701976776	0.0
+X	minecraft:silverfish	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:silverfish	NAME_TAG	0	0.0	0.30000001192092896	0.0
+X	minecraft:silverfish	WARDEN_CHEST	0	0.0	0.15000000596046448	0.0
 T	118	minecraft:skeleton	0.6	1.99	1.74	false	8	3	true	monster
+X	minecraft:skeleton	PASSENGER	0	0.0	1.9900000095367432	0.0
+X	minecraft:skeleton	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:skeleton	NAME_TAG	0	0.0	1.9900000095367432	0.0
+X	minecraft:skeleton	WARDEN_CHEST	0	0.0	0.9950000047683716	0.0
 T	119	minecraft:skeleton_horse	1.3964844	1.6	1.52	false	10	3	true	creature
+X	minecraft:skeleton_horse	PASSENGER	0	0.0	1.318750023841858	0.0
+X	minecraft:skeleton_horse	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:skeleton_horse	NAME_TAG	0	0.0	1.600000023841858	0.0
+X	minecraft:skeleton_horse	WARDEN_CHEST	0	0.0	0.800000011920929	0.0
 T	120	minecraft:slime	0.52	0.52	0.325	false	10	3	true	monster
+X	minecraft:slime	PASSENGER	0	0.0	0.5199999809265137	0.0
+X	minecraft:slime	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:slime	NAME_TAG	0	0.0	0.5199999809265137	0.0
+X	minecraft:slime	WARDEN_CHEST	0	0.0	0.25999999046325684	0.0
 T	121	minecraft:small_fireball	0.3125	0.3125	0.265625	false	4	10	true	misc
+X	minecraft:small_fireball	PASSENGER	0	0.0	0.3125	0.0
+X	minecraft:small_fireball	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:small_fireball	NAME_TAG	0	0.0	0.3125	0.0
+X	minecraft:small_fireball	WARDEN_CHEST	0	0.0	0.15625	0.0
 T	122	minecraft:sniffer	1.9	1.75	1.05	false	10	3	true	creature
+X	minecraft:sniffer	PASSENGER	0	0.0	2.09375	0.0
+X	minecraft:sniffer	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:sniffer	NAME_TAG	0	0.0	2.049999952316284	0.0
+X	minecraft:sniffer	WARDEN_CHEST	0	0.0	0.875	0.0
 T	123	minecraft:snowball	0.25	0.25	0.2125	false	4	10	true	misc
+X	minecraft:snowball	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:snowball	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:snowball	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:snowball	WARDEN_CHEST	0	0.0	0.125	0.0
 T	124	minecraft:snow_golem	0.7	1.9	1.7	false	8	3	true	misc
+X	minecraft:snow_golem	PASSENGER	0	0.0	1.899999976158142	0.0
+X	minecraft:snow_golem	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:snow_golem	NAME_TAG	0	0.0	1.899999976158142	0.0
+X	minecraft:snow_golem	WARDEN_CHEST	0	0.0	0.949999988079071	0.0
 T	125	minecraft:spawner_minecart	0.98	0.7	0.595	false	8	3	true	misc
+X	minecraft:spawner_minecart	PASSENGER	0	0.0	0.1875	0.0
+X	minecraft:spawner_minecart	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:spawner_minecart	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:spawner_minecart	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	126	minecraft:spectral_arrow	0.5	0.5	0.13	false	4	20	true	misc
+X	minecraft:spectral_arrow	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:spectral_arrow	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:spectral_arrow	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:spectral_arrow	WARDEN_CHEST	0	0.0	0.25	0.0
 T	127	minecraft:spider	1.4	0.9	0.65	false	8	3	true	monster
+X	minecraft:spider	PASSENGER	0	0.0	0.7649999856948853	0.0
+X	minecraft:spider	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:spider	NAME_TAG	0	0.0	0.8999999761581421	0.0
+X	minecraft:spider	WARDEN_CHEST	0	0.0	0.44999998807907104	0.0
 T	128	minecraft:spruce_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:spruce_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:spruce_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:spruce_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:spruce_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	129	minecraft:spruce_chest_boat	1.375	0.5625	0.5625	false	10	3	true	misc
+X	minecraft:spruce_chest_boat	PASSENGER	0	0.0	0.5625	0.0
+X	minecraft:spruce_chest_boat	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:spruce_chest_boat	NAME_TAG	0	0.0	0.5625	0.0
+X	minecraft:spruce_chest_boat	WARDEN_CHEST	0	0.0	0.28125	0.0
 T	130	minecraft:squid	0.8	0.8	0.4	false	8	3	true	water_creature
+X	minecraft:squid	PASSENGER	0	0.0	0.800000011920929	0.0
+X	minecraft:squid	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:squid	NAME_TAG	0	0.0	0.800000011920929	0.0
+X	minecraft:squid	WARDEN_CHEST	0	0.0	0.4000000059604645	0.0
 T	131	minecraft:stray	0.6	1.99	1.74	false	8	3	true	monster
+X	minecraft:stray	PASSENGER	0	0.0	1.9900000095367432	0.0
+X	minecraft:stray	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:stray	NAME_TAG	0	0.0	1.9900000095367432	0.0
+X	minecraft:stray	WARDEN_CHEST	0	0.0	0.9950000047683716	0.0
 T	132	minecraft:strider	0.9	1.7	1.445	false	10	3	true	creature
+X	minecraft:strider	PASSENGER	0	0.0	1.7000000476837158	0.0
+X	minecraft:strider	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:strider	NAME_TAG	0	0.0	1.7000000476837158	0.0
+X	minecraft:strider	WARDEN_CHEST	0	0.0	0.8500000238418579	0.0
 T	133	minecraft:sulfur_cube	0.49	0.49	0.175	false	10	3	true	monster
+X	minecraft:sulfur_cube	PASSENGER	0	0.0	0.49000000953674316	0.0
+X	minecraft:sulfur_cube	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:sulfur_cube	NAME_TAG	0	0.0	0.49000000953674316	0.0
+X	minecraft:sulfur_cube	WARDEN_CHEST	0	0.0	0.24500000476837158	0.0
 T	134	minecraft:tadpole	0.4	0.3	0.19500001	false	10	3	true	creature
+X	minecraft:tadpole	PASSENGER	0	0.0	0.30000001192092896	0.0
+X	minecraft:tadpole	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:tadpole	NAME_TAG	0	0.0	0.30000001192092896	0.0
+X	minecraft:tadpole	WARDEN_CHEST	0	0.0	0.15000000596046448	0.0
 T	135	minecraft:text_display	0.0	0.0	0.0	false	10	1	true	misc
+X	minecraft:text_display	PASSENGER	0	0.0	0.0	0.0
+X	minecraft:text_display	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:text_display	NAME_TAG	0	0.0	0.0	0.0
+X	minecraft:text_display	WARDEN_CHEST	0	0.0	0.0	0.0
 T	136	minecraft:tnt	0.98	0.98	0.15	false	10	10	true	misc
+X	minecraft:tnt	PASSENGER	0	0.0	0.9800000190734863	0.0
+X	minecraft:tnt	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:tnt	NAME_TAG	0	0.0	0.9800000190734863	0.0
+X	minecraft:tnt	WARDEN_CHEST	0	0.0	0.49000000953674316	0.0
 T	137	minecraft:tnt_minecart	0.98	0.7	0.595	false	8	3	true	misc
+X	minecraft:tnt_minecart	PASSENGER	0	0.0	0.1875	0.0
+X	minecraft:tnt_minecart	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:tnt_minecart	NAME_TAG	0	0.0	0.699999988079071	0.0
+X	minecraft:tnt_minecart	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
 T	138	minecraft:trader_llama	0.9	1.87	1.7765	false	10	3	true	creature
+X	minecraft:trader_llama	PASSENGER	0	0.0	1.37	-0.3
+X	minecraft:trader_llama	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:trader_llama	NAME_TAG	0	0.0	1.8700000047683716	0.0
+X	minecraft:trader_llama	WARDEN_CHEST	0	0.0	0.9350000023841858	0.0
 T	139	minecraft:trident	0.5	0.5	0.13	false	4	20	true	misc
+X	minecraft:trident	PASSENGER	0	0.0	0.5	0.0
+X	minecraft:trident	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:trident	NAME_TAG	0	0.0	0.5	0.0
+X	minecraft:trident	WARDEN_CHEST	0	0.0	0.25	0.0
 T	140	minecraft:tropical_fish	0.5	0.4	0.26	false	4	3	true	water_ambient
+X	minecraft:tropical_fish	PASSENGER	0	0.0	0.4000000059604645	0.0
+X	minecraft:tropical_fish	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:tropical_fish	NAME_TAG	0	0.0	0.4000000059604645	0.0
+X	minecraft:tropical_fish	WARDEN_CHEST	0	0.0	0.20000000298023224	0.0
 T	141	minecraft:turtle	1.2	0.4	0.34	false	10	3	true	creature
+X	minecraft:turtle	PASSENGER	0	0.0	0.55625	-0.25
+X	minecraft:turtle	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:turtle	NAME_TAG	0	0.0	0.4000000059604645	0.0
+X	minecraft:turtle	WARDEN_CHEST	0	0.0	0.20000000298023224	0.0
 T	142	minecraft:vex	0.4	0.8	0.51875	false	8	3	true	monster
+X	minecraft:vex	PASSENGER	0	0.0	0.737500011920929	0.0
+X	minecraft:vex	VEHICLE	0	0.0	-0.03999999910593033	0.0
+X	minecraft:vex	NAME_TAG	0	0.0	0.800000011920929	0.0
+X	minecraft:vex	WARDEN_CHEST	0	0.0	0.4000000059604645	0.0
 T	143	minecraft:villager	0.6	1.95	1.62	false	10	3	true	misc
+X	minecraft:villager	PASSENGER	0	0.0	1.9500000476837158	0.0
+X	minecraft:villager	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:villager	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:villager	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	144	minecraft:vindicator	0.6	1.95	1.6575	false	8	3	true	monster
+X	minecraft:vindicator	PASSENGER	0	0.0	2.0	0.0
+X	minecraft:vindicator	VEHICLE	0	0.0	0.6000000238418579	0.0
+X	minecraft:vindicator	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:vindicator	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	145	minecraft:wandering_trader	0.6	1.95	1.62	false	10	3	true	creature
+X	minecraft:wandering_trader	PASSENGER	0	0.0	1.9500000476837158	0.0
+X	minecraft:wandering_trader	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:wandering_trader	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:wandering_trader	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	146	minecraft:warden	0.9	2.9	2.4650002	false	16	3	true	monster
+X	minecraft:warden	PASSENGER	0	0.0	3.1500000953674316	0.0
+X	minecraft:warden	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:warden	NAME_TAG	0	0.0	2.9000000953674316	0.0
+X	minecraft:warden	WARDEN_CHEST	0	0.0	1.600000023841858	0.0
 T	147	minecraft:wind_charge	0.3125	0.3125	0.0	false	4	10	true	misc
+X	minecraft:wind_charge	PASSENGER	0	0.0	0.3125	0.0
+X	minecraft:wind_charge	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:wind_charge	NAME_TAG	0	0.0	0.3125	0.0
+X	minecraft:wind_charge	WARDEN_CHEST	0	0.0	0.15625	0.0
 T	148	minecraft:witch	0.6	1.95	1.62	false	8	3	true	monster
+X	minecraft:witch	PASSENGER	0	0.0	2.262500047683716	0.0
+X	minecraft:witch	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:witch	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:witch	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	149	minecraft:wither	0.9	3.5	2.9750001	false	10	3	false	monster
+X	minecraft:wither	PASSENGER	0	0.0	3.5	0.0
+X	minecraft:wither	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:wither	NAME_TAG	0	0.0	3.5	0.0
+X	minecraft:wither	WARDEN_CHEST	0	0.0	1.75	0.0
 T	150	minecraft:wither_skeleton	0.7	2.4	2.1	false	8	3	true	monster
+X	minecraft:wither_skeleton	PASSENGER	0	0.0	2.4000000953674316	0.0
+X	minecraft:wither_skeleton	VEHICLE	0	0.0	0.875	0.0
+X	minecraft:wither_skeleton	NAME_TAG	0	0.0	2.4000000953674316	0.0
+X	minecraft:wither_skeleton	WARDEN_CHEST	0	0.0	1.2000000476837158	0.0
 T	151	minecraft:wither_skull	0.3125	0.3125	0.265625	false	4	10	true	misc
+X	minecraft:wither_skull	PASSENGER	0	0.0	0.3125	0.0
+X	minecraft:wither_skull	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:wither_skull	NAME_TAG	0	0.0	0.3125	0.0
+X	minecraft:wither_skull	WARDEN_CHEST	0	0.0	0.15625	0.0
 T	152	minecraft:wolf	0.6	0.85	0.68	false	10	3	true	creature
+X	minecraft:wolf	PASSENGER	0	0.0	0.81875	-0.0625
+X	minecraft:wolf	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:wolf	NAME_TAG	0	0.0	0.8500000238418579	0.0
+X	minecraft:wolf	WARDEN_CHEST	0	0.0	0.42500001192092896	0.0
 T	153	minecraft:zoglin	1.3964844	1.4	1.19	false	8	3	true	monster
+X	minecraft:zoglin	PASSENGER	0	0.0	1.493749976158142	0.0
+X	minecraft:zoglin	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:zoglin	NAME_TAG	0	0.0	1.399999976158142	0.0
+X	minecraft:zoglin	WARDEN_CHEST	0	0.0	0.699999988079071	0.0
 T	154	minecraft:zombie	0.6	1.95	1.74	false	8	3	true	monster
+X	minecraft:zombie	PASSENGER	0	0.0	2.012500047683716	0.0
+X	minecraft:zombie	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:zombie	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:zombie	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	155	minecraft:zombie_horse	1.3964844	1.6	1.52	false	10	3	true	monster
+X	minecraft:zombie_horse	PASSENGER	0	0.0	1.318750023841858	0.0
+X	minecraft:zombie_horse	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:zombie_horse	NAME_TAG	0	0.0	1.600000023841858	0.0
+X	minecraft:zombie_horse	WARDEN_CHEST	0	0.0	0.800000011920929	0.0
 T	156	minecraft:zombie_nautilus	0.875	0.95	0.2751	false	10	3	true	monster
+X	minecraft:zombie_nautilus	PASSENGER	0	0.0	1.1375000476837158	0.0
+X	minecraft:zombie_nautilus	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:zombie_nautilus	NAME_TAG	0	0.0	0.949999988079071	0.0
+X	minecraft:zombie_nautilus	WARDEN_CHEST	0	0.0	0.4749999940395355	0.0
 T	157	minecraft:zombie_villager	0.6	1.95	1.74	false	8	3	true	monster
+X	minecraft:zombie_villager	PASSENGER	0	0.0	2.125	0.0
+X	minecraft:zombie_villager	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:zombie_villager	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:zombie_villager	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	158	minecraft:zombified_piglin	0.6	1.95	1.79	false	8	3	true	monster
+X	minecraft:zombified_piglin	PASSENGER	0	0.0	2.0	0.0
+X	minecraft:zombified_piglin	VEHICLE	0	0.0	0.699999988079071	0.0
+X	minecraft:zombified_piglin	NAME_TAG	0	0.0	1.9500000476837158	0.0
+X	minecraft:zombified_piglin	WARDEN_CHEST	0	0.0	0.9750000238418579	0.0
 T	159	minecraft:player	0.6	1.8	1.62	false	32	2	false	misc
+X	minecraft:player	PASSENGER	0	0.0	1.7999999523162842	0.0
+X	minecraft:player	VEHICLE	0	0.0	0.6	0.0
+X	minecraft:player	NAME_TAG	0	0.0	1.7999999523162842	0.0
+X	minecraft:player	WARDEN_CHEST	0	0.0	0.8999999761581421	0.0
 T	160	minecraft:fishing_bobber	0.25	0.25	0.2125	false	4	5	true	misc
+X	minecraft:fishing_bobber	PASSENGER	0	0.0	0.25	0.0
+X	minecraft:fishing_bobber	VEHICLE	0	0.0	0.0	0.0
+X	minecraft:fishing_bobber	NAME_TAG	0	0.0	0.25	0.0
+X	minecraft:fishing_bobber	WARDEN_CHEST	0	0.0	0.125	0.0
+R	villager_type	0	minecraft:desert
+R	villager_type	1	minecraft:jungle
+R	villager_type	2	minecraft:plains
+R	villager_type	3	minecraft:savanna
+R	villager_type	4	minecraft:snow
+R	villager_type	5	minecraft:swamp
+R	villager_type	6	minecraft:taiga
+R	villager_profession	0	minecraft:none
+R	villager_profession	1	minecraft:armorer
+R	villager_profession	2	minecraft:butcher
+R	villager_profession	3	minecraft:cartographer
+R	villager_profession	4	minecraft:cleric
+R	villager_profession	5	minecraft:farmer
+R	villager_profession	6	minecraft:fisherman
+R	villager_profession	7	minecraft:fletcher
+R	villager_profession	8	minecraft:leatherworker
+R	villager_profession	9	minecraft:librarian
+R	villager_profession	10	minecraft:mason
+R	villager_profession	11	minecraft:nitwit
+R	villager_profession	12	minecraft:shepherd
+R	villager_profession	13	minecraft:toolsmith
+R	villager_profession	14	minecraft:weaponsmith
+B	Pig	BABY_DIMENSIONS	0.45	0.45	0.40625
+XB	Pig	PASSENGER	0	0.0	0.5	0.0
+XB	Pig	VEHICLE	0	0.0	0.0	0.0
+XB	Pig	NAME_TAG	0	0.0	0.44999998807907104	0.0
+XB	Pig	WARDEN_CHEST	0	0.0	0.22499999403953552	0.0
+B	AbstractCow	BABY_DIMENSIONS	0.45	0.7	0.665
+XB	AbstractCow	PASSENGER	0	0.0	0.684374988079071	0.0
+XB	AbstractCow	VEHICLE	0	0.0	0.0	0.0
+XB	AbstractCow	NAME_TAG	0	0.0	0.699999988079071	0.0
+XB	AbstractCow	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
+B	Cow	BABY_DIMENSIONS	0.45	0.7	0.69
+XB	Cow	PASSENGER	0	0.0	0.75	0.0
+XB	Cow	VEHICLE	0	0.0	0.0	0.0
+XB	Cow	NAME_TAG	0	0.0	0.699999988079071	0.0
+XB	Cow	WARDEN_CHEST	0	0.0	0.3499999940395355	0.0
+B	Sheep	BABY_DIMENSIONS	0.45	0.65	0.65625
+XB	Sheep	PASSENGER	0	0.0	0.5625	0.0
+XB	Sheep	VEHICLE	0	0.0	0.0	0.0
+XB	Sheep	NAME_TAG	0	0.0	0.6499999761581421	0.0
+XB	Sheep	WARDEN_CHEST	0	0.0	0.32499998807907104	0.0
+B	Zombie	BABY_DIMENSIONS	0.49	0.98	0.775
+XB	Zombie	PASSENGER	0	0.0	0.9800000190734863	0.0
+XB	Zombie	VEHICLE	0	0.0	0.1875	0.0
+XB	Zombie	NAME_TAG	0	0.0	0.9800000190734863	0.0
+XB	Zombie	WARDEN_CHEST	0	0.0	0.49000000953674316	0.0
+B	Chicken	BABY_DIMENSIONS	0.3	0.4	0.28125
+XB	Chicken	PASSENGER	0	0.0	0.375	0.0
+XB	Chicken	VEHICLE	0	0.0	0.0	0.0
+XB	Chicken	NAME_TAG	0	0.0	0.4000000059604645	0.0
+XB	Chicken	WARDEN_CHEST	0	0.0	0.20000000298023224	0.0
+B	Wolf	BABY_DIMENSIONS	0.3	0.425	0.34375
+XB	Wolf	PASSENGER	0	0.0	0.4375	0.0
+XB	Wolf	VEHICLE	0	0.0	0.0	0.0
+XB	Wolf	NAME_TAG	0	0.0	0.42500001192092896	0.0
+XB	Wolf	WARDEN_CHEST	0	0.0	0.21250000596046448	0.0
+B	Cat	BABY_DIMENSIONS	0.3	0.35	0.34375
+XB	Cat	PASSENGER	0	0.0	0.3125	0.0
+XB	Cat	VEHICLE	0	0.0	0.0	0.0
+XB	Cat	NAME_TAG	0	0.0	0.3499999940395355	0.0
+XB	Cat	WARDEN_CHEST	0	0.0	0.17499999701976776	0.0
+B	Ocelot	BABY_DIMENSIONS	0.3	0.35	0.34375
+XB	Ocelot	PASSENGER	0	0.0	0.3125	0.0
+XB	Ocelot	VEHICLE	0	0.0	0.0	0.0
+XB	Ocelot	NAME_TAG	0	0.0	0.3499999940395355	0.0
+XB	Ocelot	WARDEN_CHEST	0	0.0	0.17499999701976776	0.0
+B	Horse	BABY_DIMENSIONS	0.97753906	1.12	1.064
+XB	Horse	PASSENGER	0	0.0	1.03249999910593	0.0
+XB	Horse	VEHICLE	0	0.0	0.0	0.0
+XB	Horse	NAME_TAG	0	0.0	1.119999997615814	0.0
+XB	Horse	WARDEN_CHEST	0	0.0	0.559999998807907	0.0
+B	Rabbit	BABY_DIMENSIONS	0.24	0.4	0.39
+XB	Rabbit	PASSENGER	0	0.0	0.4000000059604645	0.0
+XB	Rabbit	VEHICLE	0	0.0	0.0	0.0
+XB	Rabbit	NAME_TAG	0	0.0	0.4000000059604645	0.0
+XB	Rabbit	WARDEN_CHEST	0	0.0	0.20000000298023224	0.0
+B	Villager	BABY_DIMENSIONS	0.49	0.98	0.63
+XB	Villager	PASSENGER	0	0.0	0.9800000190734863	0.0
+XB	Villager	VEHICLE	0	0.0	0.0	0.0
+XB	Villager	NAME_TAG	0	0.0	0.9800000190734863	0.0
+XB	Villager	WARDEN_CHEST	0	0.0	0.49000000953674316	0.0
+B	Drowned	BABY_DIMENSIONS	0.49	0.98	0.775
+XB	Drowned	PASSENGER	0	0.0	0.9800000190734863	0.0
+XB	Drowned	VEHICLE	0	0.0	0.1875	0.0
+XB	Drowned	NAME_TAG	0	0.0	0.9800000190734863	0.0
+XB	Drowned	WARDEN_CHEST	0	0.0	0.49000000953674316	0.0
+B	ArmorStand	BABY_DIMENSIONS	0.25	0.9875	0.9875
+XB	ArmorStand	PASSENGER	0	0.0	0.987500011920929	0.0
+XB	ArmorStand	VEHICLE	0	0.0	0.0	0.0
+XB	ArmorStand	NAME_TAG	0	0.0	0.987500011920929	0.0
+XB	ArmorStand	WARDEN_CHEST	0	0.0	0.4937500059604645	0.0
 D	Entity	DATA_SHARED_FLAGS_ID	0	0
 D	Entity	DATA_AIR_SUPPLY_ID	1	1
 D	Entity	DATA_CUSTOM_NAME	2	6
@@ -195,6 +933,50 @@ D	Player	DATA_SCORE_ID	18	1
 D	Player	DATA_SHOULDER_PARROT_LEFT	19	19
 D	Player	DATA_SHOULDER_PARROT_RIGHT	20	19
 D	ItemEntity	DATA_ITEM	8	7
+D	TamableAnimal	DATA_FLAGS_ID	18	0
+D	TamableAnimal	DATA_OWNERUUID_ID	19	13
+D	Chicken	DATA_VARIANT_ID	18	30
+D	Chicken	DATA_SOUND_VARIANT_ID	19	31
+D	Wolf	DATA_INTERESTED_ID	20	8
+D	Wolf	DATA_COLLAR_COLOR	21	1
+D	Wolf	DATA_ANGER_END_TIME	22	2
+D	Wolf	DATA_VARIANT_ID	23	25
+D	Wolf	DATA_SOUND_VARIANT_ID	24	26
+D	Cat	DATA_VARIANT_ID	20	21
+D	Cat	IS_LYING	21	8
+D	Cat	RELAX_STATE_ONE	22	8
+D	Cat	DATA_COLLAR_COLOR	23	1
+D	Cat	DATA_SOUND_VARIANT_ID	24	22
+D	Ocelot	DATA_TRUSTING	18	8
+D	AbstractHorse	DATA_ID_FLAGS	18	0
+D	Horse	DATA_ID_TYPE_VARIANT	19	1
+D	AbstractChestedHorse	DATA_ID_CHEST	19	8
+D	Rabbit	DATA_TYPE_ID	18	1
+D	Bee	DATA_FLAGS_ID	18	0
+D	Bee	DATA_ANGER_END_TIME	19	2
+D	Creeper	DATA_SWELL_DIR	16	1
+D	Creeper	DATA_IS_POWERED	17	8
+D	Creeper	DATA_IS_IGNITED	18	8
+D	Spider	DATA_FLAGS_ID	16	0
+D	Enderman	DATA_CARRY_STATE	16	15
+D	Enderman	DATA_CREEPY	17	8
+D	Enderman	DATA_STARED_AT	18	8
+D	AbstractVillager	DATA_UNHAPPY_COUNTER	18	1
+D	Villager	DATA_VILLAGER_DATA	19	18
+D	Villager	DATA_VILLAGER_DATA_FINALIZED	20	8
+D	IronGolem	DATA_FLAGS_ID	16	0
+D	VehicleEntity	DATA_ID_HURT	8	1
+D	VehicleEntity	DATA_ID_HURTDIR	9	1
+D	VehicleEntity	DATA_ID_DAMAGE	10	3
+D	AbstractBoat	DATA_ID_PADDLE_LEFT	11	8
+D	AbstractBoat	DATA_ID_PADDLE_RIGHT	12	8
+D	AbstractBoat	DATA_ID_BUBBLE_TIME	13	1
+D	AbstractMinecart	DATA_ID_CUSTOM_DISPLAY_BLOCK	11	15
+D	AbstractMinecart	DATA_ID_DISPLAY_OFFSET	12	1
+D	MinecartFurnace	DATA_ID_FUEL	13	8
+D	Mannequin	DATA_PROFILE	17	41
+D	Mannequin	DATA_IMMOVABLE	18	8
+D	Mannequin	DATA_DESCRIPTION	19	6
 D	ArmorStand	DATA_CLIENT_FLAGS	15	0
 D	ArmorStand	DATA_HEAD_POSE	16	9
 D	ArmorStand	DATA_BODY_POSE	17	9

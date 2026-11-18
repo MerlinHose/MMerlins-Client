@@ -99,7 +99,7 @@ final class GameView {
 			Thread.ofPlatform().name("session").daemon(true).start(() -> result.complete(session.run()));
 			try (ShaderProgram shader = new ShaderProgram(Shaders.WORLD_VERTEX, Shaders.WORLD_FRAGMENT); Overlay overlay = new Overlay();
 				HudRenderer hud = new HudRenderer(); Hud gameHud = new Hud(); InventoryScreen invScreen = new InventoryScreen();
-				EntityRenderer entityRenderer = new EntityRenderer(o.textures() ? o.assets() : null); NameTags nameTags = new NameTags();
+				EntityRenderer entityRenderer = new EntityRenderer(o.textures() ? o.assets() : null, o.skins()); NameTags nameTags = new NameTags();
 				SurvivalHud survivalHud = new SurvivalHud(o.textures() ? o.assets() : null); FrameProfiler profiler = new FrameProfiler();
 				LightmapGl lightmap = new LightmapGl(); SkyRenderer sky = new SkyRenderer(o.textures() ? o.assets() : null);
 				CloudRenderer clouds = new CloudRenderer(o.textures() ? o.assets() : null); WeatherRenderer weather = new WeatherRenderer(o.textures() ? o.assets() : null);
@@ -409,8 +409,12 @@ final class GameView {
 				List<dev.mcresearch.protocolclient.entity.EntityManager.View> eviews = List.of();
 				if (rs.ready() && session.playing()) {
 					eviews = session.entities().snapshot(session.entities().partialTick(now), session.gameMode());
-					entityRenderer.draw(vp, new Frustum(vp), cx, cy, cz, eviews, world, fogColor, fogStart, fogEnd, now);
+					entityRenderer.draw(vp, new Frustum(vp), cx, cy, cz, eviews, world, fogColor, fogStart, fogEnd, now, session.entities().variants(),
+						session.levelEnvironment().gameTime());
 					ENTITY_FRAME = entityRenderer.lastFrame();
+					ENTITY_LOOKS = entityRenderer.looks();
+					ENTITY_GPU = String.format(java.util.Locale.ROOT, "meshes=%d meshKB=%d textures=%d skins=%d", entityRenderer.meshCount(),
+						entityRenderer.meshBytes() >> 10, entityRenderer.textureCount(), entityRenderer.skins().cacheSize());
 				}
 				// ---- M12: durchscheinendes Terrain, Wolken, Niederschlag (Reihenfolge wie LevelRenderer#executeClassicTransparency) ----
 				if (renderer != null && rs.ready()) {
@@ -582,6 +586,9 @@ final class GameView {
 	/** Für Autotest und Leistungsmessung: Zähler des letzten Bildes und die aktuelle Auswahl (nur Grafikthread schreibt). */
 	static volatile EntityRenderer.FrameInfo ENTITY_FRAME = new EntityRenderer.FrameInfo(0, 0, 0, 0, 0, 0);
 	static volatile dev.mcresearch.protocolclient.entity.EntityPick.Target ENTITY_TARGET;
+	/** M14: Darstellungsplan je Entity des letzten Bildes (look-dump) und GPU-Bestand des Entity-Renderers. */
+	static volatile java.util.Map<Integer, String> ENTITY_LOOKS = java.util.Map.of();
+	static volatile String ENTITY_GPU = "";
 	/** M10: Todesbildschirm sichtbar und Lage des Knopfs „Wiederbeleben“ (für Autotest-Klicks über denselben Eingabeweg). */
 	static volatile boolean DEATH_SCREEN;
 	/** M11: Bildschirm offen (Inventar, Container, Tod) – Bewegungstasten wirkungslos. */

@@ -4,6 +4,7 @@ import dev.mcresearch.protocolclient.physics.BlockView;
 import dev.mcresearch.protocolclient.physics.CollisionWorld;
 import dev.mcresearch.protocolclient.physics.PlayerPhysics;
 import dev.mcresearch.protocolclient.physics.ShapeRegistry;
+import dev.mcresearch.protocolclient.physics.Vec3d;
 import dev.mcresearch.protocolclient.protocol.packet.Serverbound;
 import dev.mcresearch.protocolclient.protocol.packet.ServerboundPacket;
 import dev.mcresearch.protocolclient.world.BlockRegistry;
@@ -301,6 +302,9 @@ public final class MovementController {
 		}
 		BlockView view = world::stateId;
 		this.physics = new PlayerPhysics(new CollisionWorld(view, ShapeRegistry.get()), BlockRegistry.get());
+		if (this.entities != null) {
+			this.physics.world().setEntityBoxes(this.entities::collisionBoxes); // M14: Boote/Shulker als feste Hindernisse
+		}
 		initPhysics();
 		syncPhysicsFromPlayer();
 	}
@@ -630,6 +634,264 @@ public final class MovementController {
 		}
 	}
 
+	// ================= M14: Reiten (docs/57 §3–5) =================
+
+	private dev.mcresearch.protocolclient.entity.EntityManager entities;
+	private int ridingVehicle = -1;
+	private dev.mcresearch.protocolclient.physics.BoatPhysics boat;
+	private dev.mcresearch.protocolclient.physics.HorsePhysics horse;
+	/** Eingabe des Vortags (Fahrzeuge ticken vor dem Spieler und nutzen dessen Tasten des letzten Ticks). */
+	private PlayerPhysics.Input vehicleInput = PlayerPhysics.Input.NONE;
+	private boolean wasJumping;
+	private int jumpRidingTicks;
+	private float jumpRidingScale;
+	private final Deque<String> vehicleTrace = new ArrayDeque<>();
+	private long vehicleCorrections;
+	private long pushes;
+
+	/** Anzahl der Ticks mit Schiebeimpuls durch andere Entities (M14 Phase J). */
+	public synchronized long pushes() {
+		return this.pushes;
+	}
+
+	/** Geplantes Fahrzeugskript (Vergleich mit der Vanilla-Referenz, docs/58 §4). */
+	private record RideScript(float yaw, int settle, List<PlayerPhysics.Input> inputs, List<String> labels, List<String> lines,
+		CompletableFuture<List<String>> future) {
+	}
+
+	private RideScript rideScript;
+	private dev.mcresearch.protocolclient.physics.BoatPhysics.TickResult lastBoat;
+	private dev.mcresearch.protocolclient.physics.HorsePhysics.TickResult lastHorse;
+
+	/** Fahrzeugzustand nach dem letzten Tick {x, y, z, vx, vy, vz, yRot, onGround, hc}; ohne eigene Physik die Entity-Darstellung. */
+	private double[] vehicleState() {
+		if (this.boat != null && this.lastBoat != null) {
+			var r = this.lastBoat;
+			return new double[]{r.x(), r.y(), r.z(), r.vx(), r.vy(), r.vz(), r.yRot(), r.onGround() ? 1 : 0, r.horizontalCollision() ? 1 : 0};
+		}
+		if (this.horse != null && this.lastHorse != null) {
+			var r = this.lastHorse;
+			return new double[]{r.x(), r.y(), r.z(), r.vx(), r.vy(), r.vz(), r.yRot(), r.onGround() ? 1 : 0, r.horizontalCollision() ? 1 : 0};
+		}
+		var v = this.entities.ownVehicleView();
+		return v == null ? new double[9] : new double[]{v.x(), v.y(), v.z(), v.motionX(), v.motionY(), v.motionZ(), v.yRot(), v.onGround() ? 1 : 0, 0};
+	}
+	private int rideScriptTick;
+
+	/**
+	 * Fahrzeugskript für den nächsten Aufsitzvorgang: Gier setzen, {@code settle} Ruheticks nach dem Aufsitz-Tick, dann je Tick eine
+	 * Eingabe. Liefert je Skript-Tick eine Spurzeile im Format der Referenz ({@code k input x y z vx vy vz yRot onGround hc playerYRot}).
+	 */
+	public synchronized CompletableFuture<List<String>> scheduleRideScript(final float yaw, final int settle, final List<PlayerPhysics.Input> inputs,
+		final List<String> labels) {
+		CompletableFuture<List<String>> f = new CompletableFuture<>();
+		this.rideScript = new RideScript(yaw, settle, List.copyOf(inputs), List.copyOf(labels), new ArrayList<>(), f);
+		this.rideScriptTick = -1;
+		return f;
+	}
+
+	/** Entity-Verwaltung für Fahrzeug, Sitz, Entity-Kollision und Schieben (M14). */
+	public synchronized void setEntities(final dev.mcresearch.protocolclient.entity.EntityManager em) {
+		this.entities = em;
+		if (this.physics != null) {
+			this.physics.world().setEntityBoxes(em::collisionBoxes);
+		}
+	}
+
+	/** Fahrzeug, auf dem der eigene Spieler sitzt (-1: keines). */
+	public synchronized int ridingVehicle() {
+		return this.ridingVehicle;
+	}
+
+	/** Letzte Fahrzeug-Ticks (Vergleichsspur, docs/58). */
+	public synchronized List<String> vehicleTrace() {
+		return List.copyOf(this.vehicleTrace);
+	}
+
+	public synchronized long vehicleCorrections() {
+		return this.vehicleCorrections;
+	}
+
+	/** Serverkorrektur ({@code move_vehicle}): wie {@code ClientPacketListener#handleMoveVehicle} übernehmen und sofort bestätigen. */
+	public synchronized ServerboundPacket onServerVehicleMove(final double x, final double y, final double z, final float yRot, final float xRot) {
+		this.vehicleCorrections++;
+		if (this.boat != null) {
+			this.boat.setPosition(x, y, z, yRot);
+		} else if (this.horse != null) {
+			this.horse.setPosition(x, y, z, yRot, this.horse.onGround());
+		} else {
+			return null;
+		}
+		if (this.entities != null && this.ridingVehicle >= 0) {
+			this.entities.setLocalVehicle(this.ridingVehicle, x, y, z, yRot, xRot);
+		}
+		return new Serverbound.MoveVehicle(x, y, z, yRot, xRot, this.boat != null ? this.boat.onGround() : this.horse.onGround());
+	}
+
+	private void enterRiding(final dev.mcresearch.protocolclient.entity.EntityManager.View v) {
+		this.ridingVehicle = v.id();
+		this.boat = null;
+		this.horse = null;
+		this.vehicleInput = PlayerPhysics.Input.NONE;
+		this.wasJumping = false;
+		this.jumpRidingTicks = 0;
+		this.jumpRidingScale = 0;
+		if (this.command != null) {
+			this.command = null; // laufende Bewegungsbefehle enden beim Aufsitzen
+		}
+		if (this.physics == null || this.entities.ownSeatIndex() != 0) {
+			return; // Mitfahrer (zweiter Platz) oder ohne Welt: nur Sitzposition
+		}
+		String type = v.type().shortName();
+		if (dev.mcresearch.protocolclient.view.model.EntityLooks.isBoat(type)) {
+			this.boat = new dev.mcresearch.protocolclient.physics.BoatPhysics(this.physics.world(), BlockRegistry.get(), v.type().width(), v.type().height());
+			this.boat.setPosition(v.x(), v.y(), v.z(), v.yRot());
+		} else if (isHorse(type) && saddled(v)) {
+			this.horse = new dev.mcresearch.protocolclient.physics.HorsePhysics(this.physics.world(), BlockRegistry.get(), v.width(), v.height());
+			this.horse.setPosition(v.x(), v.y(), v.z(), v.yRot(), v.onGround());
+			Double sp = v.attributes().get(26);
+			Double jump = v.attributes().get(19);
+			Double step = v.attributes().get(33);
+			this.horse.setAttributes(sp == null ? 0.225 : sp, jump == null ? 0.7 : jump, step == null ? 1.0 : step);
+		}
+	}
+
+	private static boolean isHorse(final String type) {
+		return type.equals("horse") || type.equals("donkey") || type.equals("mule") || type.equals("skeleton_horse") || type.equals("zombie_horse");
+	}
+
+	private static boolean saddled(final dev.mcresearch.protocolclient.entity.EntityManager.View v) {
+		dev.mcresearch.protocolclient.world.ItemStack s = v.equipment()[dev.mcresearch.protocolclient.entity.ClientEntity.SLOT_SADDLE];
+		return s != null && !s.isEmpty();
+	}
+
+	private void leaveRiding() {
+		this.ridingVehicle = -1;
+		this.boat = null;
+		this.horse = null;
+		syncPhysicsFromPlayer();
+		this.lastInput = Serverbound.PlayerInput.EMPTY;
+		this.positionReminder = POSITION_REMINDER_TICKS; // nächstes Positionspaket sofort
+	}
+
+	/**
+	 * Ein Tick auf einem Fahrzeug ({@code LocalPlayer#rideTick}): Fahrzeug zuerst (Boot/Pferd mit der Eingabe des Vortags, Paket
+	 * {@code paddle_boat}), dann Sitzposition, dann {@code sendChanges}: {@code player_input} bei Änderung, Drehung
+	 * ({@code move_player_rot}) jeden Tick, für das selbst gesteuerte Fahrzeug {@code move_vehicle}.
+	 */
+	private void tickRiding(final int vid, final List<ServerboundPacket> out) {
+		dev.mcresearch.protocolclient.entity.EntityManager.View v = this.entities.ownVehicleView();
+		if (v == null) {
+			return;
+		}
+		if (this.ridingVehicle != vid) {
+			enterRiding(v);
+		}
+		PlayerPhysics.Input input = this.command == null ? this.manualInput : this.command.input();
+		RideScript rs = this.rideScript;
+		int scriptIndex = -1;
+		if (rs != null) {
+			if (this.rideScriptTick < 0) {
+				this.player.setRotation(rs.yaw(), 0.0F); // wie die Referenz beim Aufsitzen
+				this.rideScriptTick = 0;
+			} else {
+				this.rideScriptTick++;
+			}
+			scriptIndex = this.rideScriptTick - (rs.settle() + 1);
+			input = scriptIndex >= 0 && scriptIndex < rs.inputs().size() ? rs.inputs().get(scriptIndex) : PlayerPhysics.Input.NONE;
+		}
+		boolean controlled = false;
+		if (this.boat != null) {
+			this.boat.setInput(this.vehicleInput.left(), this.vehicleInput.right(), this.vehicleInput.forward(), this.vehicleInput.backward());
+			dev.mcresearch.protocolclient.physics.BoatPhysics.TickResult r = this.boat.tick();
+			this.lastBoat = r;
+			out.add(new Serverbound.PaddleBoat(r.paddleLeft(), r.paddleRight()));
+			this.entities.setLocalVehicle(vid, r.x(), r.y(), r.z(), r.yRot(), 0);
+			// positionRider: Blick dreht mit, höchstens ±105° zur Bootsrichtung (clampRotation)
+			float yaw = this.player.yRot() + r.deltaRotation();
+			float delta = dev.mcresearch.protocolclient.entity.EntityInterpolator.wrapDegrees(yaw - r.yRot());
+			float clamped = Math.clamp(delta, -105.0F, 105.0F);
+			this.player.setRotation(yaw + clamped - delta, this.player.xRot());
+			trace(String.format(Locale.ROOT, "boat %d %s %.6f %.6f %.6f %.6f %.6f %.6f %.4f %s %b %b", r.tick(), keys(this.vehicleInput), r.x(), r.y(),
+				r.z(), r.vx(), r.vy(), r.vz(), r.yRot(), r.status(), r.paddleLeft(), r.paddleRight()));
+			controlled = true;
+		} else if (this.horse != null) {
+			float strafe = ((this.vehicleInput.left() ? 1 : 0) - (this.vehicleInput.right() ? 1 : 0)) * 0.98F;
+			float forward = ((this.vehicleInput.forward() ? 1 : 0) - (this.vehicleInput.backward() ? 1 : 0)) * 0.98F;
+			dev.mcresearch.protocolclient.physics.HorsePhysics.TickResult r = this.horse.tick(strafe, forward, this.player.yRot(), this.player.xRot());
+			this.lastHorse = r;
+			this.entities.setLocalVehicle(vid, r.x(), r.y(), r.z(), r.yRot(), r.xRot());
+			trace(String.format(Locale.ROOT, "horse %d %s %.6f %.6f %.6f %.6f %.6f %.6f %.4f %b %b", r.tick(), keys(this.vehicleInput), r.x(), r.y(), r.z(),
+				r.vx(), r.vy(), r.vz(), r.yRot(), r.onGround(), r.jumped()));
+			controlled = true;
+			// LocalPlayer#aiStep: Sprungladung (Taste halten, beim Loslassen START_RIDING_JUMP mit Ladung·100)
+			if (this.jumpRidingTicks < 0) {
+				this.jumpRidingTicks++;
+				if (this.jumpRidingTicks == 0) {
+					this.jumpRidingScale = 0.0F;
+				}
+			}
+			if (this.wasJumping && !input.jump()) {
+				this.jumpRidingTicks = -10;
+				int amount = (int) Math.floor(this.jumpRidingScale * 100.0F);
+				this.horse.playerJump(amount);
+				out.add(new Serverbound.PlayerCommand(this.entityId, 3, amount));
+			} else if (!this.wasJumping && input.jump()) {
+				this.jumpRidingTicks = 0;
+				this.jumpRidingScale = 0.0F;
+			} else if (this.wasJumping) {
+				this.jumpRidingTicks++;
+				this.jumpRidingScale = this.jumpRidingTicks < 10 ? this.jumpRidingTicks * 0.1F : 0.8F + 2.0F / (this.jumpRidingTicks - 9) * 0.1F;
+			}
+			this.wasJumping = input.jump();
+		}
+		double[] seat = this.entities.ownSeatTick();
+		if (seat != null) {
+			this.player.setPhysics(seat[0], seat[1], seat[2], 0, 0, 0, false, false);
+		}
+		Serverbound.PlayerInput keys = new Serverbound.PlayerInput(input.forward(), input.backward(), input.left(), input.right(), input.jump(),
+			input.sneak(), input.sprint());
+		if (!keys.equals(this.lastInput)) {
+			out.add(keys);
+			this.lastInput = keys;
+		}
+		out.add(new Serverbound.MovePlayerRot(this.player.yRot(), this.player.xRot(), false, false));
+		this.lastYRot = this.player.yRot();
+		this.lastXRot = this.player.xRot();
+		if (controlled) {
+			if (this.boat != null) {
+				out.add(new Serverbound.MoveVehicle(this.boat.x(), this.boat.y(), this.boat.z(), this.boat.yRot(), 0, this.boat.onGround()));
+			} else {
+				out.add(new Serverbound.MoveVehicle(this.horse.x(), this.horse.y(), this.horse.z(), this.horse.yRot(), this.horse.xRot(), this.horse.onGround()));
+			}
+		}
+		if (rs != null && scriptIndex >= 0 && scriptIndex < rs.inputs().size()) {
+			double[] st = vehicleState();
+			rs.lines().add(String.join(" ", Integer.toString(scriptIndex + 1), rs.labels().get(scriptIndex), Double.toString(st[0]),
+				Double.toString(st[1]), Double.toString(st[2]), Double.toString(st[3]), Double.toString(st[4]), Double.toString(st[5]),
+				Float.toString((float) st[6]), Boolean.toString(st[7] != 0), Boolean.toString(st[8] != 0), Float.toString(this.player.yRot())));
+			if (scriptIndex == rs.inputs().size() - 1) {
+				this.rideScript = null;
+				rs.future().complete(List.copyOf(rs.lines()));
+			}
+		}
+		this.vehicleInput = input;
+		this.lastPhysicsInput = input;
+	}
+
+	private void trace(final String line) {
+		this.vehicleTrace.addLast(line);
+		while (this.vehicleTrace.size() > TRAJECTORY_SIZE) {
+			this.vehicleTrace.removeFirst();
+		}
+	}
+
+	private static String keys(final PlayerPhysics.Input in) {
+		String s = (in.forward() ? "f" : "") + (in.backward() ? "b" : "") + (in.left() ? "l" : "") + (in.right() ? "r" : "") + (in.jump() ? "j" : "")
+			+ (in.sneak() ? "s" : "");
+		return s.isEmpty() ? "-" : s;
+	}
+
 	/** Ein Tick: Tastenzustand bestimmen, Physik anwenden, zu sendende Pakete bestimmen (ohne client_tick_end). */
 	public synchronized List<ServerboundPacket> tick() {
 		List<ServerboundPacket> out = new ArrayList<>(2);
@@ -641,6 +903,23 @@ public final class MovementController {
 		this.prevY = this.player.y();
 		this.prevZ = this.player.z();
 		this.lastTickNanos = System.nanoTime();
+		int vehicle = this.entities == null ? -1 : this.entities.ownVehicle();
+		if (vehicle >= 0) {
+			tickRiding(vehicle, out);
+			return out;
+		}
+		if (this.ridingVehicle >= 0) {
+			leaveRiding();
+		}
+		// M14 Phase J: Schieben durch andere Lebewesen und Boote (Entity#push aus deren pushEntities), vor der eigenen Bewegung
+		if (this.entities != null && this.physics != null && this.command == null && this.claim == null) {
+			double[] push = this.entities.pushImpulse(this.physics.boundingBox(), this.physics.x(), this.physics.z());
+			if (push[0] != 0 || push[1] != 0) {
+				Vec3d vel = this.physics.velocity();
+				this.physics.setVelocity(vel.x() + push[0], vel.y(), vel.z() + push[1]);
+				this.pushes++;
+			}
+		}
 		PlayerPhysics.Input input = this.command == null && this.claim == null ? this.manualInput : PlayerPhysics.Input.NONE;
 		if (this.claim != null) {
 			tickClaim();

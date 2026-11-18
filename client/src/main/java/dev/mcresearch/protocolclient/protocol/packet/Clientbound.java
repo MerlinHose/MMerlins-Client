@@ -398,6 +398,10 @@ public sealed interface Clientbound {
 	record TakeItemEntity(int itemId, int collectorId, int amount) implements Clientbound {
 	}
 
+	/** M14 (docs/57 §3): {@code move_vehicle} – Serverkorrektur der Position des selbst gesteuerten Fahrzeugs. */
+	record MoveVehicle(double x, double y, double z, float yRot, float xRot) implements Clientbound {
+	}
+
 	/** {@code set_passengers}. */
 	record SetPassengers(int vehicleId, int[] passengers) implements Clientbound {
 	}
