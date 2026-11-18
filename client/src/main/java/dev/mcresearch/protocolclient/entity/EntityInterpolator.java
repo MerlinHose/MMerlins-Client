@@ -42,8 +42,24 @@ public final class EntityInterpolator {
 
 	/** @param interpolationTicks Ticks je linearem Ziel (Typ-Aktualisierungsintervall, begrenzt auf 1–3) */
 	public EntityInterpolator(final int interpolationTicks) {
-		this.interpolationTicks = Math.max(1, interpolationTicks);
+		this(interpolationTicks, false);
 	}
+
+	/**
+	 * @param linear M14 (Vergleich vehicle5): Boote und Loren interpolieren in Vanilla mit {@code LinearInterpolationHandler} – ein
+	 *        neues Ziel ersetzt das alte und startet 3 Schritte neu, je Tick {@code pos += (ziel − pos)/verbleibend} – statt die Ziele
+	 *        nacheinander abzuarbeiten. Gleiche Rechenreihenfolge wie {@code Mth.lerp}/{@code Mth.rotLerp} (bitgleich).
+	 */
+	public EntityInterpolator(final int interpolationTicks, final boolean linear) {
+		this.interpolationTicks = Math.max(1, interpolationTicks);
+		this.linear = linear;
+	}
+
+	private final boolean linear;
+	private double targetX, targetY, targetZ;
+	private float targetYRot, targetXRot;
+	private int remainingSteps;
+	static final int LINEAR_STEPS = 3;
 
 	/** Sofort auf den Zustand setzen (Spawn, Teleport, zu großer Abstand, Überlauf). */
 	public void snap(final double nx, final double ny, final double nz, final float nyRot, final float nxRot) {
@@ -55,6 +71,7 @@ public final class EntityInterpolator {
 		this.z = this.prevZ = this.fromZ = this.lastZ = nz;
 		this.yRot = this.prevYRot = this.fromYRot = this.lastYRot = nyRot;
 		this.xRot = this.prevXRot = this.fromXRot = this.lastXRot = nxRot;
+		this.remainingSteps = 0;
 		this.snaps++;
 	}
 
@@ -65,6 +82,25 @@ public final class EntityInterpolator {
 
 	/** Ein Ziel mit eigener Dauer ({@code ticks} ≤ 0 → Standarddauer des Typs). */
 	public void addTarget(final double nx, final double ny, final double nz, final float nyRot, final float nxRot, final int ticks) {
+		if (this.linear) {
+			// AbstractInterpolationHandler#interpolateTo: gleiches laufendes Ziel → nichts neu starten
+			boolean same = this.remainingSteps > 0 && this.targetX == nx && this.targetY == ny && this.targetZ == nz && this.targetYRot == nyRot
+				&& this.targetXRot == nxRot;
+			if (!same) {
+				this.targetX = nx;
+				this.targetY = ny;
+				this.targetZ = nz;
+				this.targetYRot = nyRot;
+				this.targetXRot = nxRot;
+				this.remainingSteps = LINEAR_STEPS;
+			}
+			this.lastX = nx;
+			this.lastY = ny;
+			this.lastZ = nz;
+			this.lastYRot = nyRot;
+			this.lastXRot = nxRot;
+			return;
+		}
 		int t = ticks <= 0 ? this.interpolationTicks : ticks;
 		if (this.queue.isEmpty()) {
 			// neuer Abschnitt beginnt an der aktuell dargestellten Stelle
@@ -88,6 +124,20 @@ public final class EntityInterpolator {
 			snap(nx, ny, nz, nyRot, nxRot);
 			this.head = h;
 		}
+	}
+
+	/** Selbst gesteuertes Fahrzeug (Position aus der eigenen Physik): im nächsten Tick erreicht, ohne Vanilla-Interpolation. */
+	public void addLocalTarget(final double nx, final double ny, final double nz, final float nyRot, final float nxRot) {
+		if (!this.linear) {
+			addTarget(nx, ny, nz, nyRot, nxRot, 1);
+			return;
+		}
+		this.targetX = this.lastX = nx;
+		this.targetY = this.lastY = ny;
+		this.targetZ = this.lastZ = nz;
+		this.targetYRot = this.lastYRot = nyRot;
+		this.targetXRot = this.lastXRot = nxRot;
+		this.remainingSteps = 1;
 	}
 
 	/** Reine Rotation: Position bleibt das letzte Ziel. */
@@ -116,6 +166,19 @@ public final class EntityInterpolator {
 		if (this.headTicksLeft > 0) {
 			this.head += wrapDegrees(this.headTarget - this.head) / this.headTicksLeft;
 			this.headTicksLeft--;
+		}
+		if (this.linear) {
+			if (this.remainingSteps > 0) {
+				// LinearInterpolationHandler#doInterpolate: alpha = 1/remainingSteps; Vec3#lerp, Mth.rotLerp(double), Mth.lerp
+				double alpha = 1.0 / this.remainingSteps;
+				this.x = this.x + alpha * (this.targetX - this.x);
+				this.y = this.y + alpha * (this.targetY - this.y);
+				this.z = this.z + alpha * (this.targetZ - this.z);
+				this.yRot = (float) (this.yRot + alpha * wrapDegreesD((double) this.targetYRot - this.yRot));
+				this.xRot = (float) (this.xRot + alpha * ((double) this.targetXRot - this.xRot));
+				this.remainingSteps--;
+			}
+			return;
 		}
 		if (this.queue.isEmpty()) {
 			return;
@@ -153,6 +216,18 @@ public final class EntityInterpolator {
 		this.z = this.fromZ + (s.z() - this.fromZ) * a;
 		this.yRot = (float) (this.fromYRot + wrapDegrees(s.yRot() - this.fromYRot) * a);
 		this.xRot = (float) (this.fromXRot + (s.xRot() - this.fromXRot) * a);
+	}
+
+	/** {@code Mth.wrapDegrees(double)}. */
+	static double wrapDegreesD(final double d) {
+		double r = d % 360.0;
+		if (r >= 180.0) {
+			r -= 360.0;
+		}
+		if (r < -180.0) {
+			r += 360.0;
+		}
+		return r;
 	}
 
 	public static float wrapDegrees(final float d) {

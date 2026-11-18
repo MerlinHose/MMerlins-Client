@@ -252,11 +252,13 @@ class VehicleIntegrationTest {
 				for (String g : got) {
 					trace.add(s.name() + " " + g);
 				}
-				List<String> ticks = got.stream().filter(g -> !g.startsWith("dismount ")).toList();
+				List<String> ticks = got.stream().filter(g -> !g.startsWith("dismount ") && !g.startsWith("after ")).toList();
+				List<String> after = got.stream().filter(g -> g.startsWith("after ")).toList();
 				String dismountLine = got.stream().filter(g -> g.startsWith("dismount ")).findFirst().orElse(null);
 				// Serverposition am Ende (Fahrzeug bzw. Spieler beim Laufen)
 				Thread.sleep(300);
 				double[] server = console.dataGet(s.walk() ? NAME : "@e[tag=m14v,limit=1]", "Pos");
+				double[] serverMotion = s.walk() ? new double[3] : console.dataGet("@e[tag=m14v,limit=1]", "Motion");
 				String[] last = ticks.getLast().split(" ");
 				double dx = Double.parseDouble(last[2]) - server[0];
 				double dy = Double.parseDouble(last[3]) - server[1];
@@ -270,7 +272,8 @@ class VehicleIntegrationTest {
 				List<String[]> ref = reference.get(s.name());
 				String cmp = "no reference";
 				if (ref != null) {
-					List<String[]> refTicks = ref.stream().filter(r -> !r[1].equals("dismount")).toList();
+					List<String[]> refTicks = ref.stream().filter(r -> !r[1].equals("dismount") && !r[1].equals("after")).toList();
+					List<String[]> refAfter = ref.stream().filter(r -> r[1].equals("after")).toList();
 					String[] refDismount = ref.stream().filter(r -> r[1].equals("dismount")).findFirst().orElse(null);
 					Comparison cmpr = new Comparison();
 					int n = Math.min(refTicks.size(), ticks.size());
@@ -291,6 +294,36 @@ class VehicleIntegrationTest {
 							cmpr.dismount = String.format(Locale.ROOT, "tick %s/%s |Δpos| %.3e", o[1], refDismount[2], d);
 						}
 					}
+					// Ticks nach dem Absteigen (Spieler): "after i x y z vx vy vz onGround", gleiche Indizes vergleichen
+					if (!refAfter.isEmpty()) {
+						double ap = 0;
+						double av = 0;
+						int firstAfter = -1;
+						int matched = 0;
+						for (String[] r : refAfter) {
+							for (String g : after) {
+								String[] o = g.split(" ");
+								if (!o[1].equals(r[2])) {
+									continue;
+								}
+								matched++;
+								double dp = 0;
+								double dv = 0;
+								for (int i = 0; i < 3; i++) {
+									dp = Math.max(dp, Math.abs(Double.parseDouble(o[2 + i]) - Double.parseDouble(r[3 + i])));
+									dv = Math.max(dv, Math.abs(Double.parseDouble(o[5 + i]) - Double.parseDouble(r[6 + i])));
+								}
+								if ((dp != 0 || dv != 0 || !o[8].equals(r[9])) && firstAfter < 0) {
+									firstAfter = Integer.parseInt(o[1]);
+								}
+								ap = Math.max(ap, dp);
+								av = Math.max(av, dv);
+							}
+						}
+						cmpr.dismountExact &= firstAfter < 0 && matched == refAfter.size();
+						cmpr.dismount = (cmpr.dismount == null ? "-" : cmpr.dismount) + String.format(Locale.ROOT,
+							"; after %d/%d first diff %d max|Δpos| %.3e |Δv| %.3e", matched, refAfter.size(), firstAfter, ap, av);
+					}
 					compared += cmpr.n;
 					exactTicks += cmpr.exactTicks;
 					if (cmpr.exactTicks == cmpr.n && n == ticks.size() && n == refTicks.size() && cmpr.dismountExact) {
@@ -298,8 +331,8 @@ class VehicleIntegrationTest {
 					}
 					cmp = cmpr + String.format(Locale.ROOT, " (ticks own %d / vanilla %d)", ticks.size(), refTicks.size());
 				}
-				report.add(String.format(Locale.ROOT, "%-20s %-16s end (%.4f %.4f %.4f) server |Δ| %.2e%s corrections %d; %s", s.name(), s.type(),
-					Double.parseDouble(last[2]), Double.parseDouble(last[3]), Double.parseDouble(last[4]), serverDiff, serverDriven ? " (serverseitig)" : "",
+				report.add(String.format(Locale.ROOT, "%-20s %-16s end (%.4f %.4f %.4f) server |Δ| %.2e%s motion (%.3e %.3e %.3e) corrections %d; %s", s.name(), s.type(),
+					Double.parseDouble(last[2]), Double.parseDouble(last[3]), Double.parseDouble(last[4]), serverDiff, serverDriven ? " (serverseitig)" : "", serverMotion[0], serverMotion[1], serverMotion[2],
 					session.movement().vehicleCorrections() - corrBefore, cmp));
 				if (!s.walk() && session.movement().ridingVehicle() >= 0) {
 					// nicht während der Folge abgestiegen: Schleichtaste wie ein Spieler

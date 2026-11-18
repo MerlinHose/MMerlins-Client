@@ -52,6 +52,8 @@ for i in $(seq 1 4800); do
     seen_end=$n_end; name=$(grep "\[VEHREF\] END" "$L" | tail -1 | sed -E 's/.*END ([^ ]+) .*/\1/')
     before=$(wc -l < "$SERVER/logs/latest.log"); server_cmd "data get entity @e[tag=m14v,limit=1] Pos"; sleep 0.4
     log "END $name client=$(grep "\[VEHREF\] END" "$L" | tail -1 | sed -E 's/.* at //') server=$(tail -n +$((before + 1)) "$SERVER/logs/latest.log" | grep -o "has the following entity data: .*" | head -1 | sed 's/has the following entity data: //')"
+    before=$(wc -l < "$SERVER/logs/latest.log"); server_cmd "data get entity @e[tag=m14v,limit=1] Motion"; sleep 0.4
+    log "END $name server motion=$(tail -n +$((before + 1)) "$SERVER/logs/latest.log" | grep -o "has the following entity data: .*" | head -1 | sed 's/has the following entity data: //')"
     server_cmd "ride $REF dismount"; server_cmd "kill @e[tag=m14v]"; server_cmd "kill @e[tag=m14o]"
   fi
   n_ready=$(grep -c "\[VEHREF\] READY" "$L")

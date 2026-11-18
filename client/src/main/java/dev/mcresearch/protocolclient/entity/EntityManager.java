@@ -570,7 +570,7 @@ public final class EntityManager {
 		e.z = e.baseZ = z;
 		e.yRot = yRot;
 		e.xRot = xRot;
-		e.display.addTarget(x, y, z, yRot, xRot, 1);
+		e.display.addLocalTarget(x, y, z, yRot, xRot);
 		e.localControl = true;
 	}
 
@@ -702,12 +702,41 @@ public final class EntityManager {
 		return v * v;
 	}
 
+	/**
+	 * M14 (Vergleich vehicle4, boat_into_boat): {@code ClientLevel#tickEntities} tickt in Einfügereihenfolge, Passagiere mit ihrem
+	 * Fahrzeug. Fährt der Spieler, sind alle vor dem eigenen Fahrzeug eingefügten Entities in diesem Tick schon interpoliert, wenn das
+	 * Fahrzeug sich bewegt (Kollision mit einem weggeschobenen Boot). Vor {@code MovementController#tick} aufrufen; {@link #tick()}
+	 * überspringt diese Entities dann.
+	 */
+	public synchronized void tickBeforeOwnVehicle() {
+		if (this.ownVehicle < 0 || !this.entities.containsKey(this.ownVehicle)) {
+			return;
+		}
+		for (ClientEntity e : this.entities.values()) {
+			if (e.id == this.ownVehicle) {
+				// Das Fahrzeug tickt vor seinem Passagier (positionRider): ein vom Server bewegtes Fahrzeug (Lore) wird hier interpoliert,
+				// damit Sitz und Spur dieses Ticks die neue Position haben. Selbst gesteuerte Fahrzeuge setzt setLocalVehicle.
+				if (!e.localControl) {
+					e.display.tick();
+					e.earlyTicked = true;
+				}
+				break;
+			}
+			e.display.tick();
+			e.earlyTicked = true;
+		}
+	}
+
 	/** Ein Client-Tick (Tick-Thread, 20/s): Interpolation weiterschalten. */
 	public synchronized void tick() {
 		long t0 = System.nanoTime();
 		this.tickCount++;
 		for (ClientEntity e : this.entities.values()) {
-			e.display.tick();
+			if (e.earlyTicked) {
+				e.earlyTicked = false;
+			} else {
+				e.display.tick();
+			}
 			e.anim.tick(e, e.display.x(), e.display.y(), e.display.z(), this.tickCount); // M14: AnimationszustÃ¤nde (docs/55 Â§4)
 		}
 		long dt = System.nanoTime() - t0;

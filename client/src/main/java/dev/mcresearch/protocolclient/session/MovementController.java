@@ -674,7 +674,8 @@ public final class MovementController {
 			return new double[]{r.x(), r.y(), r.z(), r.vx(), r.vy(), r.vz(), r.yRot(), r.onGround() ? 1 : 0, r.horizontalCollision() ? 1 : 0};
 		}
 		var v = this.entities.ownVehicleView();
-		return v == null ? new double[9] : new double[]{v.x(), v.y(), v.z(), v.motionX(), v.motionY(), v.motionZ(), v.yRot(), v.onGround() ? 1 : 0, 0};
+		// vom Server bewegtes Fahrzeug (Lore): interpolierte Position wie Entity#getX im Vanilla-Client, nicht der Basiswert des Pakets
+		return v == null ? new double[9] : new double[]{v.rx(), v.ry(), v.rz(), v.motionX(), v.motionY(), v.motionZ(), v.yRot(), v.onGround() ? 1 : 0, 0};
 	}
 	private int rideScriptTick;
 	/** Ticks nach dem Absteigen bis zur Spurzeile {@code dismount k x y z} (Erkennungstick mitgezählt, wie VehicleReferenceClient). */
@@ -966,6 +967,13 @@ public final class MovementController {
 		}
 		this.lastPhysicsInput = input;
 		RideScript ds = this.dismountScript;
+		if (ds != null && this.physics != null) {
+			// je Tick nach dem Absteigen eine Zeile "after i" wie VehicleReferenceClient (i = 1 Erkennungstick … 10)
+			Vec3d pv = this.physics.velocity();
+			ds.lines().add(String.join(" ", "after", Integer.toString(this.dismountWait + 1), Double.toString(this.player.x()),
+				Double.toString(this.player.y()), Double.toString(this.player.z()), Double.toString(pv.x()), Double.toString(pv.y()),
+				Double.toString(pv.z()), Boolean.toString(this.physics.onGround())));
+		}
 		if (ds != null && ++this.dismountWait >= DISMOUNT_TRACE_TICKS) {
 			ds.lines().add(String.join(" ", "dismount", Integer.toString(this.dismountK), Double.toString(this.player.x()), Double.toString(this.player.y()),
 				Double.toString(this.player.z())));

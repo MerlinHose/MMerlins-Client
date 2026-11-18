@@ -332,6 +332,7 @@ public final class ClientSession {
 				for (ServerboundPacket packet : interactionTick()) {
 					send(packet);
 				}
+				this.entities.tickBeforeOwnVehicle(); // M14: Vanilla-Tickreihenfolge beim Fahren
 				for (ServerboundPacket packet : this.movement.tick()) {
 					send(packet);
 				}

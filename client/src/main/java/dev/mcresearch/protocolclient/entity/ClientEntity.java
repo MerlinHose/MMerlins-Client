@@ -27,6 +27,8 @@ public final class ClientEntity {
 	final UUID uuid;
 	final EntityTypes.Type type;
 	final EntityInterpolator display;
+	/** M14: in diesem Tick schon vor dem eigenen Fahrzeug interpoliert ({@link EntityManager#tickBeforeOwnVehicle()}). */
+	boolean earlyTicked;
 	final long spawnTick;
 	// ---- bestätigter Zustand ----
 	double x, y, z;
@@ -60,7 +62,10 @@ public final class ClientEntity {
 		this.uuid = uuid;
 		this.type = type;
 		this.spawnTick = spawnTick;
-		this.display = new EntityInterpolator(Math.min(3, Math.max(1, type.updateInterval())));
+		String sn = type.shortName();
+		// M14: Boote/Flöße/Loren wie Vanilla mit LinearInterpolationHandler (3 Schritte, neues Ziel startet neu)
+		boolean linear = sn.endsWith("_boat") || sn.endsWith("_raft") || sn.endsWith("minecart");
+		this.display = new EntityInterpolator(Math.min(3, Math.max(1, type.updateInterval())), linear);
 		java.util.Arrays.fill(this.equipment, ItemStack.EMPTY);
 	}
 

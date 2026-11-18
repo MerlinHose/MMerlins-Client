@@ -143,4 +143,41 @@ class EntityInterpolatorTest {
 		}
 		return out;
 	}
+
+	/**
+	 * M14 (Vergleich vehicle5, boat_into_boat/minecart_push): Boote und Loren wie {@code LinearInterpolationHandler} – je Tick
+	 * {@code pos + 1/rest · (ziel − pos)}, ein neues Ziel ersetzt das alte und startet 3 Schritte neu (nicht nacheinander abarbeiten).
+	 */
+	@Test
+	void linearModeRestartsTowardsTheNewestTargetLikeVanilla() {
+		EntityInterpolator in = new EntityInterpolator(3, true);
+		in.snap(0.0, 64.0, 102.5, 0, 0);
+		in.addTarget(0.0, 64.0, 102.5075, 0, 0, 0);
+		double z = 102.5;
+		in.tick();
+		z = z + 1.0 / 3 * (102.5075 - z);
+		assertEquals(z, in.z(), 0.0); // bitgleich
+		in.addTarget(0.0, 64.0, 102.5175, 0, 0, 0); // neues Ziel vor Ablauf: 3 Schritte ab hier
+		in.tick();
+		z = z + 1.0 / 3 * (102.5175 - z);
+		assertEquals(z, in.z(), 0.0);
+		in.tick();
+		z = z + 1.0 / 2 * (102.5175 - z);
+		assertEquals(z, in.z(), 0.0);
+		in.tick();
+		assertEquals(102.5175, in.z(), 0.0);
+		in.tick(); // fertig: bleibt stehen
+		assertEquals(102.5175, in.z(), 0.0);
+		// gleiches Ziel erneut: kein Neustart
+		in.addTarget(0.0, 64.0, 103.0, 0, 0, 0);
+		in.tick();
+		double z1 = in.z();
+		in.addTarget(0.0, 64.0, 103.0, 0, 0, 0);
+		in.tick();
+		assertEquals(z1 + 1.0 / 2 * (103.0 - z1), in.z(), 0.0);
+		// selbst gesteuertes Fahrzeug: im nächsten Tick am Ziel
+		in.addLocalTarget(0.0, 64.0, 110.0, 0, 0);
+		in.tick();
+		assertEquals(110.0, in.z(), 0.0);
+	}
 }

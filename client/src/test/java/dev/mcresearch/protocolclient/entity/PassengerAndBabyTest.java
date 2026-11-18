@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.mcresearch.protocolclient.protocol.packet.Clientbound;
 import java.util.List;
@@ -161,5 +162,55 @@ class PassengerAndBabyTest {
 		// weiter als 0,2 entfernt: kein Stoß
 		dev.mcresearch.protocolclient.physics.Aabb far = new dev.mcresearch.protocolclient.physics.Aabb(-0.3, 64.0, -1.6, 0.3, 65.8, -0.95);
 		assertArrayEquals(new double[]{0, 0}, m.pushImpulse(far, 0.0, -1.25), 1e-12);
+	}
+
+	private static EntityManager ridingWithObstacleMoving() {
+		EntityManager m = new EntityManager();
+		m.setOwnId(500);
+		spawn(m, 5, OAK_BOAT, 0.0, 64.0, 10.0, 90); // Hindernis, vor dem eigenen Boot eingefügt
+		spawn(m, 10, OAK_BOAT, 0.0, 64.0, 0.0, 0);
+		m.handle(new Clientbound.SetPassengers(10, new int[]{500}));
+		m.handle(new Clientbound.MoveEntity(5, true, false, false, List.of(new Clientbound.DeltaStep(0, (short) 0, (short) 0, (short) 4096)), 0, 0, false)); // Server schiebt das Hindernis 1 Block weg
+		return m;
+	}
+
+	/**
+	 * Vergleich vehicle4 (boat_into_boat): Vanilla tickt Entities in Einfügereihenfolge. Das vor dem eigenen Boot eingefügte Hindernis
+	 * ist schon interpoliert, wenn das eigene Boot kollidiert; vorher sah unser Client die Hindernisposition einen Tick zu spät.
+	 */
+	@Test
+	void entitiesInsertedBeforeTheOwnVehicleAreInterpolatedBeforeItMoves() {
+		EntityManager early = ridingWithObstacleMoving();
+		EntityManager late = ridingWithObstacleMoving();
+		double before = early.collisionBoxes().getFirst().minZ();
+		early.tickBeforeOwnVehicle();
+		double stepped = early.collisionBoxes().getFirst().minZ();
+		assertTrue(stepped > before, "obstacle interpolated before the own vehicle moves: " + before + " -> " + stepped + " ownVehicle=" + early.ownVehicle());
+		late.tick();
+		assertEquals(late.collisionBoxes().getFirst().minZ(), stepped, 1e-12, "same single interpolation step as a normal tick");
+		early.tick(); // darf das Hindernis nicht ein zweites Mal weiterschalten
+		assertEquals(stepped, early.collisionBoxes().getFirst().minZ(), 1e-12);
+		// ohne eigenes Fahrzeug: nichts vorgezogen
+		EntityManager walking = new EntityManager();
+		spawn(walking, 5, OAK_BOAT, 0.0, 64.0, 10.0, 90);
+		walking.handle(new Clientbound.MoveEntity(5, true, false, false, List.of(new Clientbound.DeltaStep(0, (short) 0, (short) 0, (short) 4096)), 0, 0, false));
+		walking.tickBeforeOwnVehicle();
+		assertEquals(before, walking.collisionBoxes().getFirst().minZ(), 1e-12);
+	}
+
+	/** Vergleich vehicle4 (minecart_push): die vom Server bewegte eigene Lore tickt vor ihrem Passagier; Sitz und Spur sind nicht einen Tick alt. */
+	@Test
+	void serverDrivenOwnVehicleIsInterpolatedBeforeItsRider() {
+		EntityManager m = new EntityManager();
+		m.setOwnId(500);
+		spawn(m, 10, MINECART, 0.5, 64.0, 0.5, 0);
+		m.handle(new Clientbound.SetPassengers(10, new int[]{500}));
+		m.handle(new Clientbound.MoveEntity(10, true, false, false, List.of(new Clientbound.DeltaStep(0, (short) 0, (short) 0, (short) 4096)), 0, 0, false));
+		double before = m.ownSeatTick()[2];
+		m.tickBeforeOwnVehicle();
+		double seat = m.ownSeatTick()[2];
+		assertTrue(seat > before, "seat follows the interpolated cart in the same tick");
+		m.tick(); // kein zweiter Schritt
+		assertEquals(seat, m.ownSeatTick()[2], 1e-12);
 	}
 }

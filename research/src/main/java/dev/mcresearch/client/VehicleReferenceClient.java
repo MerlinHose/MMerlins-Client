@@ -166,7 +166,11 @@ public final class VehicleReferenceClient implements ClientModInitializer {
 			}
 			case DISMOUNTED -> {
 				// Absteigeposition (DismountHelper auf dem Server, Teleport an den Client) samt Fall danach; Zählung wie im eigenen Client:
-				// Erkennungstick + 9 weitere Ticks
+				// Erkennungstick + 9 weitere Ticks; je Tick eine Zeile "after i" (i = 2…10, Erkennungstick = 1) für den Vergleich nach dem Absteigen
+				Vec3 pd = player.getDeltaMovement();
+				this.trace.println(String.join(" ", this.scenarios.get(this.index).name(), "after", Integer.toString(this.ticksInPhase + 1),
+					Double.toString(player.getX()), Double.toString(player.getY()), Double.toString(player.getZ()), Double.toString(pd.x),
+					Double.toString(pd.y), Double.toString(pd.z), Boolean.toString(player.onGround())));
 				if (this.ticksInPhase >= DISMOUNT_TICKS - 1) {
 					Scenario s = this.scenarios.get(this.index);
 					this.trace.println(String.join(" ", s.name(), "dismount", Integer.toString(this.dismountK), Double.toString(player.getX()),
