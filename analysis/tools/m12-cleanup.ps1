@@ -24,7 +24,10 @@ foreach ($p in (Procs @("powershell.exe") | Where-Object { $_.CommandLine -like 
 foreach ($p in $scripts) { "stop script $($p.ProcessId)"; Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue }
 Start-Sleep 1
 $java = Procs @("java.exe", "javaw.exe") | Where-Object { IsProject $_ }
-foreach ($p in ($java | Where-Object { -not (IsServer $_) })) { "stop java $($p.ProcessId)"; Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue }
+# M14: Projekt-Gradle-Daemons (Markierung -XX:ErrorFile=mcresearch-daemon-hs_err_%p.log aus client/research gradle.properties) erst ganz am
+# Ende beenden, nachdem Testskripte, Test-JVMs und Server gestoppt sind
+function IsProjectDaemon($p) { return $p.CommandLine -like "*mcresearch-daemon-hs_err*" -and $p.CommandLine -like "*GradleDaemon*" }
+foreach ($p in ($java | Where-Object { -not (IsServer $_) -and -not (IsProjectDaemon $_) })) { "stop java $($p.ProcessId)"; Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue }
 $server = $java | Where-Object { IsServer $_ }
 if ($server) {
   $console = Join-Path $Root "server\console.in"
@@ -36,6 +39,9 @@ if ($server) {
     $ok = $false
     for ($i = 0; $i -lt 40; $i++) { if (-not (Get-Process -Id $s.ProcessId -ErrorAction SilentlyContinue)) { $ok = $true; break }; Start-Sleep 1 }
     if ($ok) { "server $($s.ProcessId) stopped via console" } else { "server $($s.ProcessId) forced"; Stop-Process -Id $s.ProcessId -Force } } }
+Start-Sleep 1
+foreach ($p in (Procs @("java.exe", "javaw.exe") | Where-Object { IsProjectDaemon $_ })) {
+  "stop gradle daemon $($p.ProcessId)"; Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue }
 foreach ($p in (Procs @("tail.exe") | Where-Object { IsProject $_ })) { "stop tail $($p.ProcessId)"; Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue }
 $props = Join-Path $Root "server\server.properties"
 $t = (Get-Content $props) -replace '^difficulty=.*', 'difficulty=easy' -replace '^network-compression-threshold=.*', 'network-compression-threshold=-1' -replace '^online-mode=.*', 'online-mode=false'

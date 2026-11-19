@@ -251,6 +251,23 @@ final class EntityRenderer implements AutoCloseable {
 		this.cameraYaw = yawDegrees;
 	}
 
+	/** M14-Leistungsanalyse: erstmaliges Laden von Texturen und Modellmeshes im Render-Thread (Anzahl, längste Dauer). */
+	static volatile long texLoads;
+	static volatile long meshLoads;
+	static volatile double loadMaxMs;
+	static volatile double loadTotalMs;
+
+	private static void noteLoad(final boolean texture, final long start) {
+		double ms = (System.nanoTime() - start) / 1e6;
+		if (texture) {
+			texLoads++;
+		} else {
+			meshLoads++;
+		}
+		loadTotalMs += ms;
+		loadMaxMs = Math.max(loadMaxMs, ms);
+	}
+
 	long flamesDrawn() {
 		return this.flamesDrawn;
 	}
@@ -529,12 +546,14 @@ final class EntityRenderer implements AutoCloseable {
 	private void drawLayer(final ModelLibrary.Model model, final ModelPose pose, final Mat4[] mats, final Mat4 rootPx, final int tex, final float[] tint,
 		final EntityLooks.Kind kind) {
 		GpuMesh[] m = this.meshes.computeIfAbsent(model.layer(), k -> {
+			long loadStart = System.nanoTime();
 			GpuMesh[] arr = new GpuMesh[model.parts().size()];
 			for (ModelLibrary.Part p : model.parts()) {
 				if (!p.cubes().isEmpty()) {
 					arr[p.index()] = new GpuMesh(ModelMesher.partMesh(model, p));
 				}
 			}
+			noteLoad(false, loadStart);
 			return arr;
 		});
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -875,6 +894,7 @@ final class EntityRenderer implements AutoCloseable {
 		if (t != null || this.missingTextures.contains(path)) {
 			return t;
 		}
+		long loadStart = System.nanoTime();
 		int w;
 		int h;
 		int[] argb;
@@ -926,6 +946,7 @@ final class EntityRenderer implements AutoCloseable {
 		} finally {
 			MemoryUtil.memFree(buf);
 		}
+		noteLoad(true, loadStart);
 		this.textures.put(path, id);
 		return id;
 	}

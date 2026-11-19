@@ -1,0 +1,183 @@
+# M14 grafischer Dauerbetrieb (docs/58 §6): 100 Entities wie m14-perf.txt (alle Modelle, Babys, Mannequins, Boote, Loren), danach
+# 6 Minuten mit Messfenster und EFRAME je Minute und wechselndem Blick; am Ende Entfernen, Heap und GPU-Freigabe (live GL objects).
+# Erzeugt aus m14-perf.txt. Aufruf: M6_DIFFICULTY=easy bash analysis/tools/m6-run.sh analysis/tools/m14-soak.txt <label> "--render-distance 8"
+server-console ${CONSOLE}
+wait-play
+console gamerule advance_time false
+console time set 6000
+console weather clear
+console gamerule spawn_mobs false
+console forceload add 288 -48 335 -1
+console kill @e[tag=m14p]
+console fill 290 99 -46 330 99 -4 minecraft:grass_block
+console fill 290 100 -46 330 104 -4 minecraft:air
+console fill 289 100 -47 331 101 -47 minecraft:oak_fence
+console fill 289 100 -3 331 101 -3 minecraft:oak_fence
+console fill 289 100 -47 289 101 -3 minecraft:oak_fence
+console fill 331 100 -47 331 101 -3 minecraft:oak_fence
+hide-gui on
+console gamemode creative ${NAME}
+console fill 309 107 1 311 107 3 minecraft:glass
+console tp ${NAME} 310.5 108 2.5 180 30
+wait 3
+wait-meshes
+perf-begin
+wait 10
+perf-end entities-0
+console summon chicken 292.5 100 -44.5 {Tags:[m14p]}
+console summon wolf 294.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon cat 296.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon horse 298.5 100 -44.5 {Tags:[m14p]}
+console summon rabbit 300.5 100 -44.5 {NoAI:1b,Age:-24000,Tags:[m14p]}
+console summon bee 302.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon creeper 304.5 100 -44.5 {Tags:[m14p]}
+console summon spider 306.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon enderman 308.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon villager 310.5 100 -44.5 {Age:-24000,Tags:[m14p]}
+wait 4
+look 180 30
+perf-begin
+wait 15
+perf-end entities-10
+entity-frame entities-10
+look-dump entities-10
+console summon iron_golem 312.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon drowned 314.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon pig 316.5 100 -44.5 {Tags:[m14p]}
+console summon cow 318.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon sheep 320.5 100 -44.5 {NoAI:1b,Age:-24000,Tags:[m14p]}
+console summon zombie 322.5 100 -44.5 {Tags:[m14p]}
+console summon skeleton 324.5 100 -44.5 {NoAI:1b,Tags:[m14p]}
+console summon mannequin 326.5 100 -44.5 {profile:{texture:"minecraft:entity/player/slim/alex",model:"slim"},NoAI:1b,Tags:[m14p]}
+console summon mannequin 328.5 100 -44.5 {profile:{texture:"minecraft:entity/player/wide/kai",model:"wide"},Tags:[m14p]}
+console summon oak_boat 292.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon minecart 294.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon chicken 296.5 100 -37.5 {Tags:[m14p]}
+console summon wolf 298.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon cat 300.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon horse 302.5 100 -37.5 {Age:-24000,Tags:[m14p]}
+console summon rabbit 304.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon bee 306.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon creeper 308.5 100 -37.5 {Tags:[m14p]}
+console summon spider 310.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon enderman 312.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon villager 314.5 100 -37.5 {Tags:[m14p]}
+console summon iron_golem 316.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon drowned 318.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon pig 320.5 100 -37.5 {Tags:[m14p]}
+console summon cow 322.5 100 -37.5 {NoAI:1b,Age:-24000,Tags:[m14p]}
+console summon sheep 324.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon zombie 326.5 100 -37.5 {Tags:[m14p]}
+console summon skeleton 328.5 100 -37.5 {NoAI:1b,Tags:[m14p]}
+console summon mannequin 292.5 100 -30.5 {profile:{texture:"minecraft:entity/player/slim/alex",model:"slim"},NoAI:1b,Tags:[m14p]}
+console summon mannequin 294.5 100 -30.5 {profile:{texture:"minecraft:entity/player/wide/kai",model:"wide"},Tags:[m14p]}
+console summon oak_boat 296.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon minecart 298.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon chicken 300.5 100 -30.5 {Tags:[m14p]}
+console summon wolf 302.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon cat 304.5 100 -30.5 {NoAI:1b,Age:-24000,Tags:[m14p]}
+console summon horse 306.5 100 -30.5 {Tags:[m14p]}
+console summon rabbit 308.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon bee 310.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon creeper 312.5 100 -30.5 {Tags:[m14p]}
+console summon spider 314.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+wait 4
+look 180 30
+perf-begin
+wait 15
+perf-end entities-50
+entity-frame entities-50
+look-dump entities-50
+console summon enderman 316.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon villager 318.5 100 -30.5 {Tags:[m14p]}
+console summon iron_golem 320.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon drowned 322.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon pig 324.5 100 -30.5 {Age:-24000,Tags:[m14p]}
+console summon cow 326.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon sheep 328.5 100 -30.5 {NoAI:1b,Tags:[m14p]}
+console summon zombie 292.5 100 -23.5 {Tags:[m14p]}
+console summon skeleton 294.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon mannequin 296.5 100 -23.5 {profile:{texture:"minecraft:entity/player/slim/alex",model:"slim"},NoAI:1b,Tags:[m14p]}
+console summon mannequin 298.5 100 -23.5 {profile:{texture:"minecraft:entity/player/wide/kai",model:"wide"},Tags:[m14p]}
+console summon oak_boat 300.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon minecart 302.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon chicken 304.5 100 -23.5 {Tags:[m14p]}
+console summon wolf 306.5 100 -23.5 {NoAI:1b,Age:-24000,Tags:[m14p]}
+console summon cat 308.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon horse 310.5 100 -23.5 {Tags:[m14p]}
+console summon rabbit 312.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon bee 314.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon creeper 316.5 100 -23.5 {Tags:[m14p]}
+console summon spider 318.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon enderman 320.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon villager 322.5 100 -23.5 {Tags:[m14p]}
+console summon iron_golem 324.5 100 -23.5 {NoAI:1b,Tags:[m14p]}
+console summon drowned 326.5 100 -23.5 {NoAI:1b,IsBaby:1b,Tags:[m14p]}
+console summon pig 328.5 100 -23.5 {Tags:[m14p]}
+console summon cow 292.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon sheep 294.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon zombie 296.5 100 -16.5 {Tags:[m14p]}
+console summon skeleton 298.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon mannequin 300.5 100 -16.5 {profile:{texture:"minecraft:entity/player/slim/alex",model:"slim"},NoAI:1b,Tags:[m14p]}
+console summon mannequin 302.5 100 -16.5 {profile:{texture:"minecraft:entity/player/wide/kai",model:"wide"},Tags:[m14p]}
+console summon oak_boat 304.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon minecart 306.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon chicken 308.5 100 -16.5 {Age:-24000,Tags:[m14p]}
+console summon wolf 310.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon cat 312.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon horse 314.5 100 -16.5 {Tags:[m14p]}
+console summon rabbit 316.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon bee 318.5 100 -16.5 {NoAI:1b,Age:-24000,Tags:[m14p]}
+console summon creeper 320.5 100 -16.5 {Tags:[m14p]}
+console summon spider 322.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon enderman 324.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon villager 326.5 100 -16.5 {Tags:[m14p]}
+console summon iron_golem 328.5 100 -16.5 {NoAI:1b,Tags:[m14p]}
+console summon drowned 292.5 100 -9.5 {NoAI:1b,Tags:[m14p]}
+console summon pig 294.5 100 -9.5 {Tags:[m14p]}
+console summon cow 296.5 100 -9.5 {NoAI:1b,Tags:[m14p]}
+console summon sheep 298.5 100 -9.5 {NoAI:1b,Tags:[m14p]}
+console summon zombie 300.5 100 -9.5 {IsBaby:1b,Tags:[m14p]}
+wait 4
+look 180 30
+perf-begin
+wait 15
+perf-end entities-100
+look 200 30
+perf-begin
+wait 60
+perf-end soak-t1min
+entity-frame soak-t1min
+look 160 30
+perf-begin
+wait 60
+perf-end soak-t2min
+entity-frame soak-t2min
+look 200 30
+perf-begin
+wait 60
+perf-end soak-t3min
+entity-frame soak-t3min
+look 160 30
+perf-begin
+wait 60
+perf-end soak-t4min
+entity-frame soak-t4min
+look 200 30
+perf-begin
+wait 60
+perf-end soak-t5min
+entity-frame soak-t5min
+look 160 30
+perf-begin
+wait 60
+perf-end soak-t6min
+entity-frame soak-t6min
+look-dump soak-end
+console kill @e[tag=m14p]
+wait 3
+console fill 309 107 1 311 107 3 minecraft:air
+console forceload remove 288 -48 335 -1
+console gamerule spawn_mobs true
+console gamerule advance_time true
+mark done

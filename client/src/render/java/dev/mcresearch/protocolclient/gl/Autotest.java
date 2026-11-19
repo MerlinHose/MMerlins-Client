@@ -403,11 +403,11 @@ final class Autotest implements AutoCloseable {
 				EntityRenderer.FrameInfo f = GameView.ENTITY_FRAME;
 				dev.mcresearch.protocolclient.entity.EntityManager.Stats st = session.entities().stats();
 				GameView.appendReport(this.report, String.format(java.util.Locale.ROOT,
-					"EFRAME %s entities=%d drawn=%d culled=%d debug=%d draws=%d entityCpuMs=%.3f fps=%.0f low1=%.0f avgMs=%.2f handleAvgUs=%.2f handleMaxUs=%.1f tickAvgUs=%.2f tickMaxUs=%.1f heapMB=%d flames=%d",
+					"EFRAME %s entities=%d drawn=%d culled=%d debug=%d draws=%d entityCpuMs=%.3f fps=%.0f low1=%.0f avgMs=%.2f handleAvgUs=%.2f handleMaxUs=%.1f tickAvgUs=%.2f tickMaxUs=%.1f heapMB=%d flames=%d texLoads=%d meshLoads=%d loadTotalMs=%.1f loadMaxMs=%.1f",
 					s[1].trim(), f.total(), f.drawn(), f.culled(), f.debugBoxes(), f.drawCalls(), f.cpuNanos() / 1e6, fps.fps(), fps.low1(), fps.avgMs(),
 					st.packetsHandled == 0 ? 0.0 : st.handleNanos / 1000.0 / st.packetsHandled, st.maxHandleNanos / 1000.0,
 					st.ticks == 0 ? 0.0 : st.tickNanos / 1000.0 / st.ticks, st.maxTickNanos / 1000.0,
-					(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) >> 20, f.flames()));
+					(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) >> 20, f.flames(), EntityRenderer.texLoads, EntityRenderer.meshLoads, EntityRenderer.loadTotalMs, EntityRenderer.loadMaxMs));
 				done = true;
 			}
 			case "look-dump" -> {
