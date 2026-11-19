@@ -89,6 +89,12 @@ public final class EntityLooks {
 				l.add(new Layer("minecraft:" + type + b + "#main", "entity/squid/" + type + b));
 				return look("squid", l);
 			}
+			case "blaze" -> {
+				// Grafiktest m14-gfx5: Debug-Box der feuerimmunen Lohe; rotierende Stäbe (BlazeModel#setupAnim) und Eigenleuchten
+				// (BlazeRenderer#getBlockLightLevel 15) nicht modelliert
+				l.add(new Layer("minecraft:blaze#main", "entity/blaze/blaze"));
+				return look("blaze", l);
+			}
 			case "cod" -> {
 				l.add(new Layer("minecraft:cod#main", "entity/fish/cod"));
 				return look("fish", l);
@@ -335,7 +341,7 @@ public final class EntityLooks {
 					}
 					return new Look("minecart", List.copyOf(l), 1, 1, 1, 0, false, 0, block);
 				}
-				return null;
+				return generic(type, baby, l);
 			}
 		}
 	}
@@ -371,6 +377,22 @@ public final class EntityLooks {
 
 	public static boolean isMinecart(final String type) {
 		return type.equals("minecart") || type.endsWith("_minecart");
+	}
+
+	/**
+	 * M14 (Grafiktest m14-gfx6: Debug-Box einer natürlich gespawnten Fledermaus): Grundmodell für Typen ohne eigenen Darstellungsplan,
+	 * wenn die Modellebene {@code minecraft:<typ>#main} (Baby: {@code <typ>_baby}) existiert; Textur nach dem 26.3-Schema
+	 * {@code entity/<typ>/<typ>}. Ohne Animation, Varianten und Sondertransformationen des jeweiligen Renderers (vereinfacht,
+	 * docs/58); fehlt die Textur, bleibt es bei der Debug-Box.
+	 */
+	private static Look generic(final String type, final boolean baby, final List<Layer> l) {
+		ModelLibrary lib = ModelLibrary.get();
+		String model = baby && lib.model("minecraft:" + type + "_baby#main") != null ? "minecraft:" + type + "_baby#main" : "minecraft:" + type + "#main";
+		if (lib.model(model) == null) {
+			return null;
+		}
+		l.add(new Layer(model, "entity/" + type + "/" + type));
+		return look("generic", l);
 	}
 
 	private static Look look(final String animator, final List<Layer> l) {

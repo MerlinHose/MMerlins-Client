@@ -318,6 +318,12 @@ class EntityModelSystemTest {
 		int squid = 130, glowSquid = 62, cod = 27, salmon = 113, pufferfish = 110, tropical = 140;
 		EntityLooks.Look sq = EntityLooks.look(spawn(m, 1, squid), c);
 		assertEquals("squid", sq.animator());
+		// Rückfall auf das Grundmodell (Fledermaus, m14-gfx6)
+		EntityLooks.Look bat = EntityLooks.look(spawn(m, 21, 10), c);
+		assertEquals("generic", bat.animator());
+		assertEquals("minecraft:bat#main", bat.layers().getFirst().model());
+		assertEquals("entity/bat/bat", bat.layers().getFirst().texture());
+		assertEquals("entity/blaze/blaze", EntityLooks.look(spawn(m, 20, 14), c).layers().getFirst().texture()); // Lohe (Typ 14)
 		assertEquals("entity/squid/squid", sq.layers().getFirst().texture());
 		assertEquals("minecraft:glow_squid_baby#main", EntityLooks.look(spawn(m, 2, glowSquid, 16, true), c).layers().getFirst().model());
 		assertEquals("minecraft:cod#main", EntityLooks.look(spawn(m, 3, cod), c).layers().getFirst().model());

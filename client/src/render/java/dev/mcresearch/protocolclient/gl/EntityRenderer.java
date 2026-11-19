@@ -376,7 +376,7 @@ final class EntityRenderer implements AutoCloseable {
 				drawDebug(base, v, 1f);
 			}
 			if (!ok) {
-				this.looks.put(v.id(), v.type().shortName() + " DEBUG");
+				this.looks.put(v.id(), v.type().shortName() + (v.type().shortName().equals("item") && !v.item().isEmpty() ? " " + this.items.name(v.item().itemId()) : "") + " DEBUG");
 			}
 			// M14: Feuer nach dem Modell (EntityRenderDispatcher: submit, dann submitFlame bei displayFireAnimation)
 			if (dev.mcresearch.protocolclient.view.FlameGeometry.showsFire(v.type().shortName(), v.flags(), false)) {
@@ -751,7 +751,22 @@ final class EntityRenderer implements AutoCloseable {
 		}
 		Integer blockTex = texture("block/" + name);
 		if (blockTex == null) {
-			return false;
+			// M14: Textur über das Item- bzw. Blockmodell (layer0, sonst Partikeltextur), z. B. grass_block → block/grass_block_top
+			String resolved = dev.mcresearch.protocolclient.view.model.ItemTextures.resolve(name, this::modelJson, n -> modelJson("..items/" + n));
+			Integer t = texture(resolved);
+			if (t == null) {
+				return false;
+			}
+			if (resolved.startsWith("item/")) {
+				glBindTexture(GL_TEXTURE_2D, t);
+				this.shader.set("uTextured", 1);
+				this.shader.set("uModel", base.multiply(Mat4.translation(0, bob + 0.25f, 0)).multiply(Mat4.rotationY(spin)).multiply(Mat4.scale(1 / 32f,
+					1 / 32f, 1 / 32f)));
+				this.itemQuad.draw();
+				this.drawCalls++;
+				return true;
+			}
+			blockTex = t;
 		}
 		glBindTexture(GL_TEXTURE_2D, blockTex);
 		this.shader.set("uTextured", 1);
@@ -777,6 +792,31 @@ final class EntityRenderer implements AutoCloseable {
 		this.shader.set("uModel", base.multiply(Mat4.translation(-w / 2, 0, -w / 2)).multiply(Mat4.scale(w / 16f, h / 16f, w / 16f)));
 		this.debugCube.draw();
 		this.drawCalls++;
+	}
+
+	private final Map<String, Map<?, ?>> modelJson = new HashMap<>();
+
+	/** Modell-JSON {@code assets/minecraft/models/<pfad>.json} aus der lokalen Installation (zwischengespeichert, auch Fehlschläge). */
+	private Map<?, ?> modelJson(final String path) {
+		if (this.modelJson.containsKey(path)) {
+			return this.modelJson.get(path);
+		}
+		Map<?, ?> out = null;
+		if (this.zip != null && path.matches("(\\.\\.)?[a-z0-9_/]+")) {
+			// "..items/<name>": Itemdefinition assets/minecraft/items/<name>.json (26.3)
+			String entry = path.startsWith("..items/") ? "assets/minecraft/items/" + path.substring(8) + ".json" : "assets/minecraft/models/" + path + ".json";
+			ZipEntry e = this.zip.getEntry(entry);
+			if (e != null && e.getSize() < 256 * 1024) {
+				try (InputStream in = this.zip.getInputStream(e)) {
+					Object o = dev.mcresearch.protocolclient.protocol.json.MiniJson.parse(new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8));
+					out = o instanceof Map<?, ?> m ? m : null;
+				} catch (IOException ex) {
+					out = null;
+				}
+			}
+		}
+		this.modelJson.put(path, out);
+		return out;
 	}
 
 	/** Rohdaten einer Tiervariante aus dem lokalen Datenpaket ({@code data/minecraft/<register>/<name>.json}), wenn der Server keine sandte. */

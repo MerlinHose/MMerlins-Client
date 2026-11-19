@@ -135,6 +135,18 @@ look 180 22
 wait 1
 screenshot ${OUT}/08-boats-passengers.png
 ride-dump boats-passengers
+# --- Wassertiere (docs/58 §5): Tintenfisch, Leuchttintenfisch (Baby), Kabeljau, großer Lachs, aufgeblasener Kugelfisch,
+# Tropenfisch groß/Muster 4 (BLOCKFISH)/rot/gelb (gepackt 1 | 3<<8 | 14<<16 | 4<<24 = 68027137)
+console summon squid 201.5 99.1 -16.5 {NoAI:1b,Tags:[m14,aqua]}
+console summon glow_squid 203.5 99.1 -16.5 {NoAI:1b,Age:-24000,Tags:[m14,aqua]}
+console summon cod 205.5 99.3 -16.5 {NoAI:1b,Tags:[m14,aqua]}
+console summon salmon 207.5 99.3 -16.5 {NoAI:1b,type:"large",Tags:[m14,aqua]}
+console summon pufferfish 209.5 99.3 -16.5 {NoAI:1b,PuffState:2,Tags:[m14,aqua]}
+console summon tropical_fish 211.5 99.3 -16.5 {NoAI:1b,Variant:68027137,Tags:[m14,aqua]}
+wait 1.5
+screenshot ${OUT}/08b-aquatic.png
+look-dump aquatic
+entity-frame aquatic
 look-dump boats
 # --- eigenes Boot: einsteigen per Rechtsklick, rudern, Kollision mit dem Beckenrand, aussteigen per Schleichen
 # fester Standblock am Floß: look-at erst nach dem Absetzen (Lauf gfx1: Spieler sank im Wasser, Strahl lief unter dem Floß durch)
