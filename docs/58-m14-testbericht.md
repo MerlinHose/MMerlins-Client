@@ -1,12 +1,15 @@
-# 58 – Testbericht M14 (Stand 2026-11-18): teilweise abgeschlossen
+# 58 – Testbericht M14 (Stand 2026-11-19): teilweise abgeschlossen
 
 **Status: M14 ist teilweise abgeschlossen.**
 
 - **Erledigt:**
-  - Der Tick-Vergleich der Fahrzeuge gegen den unveränderten Vanilla-Client ist grün: 16/16 Szenarien und 1125/1125 Ticks bitgenau (§3).
-  - 459 Unit-Tests sind grün.
-- **Bildvergleich:** Er wurde ausgeführt und zeigt drei Darstellungsunterschiede, die noch zu beheben sind (§5).
-- **Noch nicht ausgeführt:** Grafiktest mit Pferdeszene, Leistung RD2/RD8 und die Regression M1–M14 (§6). Sie würden durch die anstehenden Renderer-Korrekturen ungültig.
+  - Fahrzeugvergleich gegen Vanilla: 16/16 Szenarien, 1125/1125 Ticks bitgenau (§3).
+  - Die drei Darstellungsfehler aus dem Bildvergleich sind behoben, der Bildvergleich ist wiederholt (§5).
+  - Grafiktest mit Pferdeszene (§7), Leistung RD2/RD8 und grafischer Dauerbetrieb über 6 Minuten (§8).
+  - 466 Unit-Tests sind grün.
+- **Offen:**
+  - Die Regression M1–M14 (§9). Claude Code hat sie zweimal wegen knappen Arbeitsspeichers abgebrochen (Schritt 1 und vorher der Grafiktest).
+  - Ohne vollständige Regression gibt es keine Abschlusskennzeichnung.
 - **Konsequenz:**
   - Es gibt keinen Merge nach `main`.
   - Die echte Microsoft-Authentifizierung bleibt auf den letzten Meilenstein verschoben.
@@ -27,11 +30,14 @@
 
 | Bereich | Ergebnis |
 |---|---|
-| Unit-Tests | **459 grün** [G] |
+| Unit-Tests | **466 grün**, keiner übersprungen [G] |
 | Fahrzeugvergleich gegen Vanilla (`m14-vehicle9`) | **16/16 Szenarien, 1125/1125 Ticks bitgenau**, inklusive Absteigen und je 9 Folgeticks; 0 Serverabweichungen, 0 Korrekturen; `VehicleIntegrationTest` grün [G] |
 | Reproduzierbarkeit | Fahrzeugsuite und Diagnose zusammen in 13 Läufen; Vanilla selbst in bis zu 8 Wiederholungen je Szenario verglichen (§4) [G] |
-| Bildvergleich `m14-visual1` (6 Entity-Szenen) | meanΔE 6,57, meanSSIM 0,581. Modelle und Skins stimmen; 3 Darstellungsunterschiede und Szenenrauschen (§5) [G][O] |
-| Grafiktest, Leistung RD2/RD8, Regression M1–M14 | nicht ausgeführt [O] |
+| Bildvergleich (6 Entity-Szenen) | `m14-visual1`: meanΔE 6,57, meanSSIM 0,581 → nach den Korrekturen `m14-visual5`: **meanΔE 5,44, meanSSIM 0,623** (§5) [G] |
+| Grafiktest `m14-gfx7` | 241/241 Schritte, **debug=0** in allen Messbildern, Feuer 3 → 0, Entladen/Neuladen 129 → 0 → 126, 4/4 Positionsprüfungen, 0 GL-Objekte (§7) [G] |
+| Leistung RD2/RD8 | 59,2–60 FPS, 1 %-Low ≥ 59,2, p99 ≤ 16,9 ms bei bis zu 214 Entities (§8) [G] |
+| Dauerbetrieb 6 min (RD8, 100 Entities) | 59,9 FPS je Minute, 1 %-Low ≥ 59,3, Heap ohne Anstieg, 0 GL-Objekte (§8) [G] |
+| Regression M1–M14 | **nicht abgeschlossen**: Abbruch in Schritt 1 wegen Speichermangel (§9) [O] |
 
 ## 2. Testaufbau Fahrzeugvergleich
 
@@ -124,26 +130,97 @@ Im abschließenden Lauf `m14-vehicle9` war das Kriterium **nicht nötig**: Alle 
 | vehicle8 | 12/16 | 1087/1125 | Pferde ohne KI, Kriterium für 3 Szenarien |
 | **vehicle9** | **16/16** | **1125/1125** | Test grün |
 
-## 5. Bildvergleich `m14-visual1`
+## 5. Darstellungsfehler aus dem Bildvergleich (Ursache, Korrektur, Regressionstest)
 
-- **Aufbau:** 6 Szenen mit Haustieren, Pferden und Kaninchen, Monstern, Dorfbewohnern und Nutztieren, Humanoiden sowie Fahrzeugen mit Passagieren. Der Vanilla-Referenzclient und der eigene Grafikclient nehmen dieselbe Kameraposition ein.
-- **Ergebnis:**
-  - meanΔE 6,57, meanSSIM 0,581.
-  - 0 offene GL-Objekte beim Beenden, 0 externe Verbindungen.
-  - Modelle, Babyformen, Varianten und Mannequin-Skins (Classic und Slim) stimmen sichtbar überein; die Passagiere sitzen richtig.
+| Fehler | Ursache (Vanilla 26.3) | Korrektur | Test |
+|---|---|---|---|
+| Brennende Entities ohne Feuer | Feuerdarstellung fehlte; Vanilla `FlameFeatureRenderer`: kamerazugewandte Quads, s = Breite · 1,4, Lagen je 0,45, `fire_0`/`fire_1` aus dem animierten Blockatlas, Blocklicht 15, feuerimmune Typen ausgenommen. Zusätzlich lud unser Atlas nur `fire_0` (Vanilla fordert beide Sprites an). | `FlameGeometry` und `EntityRenderer#drawFlame` mit derselben Float-Arithmetik; beide Sprites werden angefordert. Ein Absturz durch eine zu kleine Mesh-Kapazität (m14-visual4) ist behoben. | `FlameGeometryTest` (Lagen, Versatz, Größen, Erlöschen, Kapazität), `RenderingM12Test#bothFireSpritesAreInTheBlockAtlasForBurningEntities` |
+| Kistenlore als Holzwürfel | Das Blockmodell `block/chest` ist leer (nur Partikeltextur); Vanilla ergänzt es über `BuiltInBlockModels` durch das Kistenmodell mit `ChestRenderer#modelTransformation`. Außerdem fehlte der typabhängige Standard-Anzeigeversatz (Kistenlore 8, Trichterlore 1, sonst 6), weil der Server Standardwerte nicht sendet. | Kistenmodell `chest#main` (Texturen normal/trapped/ender) über den vorhandenen Modellweg, Versatz je Typ | `EntityModelSystemTest` (`minecartDisplayOffset`) |
+| Dorfbewohner mit hautfarbenen Armen | Ohne Beruf hat der Dorfbewohner Standarddaten; der Server sendet das Feld nicht, unser Client brach ohne Feld vor der Typschicht ab | Standard plains/none/1 (`Villager#createDefaultVillagerData`) | `EntityModelSystemTest` (ohne Feld, Wüste mit Schmied, Baby) |
 
-| Befund | Einordnung |
+### Bildvergleich `m14-visual5`
+
+| Szene | ΔE | SSIM |
+|---|---|---|
+| 18 Haustiere | 5,08 | 0,633 |
+| 19 Pferde, Kaninchen | 5,26 | 0,628 |
+| 20 Monster (mit Feuer) | 6,34 | 0,602 |
+| 21 Dorfbewohner, Nutztiere | 5,21 | 0,631 |
+| 22 Humanoide (mit Feuer) | 5,56 | 0,615 |
+| 23 Fahrzeuge und Passagiere | 5,19 | 0,629 |
+| **Mittel** | **5,44** (vorher 6,57) | **0,623** (vorher 0,581) |
+
+- **Szenenaufbau:** keine Drops (`mob_drops`/`entity_drops`). Die vorige Szene wird unter die Welt teleportiert und dann entfernt; liegende Reste werden vor jeder Szene entfernt. Feste Brenndauer (`Fire`) statt zufälliger Sonnenentzündung. Kamera, Blickfeld, Tageszeit und Wetter sind in beiden Clients gleich.
+- **Gezielt geprüft (vergrößerte Ausschnitte):** Feuer an Spinne, Höhlenspinne und Ertrunkenen in Größe und Lagen wie Vanilla; Kiste in der Lore in Höhe, Schloss und Ausrichtung wie Vanilla; Dorfbewohner mit braunen Ärmeln.
+- **Verbleibende Unterschiede [E/O]:**
+  - keine Schatten unter Entities
+  - keine Partikel beim Enderman
+  - Animationsphase der Creeper-Ladung
+  - Himmelsfarbe und Wolken: Wolken hängen an der Weltzeit, die zwischen den Läufen weiterläuft
+  - Animationsphase des Feuers
+
+## 6. Weitere Modelle (Grafiktest)
+
+- **Debug-Boxen** traten auf bei natürlich gespawnten oder im Test beschworenen Typen ohne Plan (Tintenfisch, Lachs, Lohe, Fledermaus) und bei liegenden Gegenständen ohne gleichnamige Textur.
+- **Neu:**
+  - Tintenfisch und Leuchttintenfisch (Baby; Versatz aus `SquidRenderer#setupRotations`; ohne Schwimmneigung und Tentakelbewegung)
+  - Kabeljau, Lachs (3 Größen), Kugelfisch (3 Stufen)
+  - Tropenfisch (gepackte Variante: Muster, Grund- und Musterfarbe)
+  - Lohe (ohne Stabrotation und Eigenleuchten)
+  - Rückfall auf das Grundmodell `minecraft:<typ>#main` mit `entity/<typ>/<typ>` für Typen ohne eigenen Plan
+  - Gegenstände: Textur über die Itemdefinition (`items/*.json`, auch Spezialmodelle), `layer0` oder die Partikeltextur
+- **Tests:**
+  - `EntityModelSystemTest#aquaticMobsHaveLooksInsteadOfDebugBoxes`
+  - `ItemTexturesTest#everyRegisteredItemHasADrawableTexture`: jeder Gegenstand der Registry hat eine Textur
+
+## 7. Grafiktest `m14-gfx7`
+
+241/241 Schritte. Mindestens 29 FPS beim Szenenaufbau, sonst 59–60 FPS. 0 externe Verbindungen, 0 offene GL-Objekte; keine Ausnahme außer der erwarteten Discovery-Meldung (127.0.0.1:9).
+
+| Prüfung | Ergebnis |
 |---|---|
-| Brennende Untote (Tageslicht): Vanilla zeichnet Feuer am Entity, unser Client nicht | **[O]** fehlende Darstellung brennender Entities (`EntityRenderDispatcher`, Feuer-Sprites) |
-| Kistenlore: Vanilla zeigt die Kiste, unser Client einen Würfel mit Holzbretter-Textur | **[O]** bisher dokumentierte Vereinfachung (docs/55 §7); Kistenmodell `minecraft:chest#main` liegt vor |
-| Dorfbewohner: verschränkte Arme bei uns hautfarben, bei Vanilla braune Ärmel | **[O]** Ursache offen; Typ- und Berufsschichten werden gezeichnet |
-| Drops und Partikel aus dem Entfernen der vorherigen Szene, Wolkenstand, Himmelsfarbe | Szenenaufbau: Entfernen ohne Drops und feste Wolkenzeit nötig, bevor die Kennzahlen aussagekräftig sind |
+| Modelle, Varianten, Babys, Classic-/Slim-Skins, Skin-Ebenen | gezeichnet, `debug=0` in allen 7 Messbildern |
+| Wassertiere (beschworen) | Tintenfisch, Leuchttintenfisch-Baby, Kabeljau, großer Lachs, aufgeblasener Kugelfisch, Tropenfisch groß/Muster 4/rot-gelb |
+| Brennende Entities | Huhn, Schwein, Eisengolem brennen (3 Feuer), Lohe feuerimmun; nach `Fire:0s` 0 Feuer |
+| Passagiere, Boote, Floß, Kistenboot, Loren, Kistenlore | Sitzpositionen und Fahrten wie in §3; Schieben der Lore |
+| Pferd mit Reiter | Gehen und Sprung auf der Plattform, Entfernen während der Fahrt |
+| Entladen und Neuladen | 129 → 0 → 126 Entities |
+| Kollisionen | 4/4 Positionsprüfungen Client = Server (Absteigen, Pferd entfernt, Boot, Stoß durch Kuh) |
 
-## 6. Offene Prüfungen
+## 8. Leistung und Dauerbetrieb
 
-1. Die drei Darstellungsunterschiede aus §5 beheben, die Szenen bereinigen, den Bildvergleich wiederholen.
-2. Grafiktest mit Pferdeszene: `bash analysis/tools/m14-gfx-run.sh <label>`
-3. Leistung RD2/RD8 mit 10/50/100 Entities (`analysis/tools/m14-perf.txt`, `M6_DIFFICULTY=easy`), Stabilitätslauf, GPU-Freigabe.
-4. Regression M1–M14 nacheinander: `bash analysis/tools/m14-regression.sh [von] [bis]`
+Fenster 1280 × 720, VSync, RTX 3070. Messfenster je 15 s (Dauerbetrieb 60 s). „Entities“ = vom Client verfolgte Entities. Bei Renderdistanz 2 sieht der Client nur die Entities der nahen Chunks.
 
-Erst danach sind die Abschlusskennzeichnung und ein Merge nach `main` möglich.
+| Lauf | Fenster | Entities (verfolgt/gezeichnet) | Ø FPS | 1 %-Low | p99 ms | max ms | Draw Calls | Entity-CPU ms |
+|---|---|---|---|---|---|---|---|---|
+| RD2 | 10 / 50 / 100 | 5 / 4 / 45 (42) | 60,0 / 60,2 / 60,0 | 59,2 / 59,6 / 59,6 | ≤ 16,9 | ≤ 17,1 | 55–486 | 0,03–0,44 |
+| RD8 | 0 / 10 / 50 / 100 | – / 145 / 175 / 214 (175) | 59,7 / 59,6 / 59,2 / 60,0 | ≥ 59,2 | ≤ 16,9 | 83 / 67 / 100 / 18 | 1487–2412 | 0,41–1,13 |
+| Dauerbetrieb RD8, 6 × 60 s | 100 Entities | 120–224 (92–186) | 59,9 je Minute | 59,3–59,5 | ≤ 16,9 | 50–67 | 852–962 | 0,70–0,96 |
+
+- **GPU und Heap:**
+  - 0 offene GL-Objekte bei allen Läufen.
+  - Entity-Meshes RD8 bei 100 Entities: 330 Meshes / 363 KB, 68 Texturen.
+  - Heap im Dauerbetrieb im Sägezahn zwischen 179 und 326 MB, ohne Anstieg.
+- **Frühere 52–59 FPS bei 34–50 Entities:** treten nicht mehr auf.
+- **Einzelne Bilder mit 50–107 ms (1–3 je Fenster):**
+  - Untersucht und **nicht** durch Entities verursacht: Sie treten auch ohne Entities auf (`entities-0`).
+  - Das erstmalige Laden von Texturen und Meshes (neuer Zähler) dauerte zusammen 125 ms, höchstens 6,5 ms je Vorgang; in den Minuten 2–6 wurde nichts mehr geladen, und die Ausreißer blieben.
+  - Die Häufigkeit entspricht dem M12-Grundwert (6 Bilder > 33 ms in 6 Minuten). Ursache vermutlich Garbage Collection oder Betriebssystem-Scheduling **[O]**; ohne Einfluss auf 1 %-Low und p99.
+- **Optimierungen:** Keine nötig. Die Bildqualität ist unverändert, und die Vanilla-Vergleiche bleiben unberührt.
+
+## 9. Regression und Prozessverwaltung
+
+- **Regression M1–M14** (`analysis/tools/m14-regression.sh`, 45 Schritte einschließlich M13, M5/M11-Physikvergleichen, Fahrzeugvergleich, M14-Grafik/Leistung/Bildvergleich):
+  - Gestartet am 2026-11-19 um 18:14 mit 5324 MB frei.
+  - Claude Code hat den Lauf in **Schritt 1** (JUnit, M5-Physikvergleich mit Vanilla-Referenzclient) wegen knappen Arbeitsspeichers beendet. Die Projekt-JVMs erreichten bis zu 2501 MB, die freien Reserven sanken auf 2732 MB; andere Programme belegten mehrere GB.
+  - **Die Regression ist damit nicht ausgeführt [O].** Neustart ab Schritt 1: `bash analysis/tools/m14-regression.sh` (fortsetzbar mit `[von] [bis]`, erfolgreiche Schrittlogs bleiben erhalten).
+- **Aufräumen:**
+  - `analysis/tools/m12-cleanup.ps1` beendet jetzt auch übrig gebliebene Projekt-Gradle-Daemons. Erkannt werden sie an der Markierung `-XX:ErrorFile=mcresearch-daemon-hs_err_%p.log` aus `client/` und `research/gradle.properties`; `-D`-Eigenschaften erscheinen nicht in der Daemon-Kommandozeile.
+  - Daemons anderer Projekte bleiben unberührt.
+  - Beendet wird erst nach Testskripten, Test-JVMs und Server.
+  - Nach jedem Abbruch: 0 Projektprozesse, Konfiguration `difficulty=easy`, `network-compression-threshold=-1`, `online-mode=false`.
+
+## 10. Offene Prüfungen
+
+1. Vollständige Regression M1–M14 bei ausreichend freiem Speicher (Ziel ≥ 5000 MB frei während des Laufs).
+2. Danach Abschlusskennzeichnung und Merge nach `main`.
