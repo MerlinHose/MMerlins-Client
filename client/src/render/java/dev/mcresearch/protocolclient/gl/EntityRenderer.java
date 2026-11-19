@@ -134,9 +134,9 @@ final class EntityRenderer implements AutoCloseable {
 	private static final float RAD = (float) (Math.PI / 180.0);
 
 	/** Zähler je Bild (Leistungstest, docs/37 §4; M14: Modelle/Teile/Schichten, docs/58). */
-	record FrameInfo(int total, int drawn, int culled, int debugBoxes, int drawCalls, long cpuNanos, int layers, int modelled, long animNanos) {
+	record FrameInfo(int total, int drawn, int culled, int debugBoxes, int drawCalls, long cpuNanos, int layers, int modelled, long animNanos, int flames) {
 		FrameInfo(final int total, final int drawn, final int culled, final int debugBoxes, final int drawCalls, final long cpuNanos) {
-			this(total, drawn, culled, debugBoxes, drawCalls, cpuNanos, 0, 0, 0);
+			this(total, drawn, culled, debugBoxes, drawCalls, cpuNanos, 0, 0, 0, 0);
 		}
 	}
 
@@ -314,6 +314,7 @@ final class EntityRenderer implements AutoCloseable {
 		this.drawCalls = 0;
 		this.layerCount = 0;
 		this.animNanos = 0;
+		long flamesBefore = this.flamesDrawn;
 		this.context = new EntityLooks.Context(variants, this::variantFallback, gameTime, this::villagerHat, this.skins, this.items);
 		this.shader.use();
 		this.shader.set("uViewProj", viewProj);
@@ -394,7 +395,8 @@ final class EntityRenderer implements AutoCloseable {
 		this.seenDamage.keySet().retainAll(seen);
 		drawParticles(camX, camY, camZ, dtTicks);
 		glEnable(GL_CULL_FACE);
-		this.last = new FrameInfo(views.size(), drawn, culled, debug, this.drawCalls, System.nanoTime() - t0, this.layerCount, modelled, this.animNanos);
+		this.last = new FrameInfo(views.size(), drawn, culled, debug, this.drawCalls, System.nanoTime() - t0, this.layerCount, modelled, this.animNanos,
+			(int) (this.flamesDrawn - flamesBefore));
 	}
 
 	/** Darstellungsplan auflösen und zeichnen; false → Debug-Box. */
@@ -446,6 +448,10 @@ final class EntityRenderer implements AutoCloseable {
 				m = m.multiply(Mat4.translation(0, s * -2f / 16f, 0)); // Schleichen: Darstellung 2 Pixel tiefer (getRenderOffset)
 			}
 			m = m.multiply(Mat4.scale(s, s, s)).multiply(Mat4.rotationY((180f - v.rYRot()) * RAD));
+			if ("squid".equals(look.animator())) {
+				// SquidRenderer#setupRotations: +0,5 (Baby 0,25), Körperneigung, −1,2 (Baby −0,6); Neigung 0 (clientseitige Schwimmneigung nicht modelliert)
+				m = m.multiply(Mat4.translation(0f, v.baby() ? -0.35f : -0.7f, 0f));
+			}
 			if (type.equals("player") && swimAmount > 0) {
 				float xAngle = swimAmount * (-90f - v.rXRot());
 				m = m.multiply(Mat4.rotationX(xAngle * RAD));

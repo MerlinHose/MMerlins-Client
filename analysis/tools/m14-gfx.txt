@@ -231,6 +231,21 @@ console tp ${NAME} 236.7 100 -64.5 0 0
 wait 2
 ride-dump pushed-by-cow
 verify after-push
+# --- Brennende Entities (docs/58 §5): verschiedene Größen, feuerimmune Lohe; danach Erlöschen (Fire 0).
+# Keine Untoten: sie entzünden sich im Tageslicht zufällig neu.
+console summon chicken 201.5 100 -66.5 {NoAI:1b,Invulnerable:1b,Fire:32000s,Rotation:[0f,0f],Tags:[m14,burn]}
+console summon pig 203.5 100 -66.5 {NoAI:1b,Invulnerable:1b,Fire:32000s,Rotation:[0f,0f],Tags:[m14,burn]}
+console summon iron_golem 206.5 100 -66.5 {NoAI:1b,Invulnerable:1b,Fire:32000s,Rotation:[0f,0f],Tags:[m14,burn]}
+console summon blaze 209.5 100 -66.5 {NoAI:1b,Invulnerable:1b,Fire:32000s,Rotation:[0f,0f],Tags:[m14,burn]}
+console tp ${NAME} 205.5 101 -59.5 180 10
+wait 2
+screenshot ${OUT}/12-burning.png
+entity-frame burning
+console execute as @e[tag=burn] run data merge entity @s {Fire:0s}
+wait 1.5
+screenshot ${OUT}/13-extinguished.png
+entity-frame extinguished
+console kill @e[tag=burn]
 # --- Ende
 console kill @e[tag=m14]
 console fill 198 103 -70 250 103 -10 minecraft:air

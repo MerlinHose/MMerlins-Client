@@ -82,6 +82,52 @@ public final class EntityLooks {
 		boolean baby = v.baby();
 		List<Layer> l = new ArrayList<>();
 		switch (type) {
+			// M14 (Grafiktest m14-gfx3: Debug-Boxen für Wassertiere aus dem Teich). Datenfelder ab Mob 15: AbstractFish FROM_BUCKET 16,
+			// Salmon/Pufferfish/TropicalFish 17; AgeableMob-Baby 16. Fehlt ein Feld, gilt der Vanilla-Standard.
+			case "squid", "glow_squid" -> {
+				String b = baby ? "_baby" : "";
+				l.add(new Layer("minecraft:" + type + b + "#main", "entity/squid/" + type + b));
+				return look("squid", l);
+			}
+			case "cod" -> {
+				l.add(new Layer("minecraft:cod#main", "entity/fish/cod"));
+				return look("fish", l);
+			}
+			case "salmon" -> {
+				int size = v.data().get(17) instanceof Integer s ? s : 1; // Salmon.Variant.DEFAULT = MEDIUM (id 1)
+				String model = switch (size) {
+					case 0 -> "minecraft:salmon_small#main";
+					case 2 -> "minecraft:salmon_large#main";
+					default -> "minecraft:salmon#main";
+				};
+				l.add(new Layer(model, "entity/fish/salmon"));
+				return look("fish", l);
+			}
+			case "pufferfish" -> {
+				int puff = v.data().get(17) instanceof Integer p ? p : 0; // PUFF_STATE Standard 0
+				String model = switch (puff) {
+					case 0 -> "minecraft:pufferfish_small#main";
+					case 1 -> "minecraft:pufferfish_medium#main";
+					default -> "minecraft:pufferfish_big#main";
+				};
+				l.add(new Layer(model, "entity/fish/pufferfish"));
+				return look("fish", l);
+			}
+			case "tropical_fish" -> {
+				// gepackte Variante (TropicalFish#packVariant): Muster-ID (Größe | Index << 8), Grundfarbe << 16, Musterfarbe << 24;
+				// Standard KOB, weiß, weiß = 0. Tönung mit DyeColor#getTextureDiffuseColor (Renderer: Modell-Tönung, Musterschicht).
+				int packed = v.data().get(17) instanceof Integer p ? p : 0;
+				boolean large = (packed & 0xFF) == 1;
+				int index = (packed >> 8) & 0xFF;
+				int base = (packed >> 16) & 0xFF;
+				int pattern = (packed >>> 24) & 0xFF;
+				String model = large ? "minecraft:tropical_fish_large" : "minecraft:tropical_fish_small";
+				String letter = large ? "b" : "a";
+				l.add(new Layer(model + "#main", "entity/fish/tropical_" + letter, 0xFF000000 | DYE[Math.min(15, base)], Kind.CUTOUT));
+				l.add(new Layer(model + "#pattern", "entity/fish/tropical_" + letter + "_pattern_" + (index + 1), 0xFF000000 | DYE[Math.min(15, pattern)],
+					Kind.CUTOUT));
+				return look("fish", l);
+			}
 			case "pig" -> {
 				EntityVariants.Variant var = variant(c, "minecraft:pig_variant", v.data().get(19), "minecraft:temperate");
 				String model = baby ? "minecraft:pig_baby#main" : "cold".equals(model(var)) ? "minecraft:cold_pig#main" : "minecraft:pig#main";

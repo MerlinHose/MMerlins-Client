@@ -182,7 +182,7 @@ public final class ClientEntity {
 
 	/** Typen mit Baby-Flag an Index 16 (AgeableMob: DATA_BABY_ID; Zombie: eigenes DATA_BABY_ID ebenfalls 16), docs/54 §3. */
 	static final java.util.Set<String> BABY_TYPES = java.util.Set.of("pig", "cow", "sheep", "zombie", "chicken", "wolf", "cat", "ocelot", "horse", "donkey",
-		"mule", "skeleton_horse", "zombie_horse", "rabbit", "bee", "villager", "drowned");
+		"mule", "skeleton_horse", "zombie_horse", "rabbit", "bee", "villager", "drowned", "squid", "glow_squid"); // Tintenfische: AgeableWaterCreature
 
 	/** Schaf: Wollbyte Index 18 (Bits 0–3 Farbe, 0x10 geschoren). */
 	public int sheepWool() {

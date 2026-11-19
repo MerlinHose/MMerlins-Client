@@ -309,4 +309,32 @@ class EntityModelSystemTest {
 		assertEquals(4.0F, player.parts().get(player.part("right_arm")).cubes().getFirst().w());
 		assertNull(EntityLooks.look(spawn(new EntityManager(), 1, PLAYER), new EntityLooks.Context(null, null, 0, t -> "none", null, null)));
 	}
+
+	/** M14 (Grafiktest m14-gfx3: Debug-Boxen für Tintenfische und Lachse): Wassertiere mit Vanilla-Standardwerten bei fehlendem Feld. */
+	@Test
+	void aquaticMobsHaveLooksInsteadOfDebugBoxes() {
+		EntityManager m = new EntityManager();
+		EntityLooks.Context c = context(null);
+		int squid = 130, glowSquid = 62, cod = 27, salmon = 113, pufferfish = 110, tropical = 140;
+		EntityLooks.Look sq = EntityLooks.look(spawn(m, 1, squid), c);
+		assertEquals("squid", sq.animator());
+		assertEquals("entity/squid/squid", sq.layers().getFirst().texture());
+		assertEquals("minecraft:glow_squid_baby#main", EntityLooks.look(spawn(m, 2, glowSquid, 16, true), c).layers().getFirst().model());
+		assertEquals("minecraft:cod#main", EntityLooks.look(spawn(m, 3, cod), c).layers().getFirst().model());
+		assertEquals("minecraft:salmon#main", EntityLooks.look(spawn(m, 4, salmon), c).layers().getFirst().model(), "default MEDIUM");
+		assertEquals("minecraft:salmon_large#main", EntityLooks.look(spawn(m, 5, salmon, 17, 2), c).layers().getFirst().model());
+		assertEquals("minecraft:pufferfish_small#main", EntityLooks.look(spawn(m, 6, pufferfish), c).layers().getFirst().model());
+		assertEquals("minecraft:pufferfish_big#main", EntityLooks.look(spawn(m, 7, pufferfish, 17, 2), c).layers().getFirst().model());
+		// Standard: KOB (klein, Muster 1), weiß/weiß
+		EntityLooks.Look kob = EntityLooks.look(spawn(m, 8, tropical), c);
+		assertEquals(List.of("entity/fish/tropical_a", "entity/fish/tropical_a_pattern_1"),
+			kob.layers().stream().map(EntityLooks.Layer::texture).toList());
+		assertEquals(0xFF000000 | EntityLooks.DYE[0], kob.layers().getFirst().color());
+		// groß (1), Muster-Index 3 (BLOCKFISH), Grundfarbe 14 (rot), Musterfarbe 4 (gelb)
+		EntityLooks.Look block = EntityLooks.look(spawn(m, 9, tropical, 17, 1 | (3 << 8) | (14 << 16) | (4 << 24)), c);
+		assertEquals("minecraft:tropical_fish_large#pattern", block.layers().get(1).model());
+		assertEquals("entity/fish/tropical_b_pattern_4", block.layers().get(1).texture());
+		assertEquals(0xFF000000 | EntityLooks.DYE[14], block.layers().getFirst().color());
+		assertEquals(0xFF000000 | EntityLooks.DYE[4], block.layers().get(1).color());
+	}
 }
