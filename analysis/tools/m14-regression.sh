@@ -60,11 +60,11 @@ step "M12 HUD 1280 px" bash analysis/tools/m6-run.sh analysis/tools/m12-hud.txt 
 step "M12 visual suite (own client vs. Vanilla images of m12-v2)" env M12_VANILLA_FROM=v2 bash analysis/tools/m12-visual.sh m14-regress-visual own
 step "M13 encrypted login vs. Vanilla server (local simulation)" bash analysis/tools/m13-sim-vanilla.sh
 # M14: Entity-Grafik, Fahrzeugvergleich gegen Vanilla, Leistung (Renderdistanz 2 und 8), Entity-Bildvergleich (eigener Client gegen die
-# Vanilla-Bilder des Laufs m12-m14-visual1)
+# Vanilla-Bilder des Laufs m12-m14-visual5)
 step "M14 graphics" bash analysis/tools/m14-gfx-run.sh m14-regress-gfx
 step "M14 vehicles vs. Vanilla" bash analysis/tools/m14-vehicle-run.sh regress-vehicle
 step "M14 performance rd 2" env M6_DIFFICULTY=easy bash analysis/tools/m6-run.sh analysis/tools/m14-perf.txt m14-regress-perf-rd2 "--render-distance 2"
 step "M14 performance rd 8" env M6_DIFFICULTY=easy bash analysis/tools/m6-run.sh analysis/tools/m14-perf.txt m14-regress-perf-rd8 "--render-distance 8"
-step "M14 entity images (own client vs. Vanilla images of m14-visual1)" env M12_SCENES="$ROOT/analysis/tools/m14-scenes.txt" M12_DIFFICULTY=easy M6_DIFFICULTY=easy M12_VANILLA_FROM=m14-visual1 bash analysis/tools/m12-visual.sh m14-regress-visual own
+step "M14 entity images (own client vs. Vanilla images of m14-visual5)" env M12_SCENES="$ROOT/analysis/tools/m14-scenes.txt" M12_DIFFICULTY=easy M6_DIFFICULTY=easy M12_VANILLA_FROM=m14-visual5 bash analysis/tools/m12-visual.sh m14-regress-m14visual own
 log "config: $(grep -E '^(difficulty|network-compression-threshold|online-mode)=' server/server.properties | tr '\n' ' ')"
 log "=== regression done"

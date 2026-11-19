@@ -294,6 +294,21 @@ public final class EntityLooks {
 		}
 	}
 
+	/**
+	 * Anzeigeversatz einer Lore (Feld 12, Pixel): fehlt das Feld, gilt {@code getDefaultDisplayOffset} des Typs – Kistenlore 8,
+	 * Trichterlore 1, sonst 6 (der Server sendet Standardwerte nicht; Bildvergleich m14-visual2: Kiste saß zu tief).
+	 */
+	public static int minecartDisplayOffset(final String type, final Object field) {
+		if (field instanceof Integer o) {
+			return o;
+		}
+		return switch (type) {
+			case "chest_minecart" -> 8;
+			case "hopper_minecart" -> 1;
+			default -> 6;
+		};
+	}
+
 	/** Holzart eines Boot-Typs ({@code oak_boat}, {@code bamboo_chest_raft} …) oder null. */
 	public static String boatWood(final String type) {
 		for (String w : WOOD) {
@@ -339,11 +354,14 @@ public final class EntityLooks {
 		String noHat = baby ? "minecraft:villager_baby_no_hat#main" : "minecraft:villager_no_hat#main";
 		l.add(new Layer(model, baby ? "entity/villager/villager_baby" : "entity/villager/villager"));
 		int[] data = v.data().get(19) instanceof int[] d && d.length == 3 ? d : null;
+		// Der Server sendet nur vom Standard abweichende Werte (getNonDefaultValues). Fehlt das Feld, gilt
+		// Villager#createDefaultVillagerData: Typ plains (VillagerData.DEFAULT_TYPE), Beruf none, Stufe 1 – sonst fehlte die Typschicht
+		// (Bildvergleich m14-visual1: hautfarbene Arme beim Dorfbewohner ohne Beruf)
+		String type = data == null ? "plains" : EntityTypes.get().registryName("villager_type", data[0]);
+		String prof = data == null ? "none" : EntityTypes.get().registryName("villager_profession", data[1]);
 		if (data == null) {
-			return;
+			data = new int[]{-1, -1, 1};
 		}
-		String type = EntityTypes.get().registryName("villager_type", data[0]);
-		String prof = EntityTypes.get().registryName("villager_profession", data[1]);
 		if (type == null) {
 			return;
 		}

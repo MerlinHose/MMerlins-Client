@@ -225,6 +225,15 @@ class EntityModelSystemTest {
 		List<String> tex = villager.layers().stream().map(EntityLooks.Layer::texture).toList();
 		assertEquals(List.of("entity/villager/villager", "entity/villager/type/plains", "entity/villager/profession/librarian",
 			"entity/villager/profession_level/gold"), tex);
+		// m14-visual1: Dorfbewohner ohne Feld 19 (Standarddaten werden nicht gesendet) → Typ plains, kein Beruf; vorher fehlte die
+		// Typschicht und die Arme erschienen hautfarben. Weitere Varianten: Wüste mit Schmied, Baby (nur Typschicht)
+		assertEquals(List.of("entity/villager/villager", "entity/villager/type/plains"),
+			EntityLooks.look(spawn(m, 40, VILLAGER), c).layers().stream().map(EntityLooks.Layer::texture).toList());
+		assertEquals(List.of("entity/villager/villager", "entity/villager/type/desert", "entity/villager/profession/weaponsmith",
+			"entity/villager/profession_level/stone"),
+			EntityLooks.look(spawn(m, 41, VILLAGER, 19, new int[]{0, 14, 1}), c).layers().stream().map(EntityLooks.Layer::texture).toList());
+		assertEquals(List.of("entity/villager/villager_baby", "entity/villager/baby/plains"),
+			EntityLooks.look(spawn(m, 42, VILLAGER, 16, true), c).layers().stream().map(EntityLooks.Layer::texture).toList());
 		EntityLooks.Look creeper = EntityLooks.look(spawn(m, 5, CREEPER), c);
 		assertEquals(1.0F, creeper.scaleX(), 1e-6);
 		EntityLooks.Look spider = EntityLooks.look(spawn(m, 6, SPIDER), c);
@@ -237,6 +246,11 @@ class EntityModelSystemTest {
 		assertEquals("boat", EntityLooks.look(spawn(m, 10, OAK_BOAT), c).animator());
 		assertEquals("minecraft:boat/oak#main", EntityLooks.look(spawn(m, 11, OAK_BOAT), c).layers().getFirst().model());
 		assertEquals("minecart", EntityLooks.look(spawn(m, 12, MINECART), c).animator());
+		// m14-visual2: Anzeigeversatz ohne Feld 12 je Typ (getDefaultDisplayOffset): Kistenlore 8, Trichterlore 1, sonst 6
+		assertEquals(8, EntityLooks.minecartDisplayOffset("chest_minecart", null));
+		assertEquals(1, EntityLooks.minecartDisplayOffset("hopper_minecart", null));
+		assertEquals(6, EntityLooks.minecartDisplayOffset("tnt_minecart", null));
+		assertEquals(3, EntityLooks.minecartDisplayOffset("chest_minecart", 3));
 	}
 
 	@Test

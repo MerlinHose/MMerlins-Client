@@ -281,4 +281,14 @@ class RenderingM12Test {
 		assertEquals(2f, first, "farthest first");
 		assertEquals(0f, last, "nearest last");
 	}
+
+	/** M14 (m14-visual3): beide Feuer-Sprites im Blockatlas, animiert – sonst fehlt das Feuer brennender Entities. */
+	@Test
+	void bothFireSpritesAreInTheBlockAtlasForBurningEntities() {
+		for (String s : new String[]{"block/fire_0", "block/fire_1"}) {
+			TextureAtlas.Sprite sprite = models.atlas().get(s);
+			org.junit.jupiter.api.Assertions.assertNotNull(sprite, s);
+			org.junit.jupiter.api.Assertions.assertTrue(sprite.animated(), s + " animated");
+		}
+	}
 }

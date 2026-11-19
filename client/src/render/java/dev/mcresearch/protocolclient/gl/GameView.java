@@ -135,6 +135,7 @@ final class GameView {
 		dev.mcresearch.protocolclient.view.env.EnvironmentState env = new dev.mcresearch.protocolclient.view.env.EnvironmentState(envData);
 		dev.mcresearch.protocolclient.view.env.FogModel fogModel = new dev.mcresearch.protocolclient.view.env.FogModel();
 		dev.mcresearch.protocolclient.view.TextureAtlas cpuAtlas = models instanceof dev.mcresearch.protocolclient.view.ResourceModels rm ? rm.atlas() : null;
+				entityRenderer.setBlockAtlas(atlas, cpuAtlas); // M14: Feuer brennender Entities aus dem Blockatlas
 		long lastEnvTick = -1;
 		long lastFrameNanos = System.nanoTime();
 		float flicker = 0f;
@@ -409,6 +410,7 @@ final class GameView {
 				List<dev.mcresearch.protocolclient.entity.EntityManager.View> eviews = List.of();
 				if (rs.ready() && session.playing()) {
 					eviews = session.entities().snapshot(session.entities().partialTick(now), session.gameMode());
+					entityRenderer.setCameraYaw(rs.yaw());
 					entityRenderer.draw(vp, new Frustum(vp), cx, cy, cz, eviews, world, fogColor, fogStart, fogEnd, now, session.entities().variants(),
 						session.levelEnvironment().gameTime());
 					ENTITY_FRAME = entityRenderer.lastFrame();

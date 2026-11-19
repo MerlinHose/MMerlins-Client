@@ -164,6 +164,12 @@ final class EntityRenderer implements AutoCloseable {
 	private final GpuMesh itemQuad;
 	/** Würfel 0…16 mit der ganzen Textur auf jeder Seite (Block-Items am Boden, Blockinhalte). */
 	private final GpuMesh texCube;
+	/** M14: Feuer um brennende Entities (Blockatlas mit animierten fire_0/fire_1, Meshes je Lagenzahl). */
+	private TextureAtlasGl blockAtlas;
+	private dev.mcresearch.protocolclient.view.TextureAtlas blockSprites;
+	private float cameraYaw;
+	private final Map<Integer, GpuMesh> flameMeshes = new HashMap<>();
+	private long flamesDrawn;
 	private final ItemRegistry items = ItemRegistry.get();
 	private FrameInfo last = new FrameInfo(0, 0, 0, 0, 0, 0);
 	private long lastFrameNanos = -1;
@@ -232,6 +238,65 @@ final class EntityRenderer implements AutoCloseable {
 
 	SkinManager skins() {
 		return this.skins;
+	}
+
+	/** M14: Blockatlas (GPU und Sprite-Tabelle) für das Feuer brennender Entities; null → kein Feuer. */
+	void setBlockAtlas(final TextureAtlasGl gl, final dev.mcresearch.protocolclient.view.TextureAtlas sprites) {
+		this.blockAtlas = gl;
+		this.blockSprites = sprites;
+	}
+
+	/** M14: Kameragier für die kamerazugewandten Feuer-Quads ({@code Camera}: Drehung um Y = π − Gier). */
+	void setCameraYaw(final float yawDegrees) {
+		this.cameraYaw = yawDegrees;
+	}
+
+	long flamesDrawn() {
+		return this.flamesDrawn;
+	}
+
+	/**
+	 * Feuer wie {@code FlameFeatureRenderer}: Skalierung s = Breite · 1,4, Drehung zur Kamera, z-Versatz, Lagen aus {@link
+	 * dev.mcresearch.protocolclient.view.FlameGeometry}; Blocklicht 15 (uLight bereits für brennende Entities gesetzt), Normale (0, 1, 0).
+	 */
+	private void drawFlame(final EntityManager.View v, final Mat4 base) {
+		if (this.blockAtlas == null || this.blockSprites == null) {
+			return;
+		}
+		var f0 = this.blockSprites.get("block/fire_0");
+		var f1 = this.blockSprites.get("block/fire_1");
+		if (f0 == null || f1 == null) {
+			return;
+		}
+		int layers = dev.mcresearch.protocolclient.view.FlameGeometry.layers(v.width(), v.height());
+		if (layers <= 0) {
+			return;
+		}
+		int key = layers * 2 + (netherLighting ? 1 : 0);
+		GpuMesh mesh = this.flameMeshes.get(key);
+		if (mesh == null) {
+			// Lichtfaktor der Normale (0, 1, 0) mit denselben Lichtrichtungen wie die Modelle (Shader-Formel, uDiffuse aus)
+			float[] l1 = netherLighting ? NETHER_LIGHT1 : LIGHT1;
+			float lf = Math.min(1f, (Math.max(0f, LIGHT0[1]) + Math.max(0f, l1[1])) * 0.6f + 0.4f);
+			int g = Math.round(lf * 255);
+			dev.mcresearch.protocolclient.view.MeshBuilder b = dev.mcresearch.protocolclient.view.FlameGeometry.builder(layers);
+			dev.mcresearch.protocolclient.view.FlameGeometry.build(b, layers, new float[]{f0.u0(), f0.v0(), f0.u1(), f0.v1()},
+				new float[]{f1.u0(), f1.v0(), f1.u1(), f1.v1()}, dev.mcresearch.protocolclient.view.MeshBuilder.rgba(g, g, g, 255));
+			mesh = new GpuMesh(b.toArray());
+			this.flameMeshes.put(key, mesh);
+		}
+		float s = dev.mcresearch.protocolclient.view.FlameGeometry.scale(v.width());
+		Mat4 m = base.multiply(Mat4.scale(s, s, s)).multiply(Mat4.rotationY((float) Math.PI - this.cameraYaw * RAD))
+			.multiply(Mat4.translation(0f, 0f, dev.mcresearch.protocolclient.view.FlameGeometry.zOffset(v.width(), v.height())));
+		this.blockAtlas.bind();
+		this.shader.set("uTextured", 1);
+		this.shader.set("uDiffuse", 0);
+		this.shader.set("uTint", 1f, 1f, 1f, 1f);
+		this.shader.set("uModel", m);
+		mesh.draw();
+		this.shader.set("uDiffuse", 1);
+		this.drawCalls++;
+		this.flamesDrawn++;
 	}
 
 	/** Zeichnet alle Entities; Kamera relativ (wie die Chunks), Nebel wie die Welt. */
@@ -312,6 +377,10 @@ final class EntityRenderer implements AutoCloseable {
 			if (!ok) {
 				this.looks.put(v.id(), v.type().shortName() + " DEBUG");
 			}
+			// M14: Feuer nach dem Modell (EntityRenderDispatcher: submit, dann submitFlame bei displayFireAnimation)
+			if (dev.mcresearch.protocolclient.view.FlameGeometry.showsFire(v.type().shortName(), v.flags(), false)) {
+				drawFlame(v, base);
+			}
 		}
 		this.swim.keySet().retainAll(seen);
 		this.looks.keySet().retainAll(seen);
@@ -361,7 +430,7 @@ final class EntityRenderer implements AutoCloseable {
 			Mat4 m = base.multiply(Mat4.translation(0, 0.375f, 0)).multiply(Mat4.rotationY((180f - v.rYRot()) * RAD)).multiply(Mat4.rotationZ(-v.rXRot()
 				* RAD)).multiply(vehicleHurt(v));
 			if (look.carriedBlock() != null) {
-				int offset = v.data().get(12) instanceof Integer o ? o : 6;
+				int offset = EntityLooks.minecartDisplayOffset(v.type().shortName(), v.data().get(12));
 				drawBlock(look.carriedBlock(), m.multiply(Mat4.scale(0.75f, 0.75f, 0.75f)).multiply(Mat4.translation(-0.5f, (offset - 8) / 16.0f, 0.5f))
 					.multiply(Mat4.rotationY(90 * RAD)), tint);
 			}
@@ -514,8 +583,14 @@ final class EntityRenderer implements AutoCloseable {
 				break;
 			}
 		}
-		if (name.equals("chest")) {
-			tex = texture("block/oak_planks");
+		String chestTex = switch (name) {
+			case "chest" -> "entity/chest/normal";
+			case "trapped_chest" -> "entity/chest/trapped";
+			case "ender_chest" -> "entity/chest/ender";
+			default -> null;
+		};
+		if (chestTex != null && drawChest(chestTex, m, tint)) {
+			return;
 		}
 		if (tex == null) {
 			return;
@@ -526,6 +601,27 @@ final class EntityRenderer implements AutoCloseable {
 		this.shader.set("uModel", m.multiply(Mat4.scale(1 / 16f, 1 / 16f, 1 / 16f)));
 		this.texCube.draw();
 		this.drawCalls++;
+	}
+
+	/**
+	 * M14: Kiste als Anzeigeblock (Kistenlore). Das Blockmodell {@code block/chest} ist leer (nur Partikeltextur); Vanilla ergänzt es in
+	 * {@code BuiltInBlockModels} durch das Kistenmodell ({@code ChestSpecialRenderer}, Ebene {@code chest#main}, Textur
+	 * {@code entity/chest/normal}) mit {@code ChestRenderer#modelTransformation}: Drehung um Y um −Gier(Blickrichtung) um (0,5; 0; 0,5).
+	 * Anzeigezustand der Kistenlore: Blickrichtung Nord (Gier 180). Modell im Blockraum (Pixel/16, aufrecht).
+	 */
+	private boolean drawChest(final String texturePath, final Mat4 m, final float[] tint) {
+		String layer = "minecraft:chest#main";
+		ModelLibrary.Model model = this.library.model(layer);
+		Integer tex = texture(texturePath);
+		if (model == null || tex == null) {
+			return false;
+		}
+		ModelPose pose = this.poses.computeIfAbsent(layer, k -> new ModelPose(model));
+		Mat4 rootPx = m.multiply(Mat4.translation(0.5f, 0f, 0.5f)).multiply(Mat4.rotationY(-180f * RAD)).multiply(Mat4.translation(-0.5f, 0f, -0.5f))
+			.multiply(Mat4.scale(1 / 16f, 1 / 16f, 1 / 16f));
+		drawLayer(model, pose, pose.matrices(), rootPx, tex, new float[]{tint[0], tint[1], tint[2], 1f}, EntityLooks.Kind.CUTOUT);
+		this.layerCount++;
+		return true;
 	}
 
 	private static int[] texturedCube() {
@@ -798,6 +894,10 @@ final class EntityRenderer implements AutoCloseable {
 			}
 		}
 		this.meshes.clear();
+		for (GpuMesh g : this.flameMeshes.values()) {
+			g.close();
+		}
+		this.flameMeshes.clear();
 		this.poses.clear();
 		for (int t : this.textures.values()) {
 			glDeleteTextures(t);

@@ -149,6 +149,10 @@ public final class ResourceModels implements BlockModelProvider {
 			}
 			FluidSprites water = new FluidSprites(sprite("block/water_still"), sprite("block/water_flow"), sprite("block/water_overlay"));
 			FluidSprites lava = new FluidSprites(sprite("block/lava_still"), sprite("block/lava_flow"), null);
+			// M14: Feuer brennender Entities braucht beide Sprites (ModelBakery.FIRE_0/FIRE_1 werden in Vanilla ausdrücklich angefordert;
+			// das Standardmodell des Feuerblocks verwendet nur fire_0)
+			sprite("block/fire_0");
+			sprite("block/fire_1");
 			String summary = String.format(Locale.ROOT, "%d states, %d textures (%d animated) in %dx%d atlas, %d models, %d debug states%s", out.length,
 				this.atlas.spriteCount(), this.atlas.animatedSprites().size(), this.atlas.size(), this.atlas.size(), this.modelJson.size(), this.debugStates,
 				this.problems.isEmpty() ? "" : ", e.g. " + this.problems.getFirst());

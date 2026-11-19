@@ -207,6 +207,10 @@ build execute in minecraft:the_nether run setblock 3 91 -2 fire
 build execute in minecraft:the_nether run fill -10 90 10 10 96 10 netherrack
 build execute in minecraft:the_nether run setblock -2 90 9 glowstone
 build execute in minecraft:the_nether run fillbiome -16 64 -16 15 127 15 minecraft:nether_wastes
+build gamerule mob_drops false
+build gamerule entity_drops false
+setup 18-m14-pets kill @e[type=item,x=272,y=100,z=272,dx=88,dy=100,dz=88]
+setup 18-m14-pets tp @e[tag=m14] 322.5 -100 342.5
 setup 18-m14-pets kill @e[tag=m14]
 setup 18-m14-pets summon chicken 312.5 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 18-m14-pets summon chicken 314.5 150 342.5 {Age:-24000,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
@@ -219,6 +223,8 @@ setup 18-m14-pets summon cat 326.5 150 342.5 {variant:"minecraft:calico",NoAI:1b
 setup 18-m14-pets summon cat 328.5 150 342.5 {variant:"minecraft:black",Owner:[I;903883492,-1477296760,-1642599272,-1810035978],CollarColor:11b,Sitting:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 18-m14-pets summon cat 330.5 150 342.5 {Age:-24000,variant:"minecraft:siamese",NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 scene 18-m14-pets 322.5 150 334.5 0 12 60
+setup 19-m14-horses-rabbits kill @e[type=item,x=272,y=100,z=272,dx=88,dy=100,dz=88]
+setup 19-m14-horses-rabbits tp @e[tag=m14] 322.5 -100 342.5
 setup 19-m14-horses-rabbits kill @e[tag=m14]
 setup 19-m14-horses-rabbits summon horse 312.5 150 342.5 {Variant:515,Tame:1b,equipment:{saddle:{id:"minecraft:saddle",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 19-m14-horses-rabbits summon horse 315.0 150 342.5 {Variant:4,Tame:1b,equipment:{body:{id:"minecraft:diamond_horse_armor",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
@@ -230,17 +236,21 @@ setup 19-m14-horses-rabbits summon bee 327.5 150 342.5 {NoAI:1b,Silent:1b,Invuln
 setup 19-m14-horses-rabbits summon bee 330.0 150 342.5 {HasNectar:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 19-m14-horses-rabbits summon bee 332.5 150 342.5 {Age:-24000,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 scene 19-m14-horses-rabbits 322.5 150 334.5 0 12 60
+setup 20-m14-hostile kill @e[type=item,x=272,y=100,z=272,dx=88,dy=100,dz=88]
+setup 20-m14-hostile tp @e[tag=m14] 322.5 -100 342.5
 setup 20-m14-hostile kill @e[tag=m14]
 setup 20-m14-hostile summon creeper 312.5 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 20-m14-hostile summon creeper 315.0 150 342.5 {powered:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
-setup 20-m14-hostile summon spider 317.5 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
-setup 20-m14-hostile summon cave_spider 320.0 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon spider 317.5 150 342.5 {Fire:30000s,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon cave_spider 320.0 150 342.5 {Fire:30000s,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 20-m14-hostile summon enderman 322.5 150 342.5 {carriedBlockState:{Name:"minecraft:grass_block"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 20-m14-hostile summon iron_golem 325.0 150 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 20-m14-hostile summon iron_golem 327.5 150 342.5 {Health:20f,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
-setup 20-m14-hostile summon drowned 330.0 150 342.5 {equipment:{mainhand:{id:"minecraft:trident",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
-setup 20-m14-hostile summon drowned 332.5 150 342.5 {IsBaby:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon drowned 330.0 150 342.5 {Fire:30000s,equipment:{mainhand:{id:"minecraft:trident",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 20-m14-hostile summon drowned 332.5 150 342.5 {Fire:30000s,IsBaby:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 scene 20-m14-hostile 322.5 150 334.5 0 12 60
+setup 21-m14-villagers-farm kill @e[type=item,x=272,y=100,z=272,dx=88,dy=100,dz=88]
+setup 21-m14-villagers-farm tp @e[tag=m14] 322.5 -100 342.5
 setup 21-m14-villagers-farm kill @e[tag=m14]
 setup 21-m14-villagers-farm summon villager 312.5 150 342.5 {VillagerData:{type:"minecraft:plains",profession:"minecraft:librarian",level:3},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 21-m14-villagers-farm summon villager 315.0 150 342.5 {VillagerData:{type:"minecraft:desert",profession:"minecraft:farmer",level:1},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
@@ -252,14 +262,18 @@ setup 21-m14-villagers-farm summon cow 327.5 150 342.5 {Age:-24000,NoAI:1b,Silen
 setup 21-m14-villagers-farm summon sheep 330.0 150 342.5 {Color:11b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 21-m14-villagers-farm summon sheep 332.5 150 342.5 {Age:-24000,Color:6b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 scene 21-m14-villagers-farm 322.5 150 334.5 0 12 60
+setup 22-m14-humanoids kill @e[type=item,x=272,y=100,z=272,dx=88,dy=100,dz=88]
+setup 22-m14-humanoids tp @e[tag=m14] 322.5 -100 342.5
 setup 22-m14-humanoids kill @e[tag=m14]
-setup 22-m14-humanoids summon zombie 312.5 150 342.5 {equipment:{head:{id:"minecraft:golden_helmet",count:1},chest:{id:"minecraft:iron_chestplate",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
-setup 22-m14-humanoids summon zombie 315.0 150 342.5 {IsBaby:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
-setup 22-m14-humanoids summon skeleton 317.5 150 342.5 {equipment:{mainhand:{id:"minecraft:bow",count:1},feet:{id:"minecraft:diamond_boots",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon zombie 312.5 150 342.5 {Fire:30000s,equipment:{head:{id:"minecraft:golden_helmet",count:1},chest:{id:"minecraft:iron_chestplate",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon zombie 315.0 150 342.5 {Fire:30000s,IsBaby:1b,NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
+setup 22-m14-humanoids summon skeleton 317.5 150 342.5 {Fire:30000s,equipment:{mainhand:{id:"minecraft:bow",count:1},feet:{id:"minecraft:diamond_boots",count:1}},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 22-m14-humanoids summon mannequin 320.0 150 342.5 {profile:{texture:"minecraft:entity/player/wide/steve",model:"wide"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 22-m14-humanoids summon mannequin 322.5 150 342.5 {profile:{texture:"minecraft:entity/player/slim/alex",model:"slim"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 setup 22-m14-humanoids summon mannequin 325.0 150 342.5 {profile:{texture:"minecraft:entity/player/slim/noor",model:"slim"},NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14"]}
 scene 22-m14-humanoids 322.5 150 334.5 0 12 60
+setup 23-m14-vehicles kill @e[type=item,x=272,y=100,z=272,dx=88,dy=100,dz=88]
+setup 23-m14-vehicles tp @e[tag=m14] 322.5 -100 342.5
 setup 23-m14-vehicles kill @e[tag=m14]
 setup 23-m14-vehicles summon oak_boat 314.5 150 342.5 {Invulnerable:1b,Rotation:[90f,0f],Tags:["m14","v0"]}
 setup 23-m14-vehicles summon birch_chest_boat 317.5 150 342.5 {Invulnerable:1b,Rotation:[0f,0f],Tags:["m14","v1"]}
@@ -272,6 +286,7 @@ setup 23-m14-vehicles ride @e[tag=p0,limit=1] mount @e[tag=v5,limit=1]
 setup 23-m14-vehicles summon villager 323.5 151 342.5 {NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b,Rotation:[180f,0f],Tags:["m14","p1"]}
 setup 23-m14-vehicles ride @e[tag=p1,limit=1] mount @e[tag=v3,limit=1]
 scene 23-m14-vehicles 322.5 150 334.5 0 12 60
+final tp @e[tag=m14] 322.5 -100 342.5
 final kill @e[tag=m14]
 final kill @e[tag=m12]
 final forceload remove 272 272 359 359
@@ -282,3 +297,5 @@ final gamerule advance_time true
 final gamerule advance_weather true
 final gamerule random_tick_speed 3
 final gamerule spawn_mobs true
+final gamerule mob_drops true
+final gamerule entity_drops true
