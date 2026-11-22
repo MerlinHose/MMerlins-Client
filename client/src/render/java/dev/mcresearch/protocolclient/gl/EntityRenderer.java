@@ -184,6 +184,18 @@ final class EntityRenderer implements AutoCloseable {
 		return java.util.Map.copyOf(this.looks);
 	}
 
+	/**
+	 * M15: Zustand je Entity einer Sitzung verwerfen (Schwimmanteil, Trefferzähler, Darstellungsplan, Trefferpartikel). Modelle, Meshes je
+	 * Modell-Layer und Texturen bleiben für die nächste Verbindung (Anwendungslebensdauer, begrenzt durch die Zahl der Typen).
+	 */
+	void resetSession() {
+		this.swim.clear();
+		this.seenDamage.clear();
+		this.looks.clear();
+		this.particles.clear();
+		this.lastFrameNanos = -1;
+	}
+
 	EntityRenderer(final Path assets) {
 		this(assets, null);
 	}

@@ -151,6 +151,7 @@ public final class MultiplayerScreen extends MenuScreen {
 	@Override
 	public void resumed() {
 		rebuildRows();
+		layout(width(), height()); // neue Zeilen in die Liste setzen
 		pingAll();
 	}
 

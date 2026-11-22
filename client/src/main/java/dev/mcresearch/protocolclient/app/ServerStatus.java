@@ -33,7 +33,7 @@ public record ServerStatus(State state, long pingMillis, String versionName, int
 	/** Eine Zeile für die Liste. */
 	public String summary() {
 		return switch (this.state) {
-			case ONLINE -> String.format(java.util.Locale.ROOT, "%s · %d/%d Spieler · %d ms · %s", this.versionName, this.online, this.max,
+			case ONLINE -> String.format(java.util.Locale.ROOT, "Erreichbar · %s · %d/%d Spieler · %d ms · %s", this.versionName, this.online, this.max,
 				this.pingMillis, switch (support()) {
 					case NATIVE -> "kompatibel";
 					case PLANNED_MVS -> "ältere Version (MVS geplant)";

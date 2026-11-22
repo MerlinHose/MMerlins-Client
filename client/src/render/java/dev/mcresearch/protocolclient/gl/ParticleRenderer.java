@@ -41,6 +41,34 @@ final class ParticleRenderer implements AutoCloseable {
 	private final Map<ParticleSystem.Kind, List<TextureAtlas.Sprite>> sprites = new EnumMap<>(ParticleSystem.Kind.class);
 	private final ParticleSystem system = new ParticleSystem();
 	private final Random random = new Random();
+	/** M15: Partikelstufe 0 alle, 1 verringert, 2 minimal; eigener Zufall, damit „alle“ keine Zufallszahlen verbraucht. */
+	private int level;
+	private final Random levelRandom = new Random();
+	private long suppressed;
+
+	void setLevel(final int l) {
+		this.level = Math.max(0, Math.min(2, l));
+	}
+
+	long suppressed() {
+		return this.suppressed;
+	}
+
+	/** Vanilla {@code LevelRenderer#calculateParticleLevel}: verringert → jede dritte entfällt; minimal → nur erzwungene. */
+	private boolean admit(final boolean force) {
+		if (this.level == 0 || force) {
+			return true;
+		}
+		int st = this.level;
+		if (st == 1 && this.levelRandom.nextInt(3) == 0) {
+			st = 2;
+		}
+		if (st == 2) {
+			this.suppressed++;
+			return false;
+		}
+		return true;
+	}
 	private final int vao;
 	private final int vbo;
 	private long capacity;
@@ -201,7 +229,7 @@ final class ParticleRenderer implements AutoCloseable {
 		}
 		this.fromServer++;
 		if (p.count() == 0) {
-			this.system.spawn(k, p.x(), p.y(), p.z(), p.xSpeed() * p.xDist(), p.ySpeed() * p.yDist(), p.zSpeed() * p.zDist(), p.blockState(),
+			if (admit(p.overrideLimiter() || p.alwaysShow())) this.system.spawn(k, p.x(), p.y(), p.z(), p.xSpeed() * p.xDist(), p.ySpeed() * p.yDist(), p.zSpeed() * p.zDist(), p.blockState(),
 				k == ParticleSystem.Kind.TERRAIN ? terrainTint(p.blockState()) : 0xFFFFFF);
 			return;
 		}
@@ -232,7 +260,7 @@ final class ParticleRenderer implements AutoCloseable {
 				ya = this.random.nextGaussian() * p.ySpeed();
 				za = this.random.nextGaussian() * p.zSpeed();
 			}
-			this.system.spawn(k, p.x() + ox, p.y() + oy, p.z() + oz, xa, ya, za, p.blockState(),
+			if (admit(p.overrideLimiter() || p.alwaysShow())) this.system.spawn(k, p.x() + ox, p.y() + oy, p.z() + oz, xa, ya, za, p.blockState(),
 				k == ParticleSystem.Kind.TERRAIN ? terrainTint(p.blockState()) : 0xFFFFFF);
 		}
 	}
@@ -263,7 +291,7 @@ final class ParticleRenderer implements AutoCloseable {
 				if (columns.precipitation(x, cy, z) != dev.mcresearch.protocolclient.view.env.Precipitation.Kind.RAIN) {
 					continue;
 				}
-				this.system.spawn(ParticleSystem.Kind.RAIN, x + this.random.nextDouble(), top + 0.1, z + this.random.nextDouble(), 0, 0, 0, -1, 0xFFFFFF);
+				if (admit(false)) this.system.spawn(ParticleSystem.Kind.RAIN, x + this.random.nextDouble(), top + 0.1, z + this.random.nextDouble(), 0, 0, 0, -1, 0xFFFFFF);
 			}
 		}
 	}
@@ -279,19 +307,19 @@ final class ParticleRenderer implements AutoCloseable {
 		String n = reg.state(s).name();
 		switch (n) {
 			case "minecraft:torch", "minecraft:wall_torch" -> {
-				this.system.spawn(ParticleSystem.Kind.SMOKE, x + 0.5, y + 0.7, z + 0.5, 0, 0, 0, -1, 0xFFFFFF);
-				this.system.spawn(ParticleSystem.Kind.FLAME, x + 0.5, y + 0.7, z + 0.5, 0, 0, 0, -1, 0xFFFFFF);
+				if (admit(false)) this.system.spawn(ParticleSystem.Kind.SMOKE, x + 0.5, y + 0.7, z + 0.5, 0, 0, 0, -1, 0xFFFFFF);
+				if (admit(false)) this.system.spawn(ParticleSystem.Kind.FLAME, x + 0.5, y + 0.7, z + 0.5, 0, 0, 0, -1, 0xFFFFFF);
 			}
 			case "minecraft:fire" -> {
 				if (this.random.nextInt(24) == 0) {
-					this.system.spawn(ParticleSystem.Kind.LARGE_SMOKE, x + this.random.nextDouble(), y + this.random.nextDouble() * 0.5 + 0.5,
+					if (admit(false)) this.system.spawn(ParticleSystem.Kind.LARGE_SMOKE, x + this.random.nextDouble(), y + this.random.nextDouble() * 0.5 + 0.5,
 						z + this.random.nextDouble(), 0, 0, 0, -1, 0xFFFFFF);
 				}
 			}
 			case "minecraft:campfire" -> {
 				if ("true".equals(reg.state(s).properties().get("lit")) && this.random.nextFloat() < 0.11f) {
 					for (int i = 0; i < this.random.nextInt(2) + 2; i++) {
-						this.system.spawn(ParticleSystem.Kind.CAMPFIRE_SMOKE, x + 0.5 + this.random.nextDouble() / 3.0 * (this.random.nextBoolean() ? 1 : -1),
+						if (admit(false)) this.system.spawn(ParticleSystem.Kind.CAMPFIRE_SMOKE, x + 0.5 + this.random.nextDouble() / 3.0 * (this.random.nextBoolean() ? 1 : -1),
 							y + this.random.nextDouble() + this.random.nextDouble(), z + 0.5 + this.random.nextDouble() / 3.0 * (this.random.nextBoolean() ? 1 : -1),
 							0.0, 0.07, 0.0, -1, 0xFFFFFF);
 					}
@@ -303,7 +331,7 @@ final class ParticleRenderer implements AutoCloseable {
 					int above = world.stateId(x, y + 1, z);
 					int below = world.stateId(x, y - 1, z);
 					if (above > 0 && reg.state(above).name().equals("minecraft:water") && below >= 0 && reg.state(Math.max(0, below)).isAir()) {
-						this.system.spawn(ParticleSystem.Kind.DRIPPING_WATER, x + this.random.nextDouble(), y - 0.05, z + this.random.nextDouble(), 0, 0, 0, -1,
+						if (admit(false)) this.system.spawn(ParticleSystem.Kind.DRIPPING_WATER, x + this.random.nextDouble(), y - 0.05, z + this.random.nextDouble(), 0, 0, 0, -1,
 							0xFFFFFF);
 					}
 				}

@@ -1,0 +1,107 @@
+# M15 GUI-Test Durchgang 2: (5) Einstellungen nach Neustart neu geladen, (7) Zurücksetzen, Phase L: 20 Verbindungen,
+# Inventar mehrfach, schneller Screenwechsel, VSync/Sichtweite im Spiel, Leistung der Menüs.
+wait-screen main-menu
+wait 1
+expect-setting graphics.particles DECREASED
+expect-setting graphics.clouds OFF
+expect-setting graphics.renderDistance 5
+expect-setting graphics.fov 75
+expect-setting controls.key.jump key:74
+expect-setting graphics.biomeBlend 5
+perf-begin main-menu
+wait 5
+perf-end main-menu
+# (7) Zurücksetzen auf Standardwerte (mit Rückfrage)
+click settings
+wait-screen settings
+click reset
+wait 0.3
+screenshot ${OUT}/p2-01-reset-dialog.png
+click confirm-reset.yes
+expect-setting graphics.particles ALL
+expect-setting graphics.clouds FANCY
+expect-setting graphics.renderDistance 6
+expect-setting controls.key.jump key:32
+perf-begin settings-screen
+wait 3
+perf-end settings-screen
+click done
+wait-screen main-menu
+threads before-cycles
+# Phase L: 20 aufeinanderfolgende Verbindungs- und Trennvorgänge, je mit Inventar öffnen/schließen
+repeat 20
+click local
+wait-screen local-server
+click join
+wait-phase CONNECTED 40
+wait-screen none 10
+wait 1
+key E
+wait-screen inventory 5
+key E
+wait-screen none 5
+key ESC
+wait-screen pause
+click main-menu
+wait-screen main-menu 15
+threads cycle
+end
+wait 3
+threads after-20-connections
+# schneller Wechsel zwischen Screens
+perf-begin screen-switching
+repeat 25
+click settings
+wait-screen settings
+click-tab tabs 2
+click-tab tabs 0
+key ESC
+wait-screen main-menu
+click about
+wait-screen about
+click back
+wait-screen main-menu
+click multiplayer
+wait-screen multiplayer
+key ESC
+wait-screen main-menu
+end
+perf-end screen-switching
+threads after-switching
+# im Spiel: Leistung, VSync aus/an, Sichtweite 2 → 8 → 6
+click local
+wait-screen local-server
+click join
+wait-phase CONNECTED 40
+wait-screen none 10
+wait 5
+perf-begin game-rd6-vsync
+wait 10
+perf-end game-rd6-vsync
+set graphics.vsync false
+wait 1
+perf-begin game-rd6-no-vsync
+wait 10
+perf-end game-rd6-no-vsync
+set graphics.vsync true
+set graphics.renderDistance 2
+wait 3
+perf-begin game-rd2
+wait 5
+perf-end game-rd2
+set graphics.renderDistance 8
+wait 8
+perf-begin game-rd8
+wait 10
+perf-end game-rd8
+screenshot ${OUT}/p2-02-game-rd8.png
+set graphics.renderDistance 6
+wait 2
+key ESC
+wait-screen pause
+click main-menu
+wait-screen main-menu 15
+wait 2
+threads final
+click quit
+wait 10

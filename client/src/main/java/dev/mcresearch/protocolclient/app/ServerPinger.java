@@ -11,10 +11,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Statusping im Hintergrund (docs/61 §6) über die vorhandene {@link StatusQuery}. Nur Loopback-Adressen; externe Einträge werden
- * ohne Netzwerkzugriff als {@link ServerStatus#BLOCKED} gemeldet. Ein Daemon-Thread, beim Beenden geschlossen.
+ * ohne Netzwerkzugriff als {@link ServerStatus#BLOCKED} gemeldet. Bis zu vier Daemon-Threads, beim Beenden geschlossen.
  */
 public final class ServerPinger implements AutoCloseable {
-	private final ExecutorService pool = Executors.newSingleThreadExecutor(r -> {
+	/** Mehrere Pings parallel: ein stummer Dienst (3 s Zeitüberschreitung) hält die anderen Einträge nicht auf. */
+	private final ExecutorService pool = Executors.newFixedThreadPool(4, r -> {
 		Thread t = new Thread(r, "server-ping");
 		t.setDaemon(true);
 		return t;

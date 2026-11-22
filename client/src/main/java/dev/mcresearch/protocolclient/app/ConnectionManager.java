@@ -74,6 +74,8 @@ public final class ConnectionManager {
 	private Thread worker;
 	private Thread sessionThread;
 	private long connects;
+	/** Nummer des aktuellen Versuchs: ein abgebrochener, noch laufender Aufbau darf den Zustand eines neuen nicht verändern. */
+	private volatile long attempt;
 
 	public ConnectionManager(final SessionFactory factory, final StatusCheck statusCheck) {
 		this.factory = factory;
@@ -92,27 +94,34 @@ public final class ConnectionManager {
 		this.userDisconnect = false;
 		this.lastStatus = ServerStatus.UNKNOWN;
 		this.connects++;
+		final long id = ++this.attempt;
 		if (!t.allowed()) {
 			fail(new ConnectErrors.UserError(ConnectErrors.Kind.NOT_ALLOWED, "Adresse nicht erlaubt",
 				"Diese Entwicklungsversion verbindet sich nur mit localhost bzw. 127.0.0.1 (keine externen Server)."));
 			return;
 		}
 		this.basePhase = checkVersion ? Phase.CHECKING : Phase.CONNECTING;
-		this.worker = Thread.ofPlatform().name("connect").daemon(true).start(() -> work(t, identity, viewDistance, checkVersion));
+		this.worker = Thread.ofPlatform().name("connect").daemon(true).start(() -> work(id, t, identity, viewDistance, checkVersion));
 	}
 
-	private void work(final ServerEntry t, final LoginIdentity identity, final int viewDistance, final boolean checkVersion) {
+	private void work(final long id, final ServerEntry t, final LoginIdentity identity, final int viewDistance, final boolean checkVersion) {
 		try {
 			if (checkVersion) {
 				ServerStatus st = this.statusCheck.check(t);
-				this.lastStatus = st;
-				if (this.cancelled) {
+				if (this.cancelled || id != this.attempt) {
 					return;
 				}
+				this.lastStatus = st;
 				if (st.state() != ServerStatus.State.ONLINE) {
-					fail(st.state() == ServerStatus.State.BLOCKED ? new ConnectErrors.UserError(ConnectErrors.Kind.NOT_ALLOWED, "Adresse nicht erlaubt",
-						st.error()) : new ConnectErrors.UserError(ConnectErrors.Kind.UNREACHABLE, "Server nicht erreichbar",
-						"An " + t.address() + " antwortet kein Minecraft-Server. Läuft der lokale Testserver?"));
+					if (st.state() == ServerStatus.State.BLOCKED) {
+						fail(new ConnectErrors.UserError(ConnectErrors.Kind.NOT_ALLOWED, "Adresse nicht erlaubt", st.error()));
+					} else if (st.error().equals("Zeitüberschreitung")) {
+						fail(new ConnectErrors.UserError(ConnectErrors.Kind.TIMEOUT, "Zeitüberschreitung",
+							"Unter " + t.address() + " nimmt ein Dienst Verbindungen an, antwortet aber nicht wie ein Minecraft-Server."));
+					} else {
+						fail(new ConnectErrors.UserError(ConnectErrors.Kind.UNREACHABLE, "Server nicht erreichbar",
+							"An " + t.address() + " antwortet kein Minecraft-Server. Läuft der lokale Testserver?"));
+					}
 					return;
 				}
 				if (st.support() != ProtocolVersions.Support.NATIVE) {
@@ -124,9 +133,11 @@ public final class ConnectionManager {
 			}
 			ClientSession s = this.factory.open(t, identity, viewDistance);
 			synchronized (this) {
-				if (this.cancelled) {
+				if (this.cancelled || id != this.attempt) {
 					s.requestStop("cancelled before start");
-					this.basePhase = Phase.CANCELLED;
+					if (id == this.attempt) {
+						this.basePhase = Phase.CANCELLED;
+					}
 					return;
 				}
 				this.session = s;
@@ -135,6 +146,9 @@ public final class ConnectionManager {
 				this.sessionThread = Thread.ofPlatform().name("session").daemon(true).start(() -> r.complete(s.run()));
 			}
 		} catch (IOException | RuntimeException e) {
+			if (id != this.attempt) {
+				return;
+			}
 			if (!this.cancelled) {
 				fail(ConnectErrors.describe(e, null));
 			} else {
@@ -264,8 +278,12 @@ public final class ConnectionManager {
 		}
 	}
 
-	/** Gibt die beendete Sitzung frei (Welt- und Entity-Daten werden damit unerreichbar). */
+	/**
+	 * Gibt die beendete Sitzung frei (Welt- und Entity-Daten werden damit unerreichbar). Endzustand und Fehlermeldung bleiben lesbar
+	 * (FAILED/CANCELLED/DISCONNECTED), bis {@link #reset()} oder ein neuer Verbindungsversuch sie löscht.
+	 */
 	public synchronized void release() {
+		Phase end = phase();
 		ClientSession s = this.session;
 		if (s != null && !s.ended()) {
 			s.requestStop("released");
@@ -274,15 +292,18 @@ public final class ConnectionManager {
 		this.result = null;
 		this.worker = null;
 		this.sessionThread = null;
-		if (!this.basePhase.active()) {
-			return;
-		}
-		this.basePhase = Phase.IDLE;
+		this.basePhase = end.active() ? Phase.IDLE : end;
 	}
 
 	/** Nach Fehler/Abbruch wieder bereit (Fehlermeldung bleibt bis zum nächsten Versuch lesbar). */
 	public synchronized void reset() {
 		release();
 		this.basePhase = Phase.IDLE;
+		this.error = null;
+	}
+
+	/** Trennen wurde vom Spieler ausgelöst (nicht vom Server). */
+	public boolean userDisconnect() {
+		return this.userDisconnect;
 	}
 }

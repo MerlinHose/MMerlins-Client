@@ -222,6 +222,24 @@ public final class Serverbound {
 		}
 	}
 
+	/** M15: dieselben Client-Optionen im Spielzustand (Vanilla {@code Options#broadcastOptions} nach Änderungen im Menü). */
+	public record ClientInformationPlay(ClientInformation info) implements ServerboundPacket {
+		@Override
+		public ProtocolState state() {
+			return ProtocolState.PLAY;
+		}
+
+		@Override
+		public String name() {
+			return "minecraft:client_information";
+		}
+
+		@Override
+		public void write(final PacketWriter out) {
+			this.info.write(out);
+		}
+	}
+
 	/** {@code custom_payload} auf Kanal {@code minecraft:brand}. */
 	public record Brand(String brand) implements ServerboundPacket {
 		@Override

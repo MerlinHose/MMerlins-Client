@@ -106,10 +106,13 @@ public class Slider extends Widget {
 		Rect r = bounds();
 		double f = this.max == this.min ? 0 : (this.value - this.min) / (this.max - this.min);
 		Rect track = r.inset(4);
-		c.fill(new Rect(track.x(), track.bottom() - 2, track.w() * f, 2), enabled() ? ctx.theme().accent() : ctx.theme().textDisabled());
-		double kw = 6;
-		c.fill(new Rect(track.x() + f * track.w() - kw / 2, r.y() + 2, kw, r.h() - 4), enabled() ? ctx.theme().text() : ctx.theme().textDisabled());
-		c.textIn(this.label + ": " + this.format.apply(this.value), r.inset(4), UiCanvas.Align.CENTER, textColor(ctx, this), true);
+		// Spur und Griff am unteren Rand, damit die Beschriftung frei lesbar bleibt
+		c.fill(new Rect(track.x(), track.bottom() - 1.5, track.w(), 1.5), 0x40FFFFFF);
+		c.fill(new Rect(track.x(), track.bottom() - 1.5, track.w() * f, 1.5), enabled() ? ctx.theme().accent() : ctx.theme().textDisabled());
+		double kw = 4;
+		c.fill(new Rect(track.x() + f * track.w() - kw / 2, track.bottom() - 4, kw, 5), enabled() ? ctx.theme().text() : ctx.theme().textDisabled());
+		c.textIn(this.label + ": " + this.format.apply(this.value), new Rect(track.x(), track.y() - 1, track.w(), track.h() - 2), UiCanvas.Align.CENTER,
+			textColor(ctx, this), true);
 	}
 
 	@Override

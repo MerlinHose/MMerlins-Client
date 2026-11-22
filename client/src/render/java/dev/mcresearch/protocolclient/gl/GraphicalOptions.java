@@ -2,13 +2,22 @@ package dev.mcresearch.protocolclient.gl;
 
 import java.nio.file.Path;
 
-/** Kommandozeilenoptionen des grafischen Clients (docs/24 §9). */
+/**
+ * Kommandozeilenoptionen des grafischen Clients (docs/24 §9). M15: Ohne {@code --autotest}, {@code --direct} und {@code --login-ui} startet der
+ * Client im Hauptmenü und verwendet die Nutzereinstellungen; mit ihnen verbindet er sofort wie bisher (Regressionsläufe, Einstellungen nur im
+ * Speicher aus den Startoptionen).
+ */
 public record GraphicalOptions(String host, int port, String username, int width, int height, float fov, boolean vsync, int renderDistance,
 	Path assets, boolean textures, boolean testCube, Path screenshot, long screenshotFrame, double exitAfterSeconds, Path autotest,
 	Path report, Path packetLog, boolean autoRespawn, dev.mcresearch.protocolclient.auth.minecraft.LoginFactory.Parser auth, boolean loginUi,
-	Path skins) {
+	Path skins, Path settingsFile, Path serversFile, boolean direct, Path uiTest, boolean noGrab) {
 
 	public static final int MAX_RENDER_DISTANCE = 8;
+
+	/** Sofort verbinden ohne Hauptmenü (bisheriges Verhalten, alle Regressionsläufe). */
+	public boolean directMode() {
+		return this.direct || this.autotest != null || this.loginUi;
+	}
 
 	public static GraphicalOptions parse(final String[] args) {
 		String host = "127.0.0.1";
@@ -32,6 +41,11 @@ public record GraphicalOptions(String host, int port, String username, int width
 		var auth = new dev.mcresearch.protocolclient.auth.minecraft.LoginFactory.Parser(); // M13 (docs/52 §5)
 		boolean loginUi = false;
 		Path skins = null;
+		Path settingsFile = null;
+		Path serversFile = null;
+		boolean direct = false;
+		Path uiTest = null;
+		boolean noGrab = false;
 		for (int i = 0; i < args.length; i++) {
 			String a = args[i];
 			int consumed = auth.parse(args, i);
@@ -61,6 +75,11 @@ public record GraphicalOptions(String host, int port, String username, int width
 				case "--packet-log" -> packetLog = Path.of(args[++i]);
 				case "--login-ui" -> loginUi = true; // M13: Anmeldefenster vor dem Spielfenster
 				case "--skins" -> skins = Path.of(args[++i]); // M14: lokale PNG-Skins (docs/56)
+				case "--settings" -> settingsFile = Path.of(args[++i]); // M15: Einstellungsdatei statt ~/.minecraft-merlin/settings.properties
+				case "--servers" -> serversFile = Path.of(args[++i]); // M15: Serverliste
+				case "--direct" -> direct = true; // M15: ohne Hauptmenü sofort verbinden (bisheriges Verhalten)
+				case "--test-no-grab" -> noGrab = true; // M15: GUI-Test ohne Fangen der Systemmaus
+				case "--ui-test" -> uiTest = Path.of(args[++i]); // M15: GUI-Testskript im Menümodus (docs/62)
 				default -> throw new IllegalArgumentException("unknown option " + a);
 			}
 		}
@@ -74,6 +93,6 @@ public record GraphicalOptions(String host, int port, String username, int width
 			throw new IllegalArgumentException("render distance 1.." + MAX_RENDER_DISTANCE);
 		}
 		return new GraphicalOptions(host, port, username, width, height, fov, vsync, renderDistance, assets, textures, testCube, screenshot,
-			screenshotFrame, exitAfter, autotest, report, packetLog, autoRespawn, auth, loginUi, skins);
+			screenshotFrame, exitAfter, autotest, report, packetLog, autoRespawn, auth, loginUi, skins, settingsFile, serversFile, direct, uiTest, noGrab);
 	}
 }

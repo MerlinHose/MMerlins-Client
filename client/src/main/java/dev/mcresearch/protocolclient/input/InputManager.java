@@ -152,6 +152,24 @@ public final class InputManager {
 		return this.states.get(a).presses();
 	}
 
+	/**
+	 * Betätigungen der Belegung von {@code a} unabhängig vom Bereich – für vom Spiel bediente Screens, die Spieltasten selbst
+	 * auswerten (Inventar: Inventartaste schließt, 1–9/F tauschen, Q wirft; wie Vanilla {@code AbstractContainerScreen#keyPressed}).
+	 */
+	public int rawPresses(final GameAction a) {
+		InputCode code = this.bindings.get(a);
+		if (code.isNone()) {
+			return 0;
+		}
+		int n = 0;
+		for (InputSource src : this.sources) {
+			if (src.handles(code.device())) {
+				n += src.presses(code);
+			}
+		}
+		return n;
+	}
+
 	/** Gehalten mit Umschaltlogik für Sprinten/Schleichen. */
 	public boolean active(final GameAction a) {
 		if (a == GameAction.SPRINT && this.toggleSprint) {

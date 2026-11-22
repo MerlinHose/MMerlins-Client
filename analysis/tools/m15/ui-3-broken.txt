@@ -1,0 +1,15 @@
+# M15 GUI-Test Durchgang 3: (6) ungültige/beschädigte Konfiguration – Client startet trotzdem im Hauptmenü mit Standardwerten.
+wait-screen main-menu
+wait 1
+expect-setting graphics.fov 70
+expect-setting controls.key.jump key:32
+expect-no-overflow
+click settings
+wait-screen settings
+wait 0.3
+expect settings-status beschädigt
+screenshot ${OUT}/p3-01-settings-after-corrupt-file.png
+click done
+wait-screen main-menu
+click quit
+wait 10

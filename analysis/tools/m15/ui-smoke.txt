@@ -1,0 +1,34 @@
+# M15 Rauchtest: Menüs ohne Server
+wait-screen main-menu
+wait 1
+expect-no-overflow
+screenshot ${OUT}/s01-main-menu.png
+dump
+click settings
+wait-screen settings
+wait 0.5
+expect-no-overflow
+screenshot ${OUT}/s02-settings-graphics.png
+click-tab tabs 2
+wait 0.5
+screenshot ${OUT}/s03-settings-keys.png
+key ESC
+wait-screen main-menu
+click local
+wait-screen local-server
+wait 2.5
+expect local-status Nicht erreichbar
+screenshot ${OUT}/s04-local-offline.png
+click join
+wait-screen connecting
+wait-phase FAILED 15
+wait 0.3
+expect error-title Server nicht erreichbar
+screenshot ${OUT}/s05-connect-failed.png
+key ESC
+wait-screen local-server
+key ESC
+wait-screen main-menu
+threads end
+click quit
+wait 5

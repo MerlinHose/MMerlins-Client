@@ -632,7 +632,45 @@ public final class ClientSession {
 			transition(ProtocolState.CONFIGURATION);
 		}
 		send(new Serverbound.Brand(this.config.brand()));
-		send(Serverbound.ClientInformation.defaults(this.config.viewDistance()));
+		send(clientInformation());
+	}
+
+	/** M15: Sichtweite und Partikelstufe, die dem Server mitgeteilt werden (Start: Sitzungskonfiguration, Partikel „alle“). */
+	private volatile int infoViewDistance = -1;
+	private volatile int infoParticles;
+
+	private Serverbound.ClientInformation clientInformation() {
+		Serverbound.ClientInformation d = Serverbound.ClientInformation.defaults(viewDistance());
+		return new Serverbound.ClientInformation(d.language(), d.viewDistance(), d.chatVisibility(), d.chatColors(), d.modelCustomisation(),
+			d.mainHand(), d.textFiltering(), d.allowsListing(), this.infoParticles);
+	}
+
+	/**
+	 * M15: Optionen aus dem Einstellungsmenü (Sichtweite 2–32, Partikelstufe 0 alle/1 verringert/2 minimal). Nur bei einer Änderung wird im
+	 * Spielzustand {@code client_information} gesendet (wie Vanilla {@code Options#broadcastOptions}); vorher gilt der Wert für den
+	 * Konfigurationsschritt. Liefert true, wenn ein Paket gesendet wurde.
+	 */
+	public boolean updateClientInformation(final int viewDistance, final int particleStatus) throws IOException {
+		if (viewDistance == viewDistance() && particleStatus == this.infoParticles) {
+			return false;
+		}
+		if (viewDistance < 2 || viewDistance > 32 || particleStatus < 0 || particleStatus > 2) {
+			throw new IllegalArgumentException("client information " + viewDistance + "/" + particleStatus);
+		}
+		this.infoViewDistance = viewDistance;
+		this.infoParticles = particleStatus;
+		synchronized (this.lock) {
+			if (this.state == ProtocolState.PLAY && this.playLoginReceived && !this.stopRequested) {
+				send(new Serverbound.ClientInformationPlay(clientInformation()));
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** M15: aktuell dem Server mitgeteilte Sichtweite. */
+	public int viewDistance() {
+		return this.infoViewDistance < 0 ? this.config.viewDistance() : this.infoViewDistance;
 	}
 
 	private void onRegistryData(final Clientbound.RegistryData p) throws ProtocolException {

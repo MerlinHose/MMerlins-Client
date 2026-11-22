@@ -133,6 +133,11 @@ public final class BlockInteraction {
 		this.useHeld = held;
 	}
 
+	/** M15: Weltinteraktion erlaubt (kein Screen, Maus gefangen) – GUI-Test „Eingabesperre bei offenem Menü“. */
+	public synchronized boolean inputAllowed() {
+		return this.inputAllowed;
+	}
+
 	/** false, solange ein Bildschirm (Inventar) offen oder die Maus frei ist: wie {@code gui.screen() != null}. */
 	public synchronized void setInputAllowed(final boolean allowed) {
 		this.inputAllowed = allowed;

@@ -1,0 +1,252 @@
+# M15 GUI-Test Durchgang 1 (docs/62 §5): Menüs, Einstellungen, Tastenbelegung, Verbinden, Pause, Trennen, Auflösungen.
+# Nummern = Testfälle der Aufgabenstellung (Phase K).
+# (1) Start im Hauptmenü
+wait-screen main-menu
+wait 1
+expect-no-overflow
+screenshot ${OUT}/p1-01-main-menu-1280x720.png
+mark ready
+# (11) Tastatur: Tab → erster Knopf, Pfeile, Eingabe; Esc zurück (Fokus bleibt)
+key TAB
+expect local Einzelspieler
+key DOWN
+key DOWN
+key ENTER
+wait-screen settings
+key ESC
+wait-screen main-menu
+key UP
+key ENTER
+wait-screen multiplayer
+key ESC
+wait-screen main-menu
+# (2)(10) Wechsel zwischen Menüs mit der Maus
+click about
+wait-screen about
+expect-no-overflow
+screenshot ${OUT}/p1-02-about.png
+click back
+wait-screen main-menu
+click account
+wait-screen login
+screenshot ${OUT}/p1-03-account.png
+expect microsoft disabled
+click done
+wait-screen main-menu
+click multiplayer
+wait-screen multiplayer
+wait 4
+expect server.0 ONLINE
+expect server.2 BLOCKED
+expect-no-overflow
+screenshot ${OUT}/p1-04-multiplayer.png
+click server.2
+expect join disabled
+# (13) Abbrechen: stummer Dienst (Statusprüfung hängt) → Abbrechen
+click server.1
+click join
+wait-screen connecting
+wait-phase CHECKING 3
+wait 0.5
+screenshot ${OUT}/p1-05-connecting-checking.png
+click cancel
+wait-phase CANCELLED 5
+wait-screen multiplayer
+# Zeitüberschreitung ohne Abbrechen
+click server.1
+click join
+wait-phase FAILED 15
+wait 0.3
+expect error-title Zeitüberschreitung
+screenshot ${OUT}/p1-06-connect-timeout.png
+click back
+wait-screen multiplayer
+key ESC
+wait-screen main-menu
+# (3) Einstellungen ändern (Maus: Auswahllisten, Schalter; Tastatur: Regler) und (4) speichern
+click settings
+wait-screen settings
+click graphics.particles
+click graphics.particles.opt.DECREASED
+expect-setting graphics.particles DECREASED
+click graphics.clouds
+expect graphics.clouds.opt.FAST disabled
+click graphics.clouds.opt.OFF
+expect-setting graphics.clouds OFF
+click graphics.biomeBlend
+key RIGHT
+expect-setting graphics.biomeBlend 5
+click-tab tabs 1
+click controls.invertY
+expect-setting controls.invertY true
+click controls.invertY
+expect-setting controls.invertY false
+click-tab tabs 3
+click accessibility.highContrast
+wait 0.3
+screenshot ${OUT}/p1-07-settings-high-contrast.png
+click accessibility.highContrast
+expect-setting accessibility.highContrast false
+# (8) Tastenbelegung ändern, (9) Konflikt erkennen
+click-tab tabs 2
+click keys.key.jump
+key J
+expect-setting controls.key.jump key:74
+click keys.key.sprint
+key J
+expect keys.key.sprint CONFLICT
+expect keys.key.jump CONFLICT
+wait 0.3
+screenshot ${OUT}/p1-08-keybinding-conflict.png
+click keys.reset.sprint
+expect keys.key.sprint key:341
+expect-no-overflow
+click done
+wait-screen main-menu
+expect-setting graphics.particles DECREASED
+# (12) Verbindung zum lokalen Server über das Menü
+click local
+wait-screen local-server
+wait 1.5
+expect local-status Erreichbar
+screenshot ${OUT}/p1-09-local-online.png
+click join
+wait-phase CONNECTED 40
+wait-screen none 10
+wait 3
+screenshot ${OUT}/p1-10-in-game.png
+threads in-game
+# Inventar öffnen/schließen (bisheriger M8-Bildschirm über den ScreenManager)
+key E
+wait-screen inventory 5
+wait 0.5
+screenshot ${OUT}/p1-11-inventory.png
+key E
+wait-screen none 5
+key E
+wait-screen inventory 5
+key ESC
+wait-screen none 5
+# (14) Pausenmenü; keine Bewegung, kein Angriff, keine Blockinteraktion bei offenem Menü
+wait 1
+mark-pos
+key ESC
+wait-screen pause
+expect-world-locked
+hold W 1
+click-at 0.5 0.95 0
+click-at 0.5 0.95 1
+wait 0.5
+expect-pos-same
+screenshot ${OUT}/p1-12-pause.png
+# (15) Einstellungen während des Spiels (Sichtweite per Maus, Sichtfeld per Tastatur)
+click settings
+wait-screen settings
+click graphics.renderDistance
+expect-setting graphics.renderDistance 5
+click graphics.fov
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+expect-setting graphics.fov 75
+wait 0.5
+screenshot ${OUT}/p1-13-settings-in-game.png
+expect-world-locked
+click done
+wait-screen pause
+# (16) Fortsetzen: Bewegung wirkt wieder
+click resume
+wait-screen none
+wait 0.5
+mark-pos
+hold W 1
+wait 0.3
+expect-pos-changed
+# (17) Verbindung trennen
+key ESC
+wait-screen pause
+click disconnect
+wait-screen disconnected 10
+wait 0.3
+screenshot ${OUT}/p1-14-disconnected.png
+threads after-disconnect
+# (18) Zurück zum Hauptmenü
+click main-menu
+wait-screen main-menu
+# (19) Erneut verbinden (ohne Neustart des Java-Prozesses)
+click local
+wait-screen local-server
+click join
+wait-phase CONNECTED 40
+wait-screen none 10
+wait 2
+key ESC
+wait-screen pause
+click main-menu
+wait-screen main-menu 15
+wait 1
+threads after-two-connections
+# Auflösungen: 1600×900, 1920×1080 (randloses Vollbild), kleines Fenster 854×480
+resize 1600 900
+wait 1.5
+dump
+expect-no-overflow
+screenshot ${OUT}/p1-20-main-1600x900.png
+click settings
+wait-screen settings
+wait 0.3
+expect-no-overflow
+screenshot ${OUT}/p1-21-settings-1600x900.png
+key ESC
+wait-screen main-menu
+click settings
+wait-screen settings
+click graphics.displayMode
+click graphics.displayMode.opt.BORDERLESS
+wait 2.5
+dump
+expect-no-overflow
+screenshot ${OUT}/p1-22-settings-1920x1080-borderless.png
+key ESC
+wait-screen main-menu
+wait 0.5
+expect-no-overflow
+screenshot ${OUT}/p1-23-main-1920x1080-borderless.png
+click multiplayer
+wait-screen multiplayer
+wait 0.5
+expect-no-overflow
+key ESC
+wait-screen main-menu
+set graphics.displayMode WINDOWED
+wait 2
+resize 854 480
+wait 1.5
+dump
+expect-no-overflow
+screenshot ${OUT}/p1-24-main-854x480.png
+click settings
+wait-screen settings
+wait 0.3
+expect-no-overflow
+screenshot ${OUT}/p1-25-settings-854x480.png
+key ESC
+wait-screen main-menu
+# GUI-Skalierung fest 2 und 4 bei 1280×720 (4 wird auf das Mögliche begrenzt)
+resize 1280 720
+wait 1
+set graphics.guiScale 2
+wait 1
+expect-no-overflow
+screenshot ${OUT}/p1-26-main-scale2.png
+set graphics.guiScale 4
+wait 1
+expect-no-overflow
+set graphics.guiScale 0
+wait 0.5
+threads before-quit
+# (20) Client regulär beenden
+click quit
+wait 10

@@ -162,7 +162,8 @@ final class InventoryScreen implements AutoCloseable {
 	// ================= Eingabe =================
 
 	/** Mausereignisse, Mausbewegung und Tasten eines Bildes verarbeiten. Liefert true, wenn das Fenster geschlossen werden soll. */
-	boolean input(final ClientSession session, final Window w, final List<Window.MouseEvent> events, final boolean closeKey) {
+	boolean input(final ClientSession session, final Window w, final List<Window.MouseEvent> events, final boolean closeKey,
+		final dev.mcresearch.protocolclient.input.InputManager input) {
 		double[] pos = w.cursorPosition();
 		move(session, pos[0], pos[1]);
 		for (Window.MouseEvent e : events) {
@@ -172,15 +173,16 @@ final class InventoryScreen implements AutoCloseable {
 				release(session, e.button(), e.x(), e.y(), e.shift());
 			}
 		}
+		// M15: Tasten über die Belegung (Schnellzugriff 1–9, Zweithand, Fallenlassen), Vanilla AbstractContainerScreen#checkHotbarKeyPressed
 		for (int k = 0; k < 9; k++) {
-			if (w.wasPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_1 + k)) {
+			if (input.rawPresses(dev.mcresearch.protocolclient.input.GameAction.hotbar(k)) > 0) {
 				key(session, k, false);
 			}
 		}
-		if (w.wasPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_F)) {
+		if (input.rawPresses(dev.mcresearch.protocolclient.input.GameAction.SWAP_OFFHAND) > 0) {
 			key(session, 40, false);
 		}
-		if (w.wasPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_Q)) {
+		if (input.rawPresses(dev.mcresearch.protocolclient.input.GameAction.DROP_ITEM) > 0) {
 			key(session, -1, w.controlDown());
 		}
 		return closeKey;
