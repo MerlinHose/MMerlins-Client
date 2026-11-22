@@ -50,6 +50,7 @@ for SCRIPT in "$@"; do
     printf '\xff\xfe\x00garbage\x01\x02 not a settings file\n' > "$SETTINGS"
     log "pass $PASS: settings file deliberately corrupted"
   fi
+  rm -f "$OUT"/stage*.flag "$OUT"/pixels-*.txt
   sed -e "s|\${OUT}|$(w "$OUT")|g" "$SCRIPT" > "$OUT/ui-$PASS-$NAME.txt"
   log "--- pass $PASS: $NAME"
   if [ "${M15_REALINPUT:-0}" = "1" ] && [[ "$NAME" == *real* ]]; then

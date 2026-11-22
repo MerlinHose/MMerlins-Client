@@ -324,11 +324,21 @@ final class UiAutotest implements AutoCloseable {
 				log("write-file " + s[1]);
 			}
 			case "pixel-map" -> {
-				// Bildschirmlage der Widgets für den Betriebssystem-Eingabetest (Fensterpixel)
+				// Bildschirmlage (Desktop-Punkte) der Widgets für den Betriebssystem-Eingabetest, Datei s[1]
+				int[] sr = w.screenRect(); // x, y, Fensterbreite, -höhe (Punkte), Framebuffer-Breite, -höhe
+				StringBuilder sb = new StringBuilder();
 				for (Widget wd : ui.current() == null ? List.<Widget>of() : ui.current().focusOrder()) {
 					double[] p = ui.pixelCenter(wd);
-					log(String.format(Locale.ROOT, "PIXEL %s %.0f %.0f", wd.id(), p[0], p[1]));
+					long sx = Math.round(sr[0] + p[0] * sr[2] / Math.max(1, sr[4]));
+					long sy = Math.round(sr[1] + p[1] * sr[3] / Math.max(1, sr[5]));
+					sb.append("PIXEL ").append(wd.id()).append(' ').append(sx).append(' ').append(sy).append('\n');
 				}
+				sb.append(String.format(Locale.ROOT, "CENTER %d %d%n", sr[0] + sr[2] / 2, sr[1] + sr[3] / 2));
+				sb.append(String.format(Locale.ROOT, "EMPTY %d %d%n", sr[0] + sr[2] * 3 / 100, sr[1] + sr[3] * 97 / 100)); // freie Ecke unten links
+				Path tmp = Path.of(s[1] + ".tmp");
+				Files.writeString(tmp, sb.toString(), StandardCharsets.UTF_8);
+				Files.move(tmp, Path.of(s[1]), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+				log("pixel-map " + s[1] + " (" + ui.current().name() + ", window " + sr[0] + "," + sr[1] + " " + sr[2] + "x" + sr[3] + ")");
 			}
 			case "resize" -> {
 				String[] a = s[1].split(" ");

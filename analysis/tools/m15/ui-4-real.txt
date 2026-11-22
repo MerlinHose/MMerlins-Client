@@ -1,0 +1,50 @@
+# M15 GUI-Test Durchgang 4 (docs/62 §5.3): echte Betriebssystem-Eingaben über analysis/tools/m15-realinput.ps1.
+# Dieses Skript liefert die Bildschirmlage der Knöpfe (pixels-<n>.txt) und prüft nach jedem Eingabeschritt (stage<n>.flag) das Ergebnis.
+wait-screen main-menu
+wait 1
+pixel-map ${OUT}/pixels-1.txt
+wait-file ${OUT}/stage1.flag 120
+wait-screen settings 5
+pixel-map ${OUT}/pixels-2.txt
+wait-file ${OUT}/stage2.flag 60
+wait-screen main-menu 5
+pixel-map ${OUT}/pixels-3.txt
+wait-file ${OUT}/stage3.flag 60
+wait-screen about 5
+pixel-map ${OUT}/pixels-4.txt
+wait-file ${OUT}/stage4.flag 60
+wait-screen main-menu 5
+pixel-map ${OUT}/pixels-5.txt
+wait-file ${OUT}/stage5.flag 60
+wait-screen local-server 5
+wait 1.5
+pixel-map ${OUT}/pixels-6.txt
+wait-file ${OUT}/stage6.flag 60
+wait-phase CONNECTED 40
+wait-screen none 10
+wait 2
+pixel-map ${OUT}/pixels-7.txt
+wait-file ${OUT}/stage7.flag 60
+wait-screen pause 5
+mark-pos
+pixel-map ${OUT}/pixels-8.txt
+wait-file ${OUT}/stage8.flag 60
+wait 0.5
+expect-screen pause
+expect-world-locked
+expect-pos-same
+pixel-map ${OUT}/pixels-9.txt
+wait-file ${OUT}/stage9.flag 60
+wait-screen none 5
+wait 0.5
+mark-pos
+pixel-map ${OUT}/pixels-10.txt
+wait-file ${OUT}/stage10.flag 60
+wait 0.5
+expect-pos-changed
+key ESC
+wait-screen pause
+click main-menu
+wait-screen main-menu 15
+click quit
+wait 10
