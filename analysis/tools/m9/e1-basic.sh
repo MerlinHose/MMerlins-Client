@@ -43,7 +43,8 @@ check_entities "teleport over 12 blocks (position sync)" skeleton pos,rot,head
 expect "teleport recognised (display snapped)" "teleport snaps [1-9]" "$(client estats)"
 # --- Entfernen
 server_cmd "kill @e[type=cow,tag=m9]"
-sleep 1.5
+# Konsole (tail -f, bis ~1 s Verzögerung) + 20 Todesticks (1 s) vor remove_entities; 1,5 s war ein Wettlauf (M14-Regression)
+sleep 2.5
 check_count "cow removed (remove_entities)" cow "0.5 100 -30.5" 30
 # --- KI-Bewegung: frei laufen lassen, dann einfrieren und vergleichen
 server_cmd "summon sheep 0.5 100 -40.5 {Tags:[m9,walker]}"; server_cmd "summon pig -6.5 100 -40.5 {Tags:[m9,walker]}"

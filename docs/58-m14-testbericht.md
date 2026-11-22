@@ -214,6 +214,22 @@ Fenster 1280 × 720, VSync, RTX 3070. Messfenster je 15 s (Dauerbetrieb 60 s). �
   - Gestartet am 2026-11-19 um 18:14 mit 5324 MB frei.
   - Claude Code hat den Lauf in **Schritt 1** (JUnit, M5-Physikvergleich mit Vanilla-Referenzclient) wegen knappen Arbeitsspeichers beendet. Die Projekt-JVMs erreichten bis zu 2501 MB, die freien Reserven sanken auf 2732 MB; andere Programme belegten mehrere GB.
   - **Die Regression ist damit nicht ausgeführt [O].** Neustart ab Schritt 1: `bash analysis/tools/m14-regression.sh` (fortsetzbar mit `[von] [bis]`, erfolgreiche Schrittlogs bleiben erhalten).
+- **Zweiter Lauf am 2026-11-22**, gestartet mit 7312 MB frei, Commit-Auslastung 14,4/32,7 GB. Schritte 1–16 sind gelaufen [G]:
+
+  | Schritt | Gruppe | Ergebnis |
+  |---|---|---|
+  | 1 | JUnit und M2–M5-Integration, Physik gegen Vanilla | 472 Tests, 0 Fehler (1 übersprungen); 20/20 Szenarien, 896/896 Ticks bitgenau, 0 Serverabweichungen |
+  | 2 | M6 vollständig | 125/125 Schritte, 0 GL-Objekte |
+  | 3–4 | M7 Auswahl gegen Vanilla (Überleben/Kreativ) | je 75/75 gleich |
+  | 5 | M7 Interaktion | 14/14 Prüfungen |
+  | 6 | M7 Licht | 1729/1729 Zellen gleich (Himmels- und Blocklicht) |
+  | 7 | M7 Grafik | 308/308, 0 GL-Objekte |
+  | 8–13 | M8 Inventar s1–s6 | 5/25/28/11/16/4 RESULT OK, 0 FAIL |
+  | 14 | M8 Grafik | 166/166, 0 GL-Objekte |
+  | 15 | M9 e1 | 17 OK, **1 FAIL**: „cow removed“. Ursache Zeitwettlauf im Testskript: Konsole (`tail -f`, bis ~1 s) + 20 Todesticks vor `remove_entities`, Abfrage nach festen 1,5 s; der Client zeigte die Kuh noch sterbend (Gesundheit 0, Pose 7), entfernt wird sofort beim Paket. Wartezeit auf 2,5 s erhöht; Schritt muss wiederholt werden [O] |
+  | 16 | M9 e2 | 21 OK |
+
+  - Claude Code hat den Lauf in **Schritt 17** (M9-Entity-Auswahl gegen Vanilla) erneut wegen Speichermangels beendet (Projekt-JVMs bis 2405 MB). Fortsetzung: `bash analysis/tools/m14-regression.sh 15` (Schritt 15 mit der Testkorrektur, dann ab 17).
 - **Aufräumen:**
   - `analysis/tools/m12-cleanup.ps1` beendet jetzt auch übrig gebliebene Projekt-Gradle-Daemons. Erkannt werden sie an der Markierung `-XX:ErrorFile=mcresearch-daemon-hs_err_%p.log` aus `client/` und `research/gradle.properties`; `-D`-Eigenschaften erscheinen nicht in der Daemon-Kommandozeile.
   - Daemons anderer Projekte bleiben unberührt.
