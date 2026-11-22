@@ -27,6 +27,8 @@ final class FakeChannel implements PacketChannel {
 	ProtocolState outbound = ProtocolState.HANDSHAKE;
 	int compressionThreshold = -1;
 	boolean closed;
+	/** Läuft, nachdem ein Paket entnommen und bevor es ausgeliefert wird (z. B. Stopp während des Empfangs). */
+	Runnable beforeDeliver;
 
 	/** Fügt ein Serverpaket für den angegebenen Zustand hinzu. */
 	FakeChannel add(final ProtocolState state, final String name, final PacketWriter body) {
@@ -48,6 +50,9 @@ final class FakeChannel implements PacketChannel {
 		RawPacket p = this.incoming.poll();
 		if (p == null) {
 			throw new EOFException("no more test packets");
+		}
+		if (this.beforeDeliver != null) {
+			this.beforeDeliver.run();
 		}
 		if (p.state() != this.inbound) {
 			throw new ProtocolException("Test packet " + p.name() + " for " + p.state() + " but inbound state is " + this.inbound);

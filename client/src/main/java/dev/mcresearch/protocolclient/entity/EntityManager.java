@@ -526,10 +526,14 @@ public final class EntityManager {
 		return out;
 	}
 
+	/** Unterklassen von {@code AbstractHorse} (isPushable = !isVehicle()). */
+	static final java.util.Set<String> HORSE_LIKE = java.util.Set.of("horse", "donkey", "mule", "skeleton_horse", "zombie_horse", "llama",
+		"trader_llama", "camel", "camel_husk");
+
 	/**
 	 * M14 Phase J: Schiebeimpuls auf den eigenen Spieler ({@code Entity#push(Entity)} aus dem {@code pushEntities} der anderen
-	 * Lebewesen und Boote): je überlappender, schiebbarer Entity (lebend, nicht Zuschauer; Boote) ±0,05 · min(1, 1/√d) weg von ihr.
-	 * Nicht auf demselben Fahrzeug. Rückgabe {dx, dz}.
+	 * Lebewesen und Boote): je überlappender, schiebbarer Entity (lebend, nicht Zuschauer, isPushable; Boote) ±0,05 · min(1, 1/√d)
+	 * weg von ihr. Nicht auf demselben Fahrzeug. Rückgabe {dx, dz}.
 	 */
 	public synchronized double[] pushImpulse(final dev.mcresearch.protocolclient.physics.Aabb playerBox, final double px, final double pz) {
 		double sx = 0;
@@ -538,7 +542,10 @@ public final class EntityManager {
 			String t = e.type.shortName();
 			boolean boat = t.endsWith("_boat") || t.endsWith("_raft");
 			Float health = e.health();
-			boolean pushable = boat || (e.living() && !e.isArmorStand() && (health == null || health > 0));
+			// isPushable: Bat immer false (Bat#isPushable, leeres pushEntities), Pferdeartige mit Reiter false (AbstractHorse#isPushable);
+			// Regression m5-threshold-0: Fledermäuse am Kurs verschoben den Spieler, Vanilla nicht
+			boolean pushable = boat || (e.living() && !e.isArmorStand() && (health == null || health > 0) && !t.equals("bat")
+				&& !(HORSE_LIKE.contains(t) && e.passengers.length > 0));
 			if (!pushable || e.id == this.ownVehicle || (this.ownVehicle >= 0 && e.vehicle == this.ownVehicle)) {
 				continue;
 			}

@@ -2,6 +2,7 @@ package dev.mcresearch.protocolclient.session;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -266,6 +267,20 @@ class ClientSessionTest {
 		ClientSession.Result r = session(true, 60).run();
 		assertFalse(r.success());
 		assertEquals("Server full", r.serverDisconnectReason());
+		assertTrue(this.channel.closed);
+	}
+
+	/**
+	 * Regression M14-Regression Schritt 33 (m5-threshold-0): requestStop schloss die Verbindung, während die Empfangsschleife ein
+	 * bereits gelesenes Paket mit Antwort bearbeitete; das scheiternde Senden ("Connection closed") galt als Sitzungsfehler.
+	 */
+	@Test
+	void replyAfterRequestedStopIsNotAnError() {
+		this.channel.add(ProtocolState.LOGIN, "minecraft:cookie_request", new PacketWriter().writeString("example:cookie", 32767));
+		ClientSession s = session(true, 60);
+		this.channel.beforeDeliver = () -> s.requestStop("test done");
+		ClientSession.Result r = s.run();
+		assertNull(r.error(), () -> "error: " + r.error());
 		assertTrue(this.channel.closed);
 	}
 

@@ -164,6 +164,26 @@ class PassengerAndBabyTest {
 		assertArrayEquals(new double[]{0, 0}, m.pushImpulse(far, 0.0, -1.25), 1e-12);
 	}
 
+	/**
+	 * Regression m5-threshold-0 (M14-Regression Schritt 33): Fledermäuse am Kurs verschoben den eigenen Spieler, Vanilla nicht –
+	 * {@code Bat#isPushable} ist immer false, {@code AbstractHorse#isPushable} false, solange ein Reiter sitzt.
+	 */
+	@Test
+	void batsAndRiddenHorsesDoNotPushThePlayer() {
+		int bat = EntityTypes.get().byName("bat").id();
+		dev.mcresearch.protocolclient.physics.Aabb player = new dev.mcresearch.protocolclient.physics.Aabb(-0.3, 64.0, -0.5, 0.3, 65.8, 0.1);
+		EntityManager bats = new EntityManager();
+		spawn(bats, 1, bat, 0.0, 64.5, 0.2, 0);
+		assertArrayEquals(new double[]{0, 0}, bats.pushImpulse(player, 0.0, -0.2), 1e-12);
+
+		EntityManager horses = new EntityManager();
+		spawn(horses, 2, HORSE, 0.0, 64.0, 0.6, 0);
+		assertTrue(horses.pushImpulse(player, 0.0, -0.2)[1] < 0, "unridden horse pushes the player away");
+		spawn(horses, 3, ZOMBIE, 0.0, 64.0, 0.6, 0);
+		horses.handle(new Clientbound.SetPassengers(2, new int[]{3}));
+		assertArrayEquals(new double[]{0, 0}, horses.pushImpulse(player, 0.0, -0.2), 1e-12);
+	}
+
 	private static EntityManager ridingWithObstacleMoving() {
 		EntityManager m = new EntityManager();
 		m.setOwnId(500);

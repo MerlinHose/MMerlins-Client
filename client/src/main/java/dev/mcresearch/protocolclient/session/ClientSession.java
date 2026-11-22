@@ -258,7 +258,13 @@ public final class ClientSession {
 			}
 		} catch (SocketTimeoutException e) {
 			error = new IOException("No data from server for " + this.config.readTimeout().toSeconds() + " s", e);
-		} catch (IOException | RuntimeException e) {
+		} catch (IOException e) {
+			// Nach requestStop ist die Verbindung geschlossen; eine Antwort auf ein schon gelesenes Paket scheitert dann mit
+			// "Connection closed" – das ist das gewollte Ende, kein Sitzungsfehler (Regression m5-threshold-0)
+			if (!this.stopRequested) {
+				error = e;
+			}
+		} catch (RuntimeException e) {
 			error = e;
 		} finally {
 			this.ended = true;
