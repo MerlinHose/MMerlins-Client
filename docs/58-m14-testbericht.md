@@ -1,17 +1,16 @@
-# 58 – Testbericht M14 (Stand 2026-11-19): teilweise abgeschlossen
+# 58 – Testbericht M14 (Stand 2026-11-22): abgeschlossen
 
-**Status: M14 ist teilweise abgeschlossen.**
+**Status: M14 ist abgeschlossen.**
 
 - **Erledigt:**
   - Fahrzeugvergleich gegen Vanilla: 16/16 Szenarien, 1125/1125 Ticks bitgenau (§3).
   - Die drei Darstellungsfehler aus dem Bildvergleich sind behoben, der Bildvergleich ist wiederholt (§5).
   - Grafiktest mit Pferdeszene (§7), Leistung RD2/RD8 und grafischer Dauerbetrieb über 6 Minuten (§8).
-  - 466 Unit-Tests sind grün.
-- **Offen:**
-  - Die Regression M1–M14 (§9). Claude Code hat sie zweimal wegen knappen Arbeitsspeichers abgebrochen (Schritt 1 und vorher der Grafiktest).
-  - Ohne vollständige Regression gibt es keine Abschlusskennzeichnung.
-- **Konsequenz:**
-  - Es gibt keinen Merge nach `main`.
+  - **Vollständige Regression M1–M14:** alle 42 Schritte bestanden (§9).
+    - Zwei Clientfehler, die nur die Regression fand, sind behoben (Commit `dab5fbd`): Fledermäuse und gerittene Pferde schoben den Spieler, und eine Antwort nach dem gewollten Stopp zählte als Sitzungsfehler.
+    - Alle dadurch betroffenen Schritte sind auf dem finalen Code wiederholt.
+  - 474 JUnit-Tests grün; der einzige übersprungene ist `VehicleIntegrationTest`, der eigens im Fahrzeugvergleich (Schritt 39) läuft und dort grün ist.
+- **Nicht Teil von M14:**
   - Die echte Microsoft-Authentifizierung bleibt auf den letzten Meilenstein verschoben.
   - M15 wurde nicht begonnen.
 
@@ -30,14 +29,14 @@
 
 | Bereich | Ergebnis |
 |---|---|
-| Unit-Tests | **466 grün**, keiner übersprungen [G] |
+| JUnit (Unit- und Integrationstests) | **474 grün**; 1 übersprungen (`VehicleIntegrationTest`, läuft nur mit Fahrzeugkurs, dort grün) [G] |
 | Fahrzeugvergleich gegen Vanilla (`m14-vehicle9`) | **16/16 Szenarien, 1125/1125 Ticks bitgenau**, inklusive Absteigen und je 9 Folgeticks; 0 Serverabweichungen, 0 Korrekturen; `VehicleIntegrationTest` grün [G] |
 | Reproduzierbarkeit | Fahrzeugsuite und Diagnose zusammen in 13 Läufen; Vanilla selbst in bis zu 8 Wiederholungen je Szenario verglichen (§4) [G] |
 | Bildvergleich (6 Entity-Szenen) | `m14-visual1`: meanΔE 6,57, meanSSIM 0,581 → nach den Korrekturen `m14-visual5`: **meanΔE 5,44, meanSSIM 0,623** (§5) [G] |
 | Grafiktest `m14-gfx7` | 241/241 Schritte, **debug=0** in allen Messbildern, Feuer 3 → 0, Entladen/Neuladen 129 → 0 → 126, 4/4 Positionsprüfungen, 0 GL-Objekte (§7) [G] |
 | Leistung RD2/RD8 | 59,2–60 FPS, 1 %-Low ≥ 59,2, p99 ≤ 16,9 ms bei bis zu 214 Entities (§8) [G] |
 | Dauerbetrieb 6 min (RD8, 100 Entities) | 59,9 FPS je Minute, 1 %-Low ≥ 59,3, Heap ohne Anstieg, 0 GL-Objekte (§8) [G] |
-| Regression M1–M14 | **nicht abgeschlossen**: Abbruch in Schritt 1 wegen Speichermangel (§9) [O] |
+| Regression M1–M14 | **42/42 Schritte bestanden**; Physik- und Entity-Schritte auf dem finalen Code `dab5fbd` wiederholt (§9) [G] |
 
 ## 2. Testaufbau Fahrzeugvergleich
 
@@ -208,35 +207,136 @@ Fenster 1280 × 720, VSync, RTX 3070. Messfenster je 15 s (Dauerbetrieb 60 s). �
   - Die Häufigkeit entspricht dem M12-Grundwert (6 Bilder > 33 ms in 6 Minuten). Ursache vermutlich Garbage Collection oder Betriebssystem-Scheduling **[O]**; ohne Einfluss auf 1 %-Low und p99.
 - **Optimierungen:** Keine nötig. Die Bildqualität ist unverändert, und die Vanilla-Vergleiche bleiben unberührt.
 
-## 9. Regression und Prozessverwaltung
+## 9. Regression M1–M14
 
-- **Regression M1–M14** (`analysis/tools/m14-regression.sh`, 45 Schritte einschließlich M13, M5/M11-Physikvergleichen, Fahrzeugvergleich, M14-Grafik/Leistung/Bildvergleich):
-  - Gestartet am 2026-11-19 um 18:14 mit 5324 MB frei.
-  - Claude Code hat den Lauf in **Schritt 1** (JUnit, M5-Physikvergleich mit Vanilla-Referenzclient) wegen knappen Arbeitsspeichers beendet. Die Projekt-JVMs erreichten bis zu 2501 MB, die freien Reserven sanken auf 2732 MB; andere Programme belegten mehrere GB.
-  - **Die Regression ist damit nicht ausgeführt [O].** Neustart ab Schritt 1: `bash analysis/tools/m14-regression.sh` (fortsetzbar mit `[von] [bis]`, erfolgreiche Schrittlogs bleiben erhalten).
-- **Zweiter Lauf am 2026-11-22**, gestartet mit 7312 MB frei, Commit-Auslastung 14,4/32,7 GB. Schritte 1–16 sind gelaufen [G]:
+**Ergebnis: alle 42 Schritte bestanden [G].** Skript `analysis/tools/m14-regression.sh` (42 Schritte, frühere Angabe „45“ war falsch; fortsetzbar mit `[von] [bis]`).
 
-  | Schritt | Gruppe | Ergebnis |
-  |---|---|---|
-  | 1 | JUnit und M2–M5-Integration, Physik gegen Vanilla | 472 Tests, 0 Fehler (1 übersprungen); 20/20 Szenarien, 896/896 Ticks bitgenau, 0 Serverabweichungen |
-  | 2 | M6 vollständig | 125/125 Schritte, 0 GL-Objekte |
-  | 3–4 | M7 Auswahl gegen Vanilla (Überleben/Kreativ) | je 75/75 gleich |
-  | 5 | M7 Interaktion | 14/14 Prüfungen |
-  | 6 | M7 Licht | 1729/1729 Zellen gleich (Himmels- und Blocklicht) |
-  | 7 | M7 Grafik | 308/308, 0 GL-Objekte |
-  | 8–13 | M8 Inventar s1–s6 | 5/25/28/11/16/4 RESULT OK, 0 FAIL |
-  | 14 | M8 Grafik | 166/166, 0 GL-Objekte |
-  | 15 | M9 e1 | 17 OK, **1 FAIL**: „cow removed“. Ursache Zeitwettlauf im Testskript: Konsole (`tail -f`, bis ~1 s) + 20 Todesticks vor `remove_entities`, Abfrage nach festen 1,5 s; der Client zeigte die Kuh noch sterbend (Gesundheit 0, Pose 7), entfernt wird sofort beim Paket. Wartezeit auf 2,5 s erhöht; Schritt muss wiederholt werden [O] |
-  | 16 | M9 e2 | 21 OK |
+### 9.1 Ablauf
 
-  - Claude Code hat den Lauf in **Schritt 17** (M9-Entity-Auswahl gegen Vanilla) erneut wegen Speichermangels beendet (Projekt-JVMs bis 2405 MB). Fortsetzung: `bash analysis/tools/m14-regression.sh 15` (Schritt 15 mit der Testkorrektur, dann ab 17).
-- **Aufräumen:**
-  - `analysis/tools/m12-cleanup.ps1` beendet jetzt auch übrig gebliebene Projekt-Gradle-Daemons. Erkannt werden sie an der Markierung `-XX:ErrorFile=mcresearch-daemon-hs_err_%p.log` aus `client/` und `research/gradle.properties`; `-D`-Eigenschaften erscheinen nicht in der Daemon-Kommandozeile.
+- **Erster Versuch, 2026-11-19:** In Schritt 1 abgebrochen (Speicher, siehe 9.4).
+- **Lauf am 2026-11-22:**
+  - Einzelne Abschnitte im Vordergrund, je Schritt Speicherprüfung vorher und nachher.
+  - Schritte 1–16 vormittags. Schritte 17–32 nachmittags (Code bis `f28a22b`).
+  - Schritte 33–42 abends auf dem finalen Code `dab5fbd`, Start jeweils mit ≥ 7900 MB frei, Commit-Auslastung 13,2–13,5/31,9 GB.
+  - Nach jedem Schritt 0 Projektprozesse.
+- **Ausgewertet wurde je Schritt:**
+  - Exit-Code
+  - `RESULT OK/FAIL`
+  - Gradle-Ergebnis (`BUILD SUCCESSFUL/FAILED`, Testberichte)
+  - `summary`/`state`-Zeilen der Vanilla-Vergleiche
+  - Schrittzahl `finished=true steps=n/n`
+  - offene GL-Objekte, externe Verbindungen
+- Der Exit-Code allein reicht nicht: Ein Lauf mit fehlgeschlagenem Gradle-Test endet mit `exit=0`.
+
+### 9.2 Ergebnisse
+
+Mit **F** markierte Schritte liefen auf dem finalen Code `dab5fbd` (erstmals oder als Wiederholung, siehe 9.3).
+
+| Schritt | Gruppe | Ergebnis |
+|---|---|---|
+| 1 F | JUnit und M2–M5-Integration, Physik gegen Vanilla (Kompression 256) | 474 Tests, 0 Fehler, 1 übersprungen; 20/20 Szenarien, 896/896 Ticks bitgenau, 0 Serverabweichungen |
+| 2 | M6 vollständig | 125/125 Schritte, 0 GL-Objekte |
+| 3–4 | M7 Auswahl gegen Vanilla (Überleben/Kreativ) | je 75/75 gleich |
+| 5 | M7 Interaktion | 14/14 Prüfungen |
+| 6 | M7 Licht | 1729/1729 Zellen gleich (Himmels- und Blocklicht) |
+| 7 | M7 Grafik | 308/308, 0 GL-Objekte |
+| 8–13 | M8 Inventar s1–s6 | 5/25/28/11/16/4 RESULT OK, 0 FAIL |
+| 14 | M8 Grafik | 166/166, 0 GL-Objekte |
+| 15 F | M9 e1 | 18/18 OK, darunter „cow removed (remove_entities): client 0 = server 0“ |
+| 16 F | M9 e2 | 21/21 OK |
+| 17–18 | M9 Entity-Auswahl gegen Vanilla (Überleben/Kreativ) | je 185/185 gleich |
+| 19 | M9 Grafik | 67 Schritte, 0 GL-Objekte |
+| 20 | M9 Leistung | 60 FPS, 1 %-Low 59–60 |
+| 21 | M9 Dauerlauf | Entity-Abgleich MATCH 20, Heap ohne Anstieg |
+| 22–25 | M10 k1–k4 (Angriffe, Schaden, Nahrung/Effekte, Tod) | 16/32/35/27 RESULT OK, 0 FAIL |
+| 26 F | M10 Vergleich mit Vanilla | 5/5 Ziele gleiche Servergesundheit; Paketfolge gleich (siehe 9.3) |
+| 27 | M10 Grafik | 94 Schritte, 0 GL-Objekte |
+| 28 F | M11 Kurs Bewegung | 22/22 Szenarien, 1210 Ticks bitgenau, 0 Zustandsabweichungen |
+| 29 F | M11 Kurs Flüssigkeiten | 21/21 Szenarien, 2305 Ticks bitgenau, 0 Zustandsabweichungen (im Wiederholungslauf, siehe 9.3) |
+| 30 F | M11 Kurs Blöcke | 22/22 Szenarien, 1863 Ticks bitgenau, 0 Zustandsabweichungen |
+| 31 | M11 Grafik | 85 Schritte, 0 GL-Objekte |
+| 32 F | M2–M5 Integration und Physik, Kompression −1 | 474 Tests, 0 Fehler; 20/20, 896/896 Ticks bitgenau |
+| 33 F | M2–M5 Integration und Physik, Kompression 0 | 474 Tests, 0 Fehler; 20/20, 896/896 Ticks bitgenau; sauberes Sitzungsende |
+| 34 F | M12 Funktionstest | 56/56 Schritte, 0 GL-Objekte |
+| 35 F | M12 HUD 1280 px | 12/12 Schritte |
+| 36 F | M12 Bildvergleich gegen Vanilla (22 Szenen) | meanΔE 4,72, meanSSIM 0,746 (M12-Abnahme: 4,68/0,743) |
+| 37 F | M13 verschlüsselte Anmeldung (lokale Simulation) | Kompression −1/0/256 und erneute Anmeldung verschlüsselt erfolgreich; 5/5 Negativfälle korrekt abgewiesen (Offline gegen Online-Server, ungültige Sitzung, HTTP 503, `unverified_username`, `authservers_down`); 0 externe Verbindungen, 40 Anfragen an den lokalen Simulationsdienst |
+| 38 F | M14 Grafik | 241/241 Schritte, `debug=0` in 7/7 Messbildern, 4/4 Positionsprüfungen Client = Server, 0 GL-Objekte |
+| 39 F | M14 Fahrzeuge gegen Vanilla | 16/16 Szenarien, 1125/1125 Ticks bitgenau, 0 Serverabweichungen, 0 Korrekturen; `VehicleIntegrationTest` ausgeführt und grün |
+| 40 F | M14 Leistung RD2 | 154/154 Schritte; 10/50/100 Entities: 60 FPS, 1 %-Low 59 |
+| 41 F | M14 Leistung RD8 | 154/154 Schritte; bis 209 verfolgte Entities: 60 FPS, 1 %-Low 60 |
+| 42 F | M14 Entity-Bildvergleich gegen `m14-visual5` | meanΔE 6,42, meanSSIM 0,601 (siehe 9.3) |
+
+- **Übersprungener Test:** In den Schritten 1, 32 und 33 meldet JUnit 1 übersprungenen Test.
+  - Das ist `VehicleIntegrationTest#vehicleCourseMatchesServerAndVanillaReference`. Er braucht den Fahrzeugkurs und die Vanilla-Fahrzeugreferenz und wird deshalb nur von `m14-vehicle-run.sh` aktiviert.
+  - In Schritt 39 lief er (`skipped=0`, `failures=0`).
+- **Erwartete Ausnahmen in den Logs:**
+  - `MinecraftClientException … 127.0.0.1:9/discovery` stammt vom Vanilla-Client bzw. Vanilla-Server: Die Mojang-Dienste sind absichtlich auf einen geschlossenen lokalen Port umgeleitet.
+  - `negative control: [Test failed …]` ist die beabsichtigte Gegenprobe des Physikvergleichs.
+
+### 9.3 Abweichungen, Fehlerbehebungen und Wiederholungen
+
+- **Schritt 15, erster Lauf (Testskript):**
+  - „cow removed“ schlug fehl: Zeitwettlauf im Testskript. Die Konsole verzögert bis ~1 s, dazu kommen 20 Todesticks vor `remove_entities`; abgefragt wurde nach festen 1,5 s.
+  - Der Client zeigte die Kuh noch sterbend (Gesundheit 0, Pose 7); entfernt wird sofort beim Paket.
+  - Wartezeit auf 2,5 s erhöht (`f28a22b`). Danach zweimal bestanden, zuletzt auf `dab5fbd` mit „client 0 = server 0“.
+- **Schritt 29, Zeiteffekt in Vanilla [E]:**
+  - Zweimal wich je ein Zustandsfeld `waterHeight` ab: zuerst `water_sprint_shallow` #44 und #62, auf `dab5fbd` einmal `swim_sprint` #137 (Vanilla 2,418, eigener Client 1,529).
+  - Position, Geschwindigkeit und Flags waren in allen Ticks bitgenau.
+  - Alle betroffenen Ticks sind Posenwechsel-Ticks (hier `SWIMMING` → `STANDING`). Vanilla berechnet `waterHeight` in `baseTick` über `updateFluidInteraction` mit der aktuellen Hitbox. Trifft die Serverpose (`DATA_POSE`) vor dem nächsten Client-Tick ein, rechnet Vanilla mit der anderen Hitbox.
+  - Unser Wert 1,529 stimmt mit allen 6 übrigen Vanilla-Läufen dieses Szenarios überein (`m11-fluid`, `-final`, `-final2`, `-final3`, `m11-m12-regress-fluid`, `m11-m14-regress-fluid-run1`).
+  - Die Wiederholungen bestanden jeweils mit 0 Abweichungen. Logs der abweichenden Läufe: `m11-m14-regress-fluid-run1`, `m11-m14-regress-fluid-run2`.
+- **Schritt 33, Clientfehler 1: nicht schiebbare Entities** (`dab5fbd`):
+  - Positionsabweichung 0,2254 Blöcke in `wall_slide` und `jump_in_place`. Am Kurs flogen 6 Fledermäuse, und unser Client ließ sich von jeder lebenden Entity schieben.
+  - Vanilla: `Bat#isPushable` = false, `AbstractHorse#isPushable` = `!isVehicle()`; `EntitySelector.pushableBy` verlangt `isPushable`.
+  - Korrektur in `EntityManager`: Fledermaus und pferdeartige Typen mit Reiter schieben nicht.
+  - Regressionstest `PassengerAndBabyTest#batsAndRiddenHorsesDoNotPushThePlayer`.
+- **Schritt 33, Clientfehler 2: Sitzungsende** (`dab5fbd`):
+  - Traf nach `requestStop` noch ein Paket ein, auf das der Client antworten wollte, endete die Sitzung mit `IOException: Connection closed` als Fehler.
+  - Korrektur in `ClientSession#run`: Nach einem gewollten Stopp ist das kein Fehler.
+  - Regressionstest `ClientSessionTest#replyAfterRequestedStopIsNotAnError`; er schlug vor der Korrektur nachweislich fehl.
+- **Wiederholung nach `dab5fbd`:**
+  - Wiederholt wurden alle Schritte, bei denen eine der beiden Änderungen das Ergebnis beeinflussen kann:
+    - Tick-Vergleiche des Spielers gegen Vanilla mit möglichen Entities in der Nähe: 1, 26, 28–30, 32
+    - Entity-Tests: 15, 16
+    - Schritt 33
+  - Die Schritte 34–42 liefen ohnehin auf `dab5fbd`.
+  - Nicht wiederholt wurden reine Auswahl-, Inventar-, Licht- und Grafikschritte (2–14, 17–25, 27, 31). Dort schiebt keine Entity den Spieler, und ein Stopp mit noch laufender Antwort beeinflusst kein Prüfergebnis.
+  - Alte Schrittlogs: `analysis/runtime-logs/archive-pre-dab5fbd/`.
+- **Schritt 26, Paketfolge:**
+  - Im Lauf auf altem Code fehlten dem eigenen Client die zwei einleitenden `set_carried_item` (PACKETS DIFF). Ursache ist der vom Server gespeicherte Hotbar-Platz des jeweiligen Testspielers (docs/45 §8, docs/49 §8).
+  - In der Wiederholung war der Ausgangszustand gleich: PACKETS EQUAL.
+- **Schritt 42, Bildvergleich [E]:**
+  - meanΔE 6,42 gegenüber 5,44 in `m14-visual5`.
+  - Ursache sind allein die Wolken. Die Vanilla-Bilder stammen aus `m14-visual5`, und die Wolken hängen an der Weltzeit (`gameTime` 1129581 → 1338111).
+  - Himmels- und Nebelfarbe, Tageszeit und Wetter sind laut Umgebungsprotokoll identisch (`#79a5ff`, `#afccff`, 6000, kein Regen). Seit `m14-visual5` wurde kein Himmels-, Nebel- oder Wettercode geändert.
+  - Getrennt ausgewertet (mittlere Pixeldifferenz zu Vanilla): unterhalb des Horizonts (Boden und Entities) 8,48 → 8,54, also unverändert; Himmelsbereich 10,9 → 14,3.
+
+### 9.4 Abbrüche und Speicher
+
+- **Ursache der früheren Abbrüche:** Weder der physische Speicher noch die Commit-Grenze war erschöpft. Projekt-JVMs erreichten höchstens ~2,5 GB, die Commit-Auslastung blieb unter 20/32 GB.
+- Beendet hat die Läufe der Speicherschutz von Claude Code: Er beendet Hintergrund-Shells, wenn der freie Speicher knapp ist und die Sitzung untätig wartet. Andere Programme belegten zeitweise mehrere GB (u. a. ein Spiel mit ~4,7 GB), sodass nur 2,7–3,4 GB frei blieben.
+- **Abhilfe ohne Abschalten des Schutzes:**
+  - Schritte einzeln im Vordergrund überwacht.
+  - Start erst ab ≥ 6800 MB frei.
+  - Fremde Prozesse wurden nicht beendet.
+  - Seither kein Abbruch mehr; geringster freier Speicher während der abschließenden Schritte 5373 MB.
+
+### 9.5 Prozessverwaltung
+
+- `analysis/tools/m12-cleanup.ps1` beendet auch übrig gebliebene Projekt-Gradle-Daemons.
+  - Erkannt werden sie an der Markierung `-XX:ErrorFile=mcresearch-daemon-hs_err_%p.log` aus `client/` und `research/gradle.properties`; `-D`-Eigenschaften erscheinen nicht in der Daemon-Kommandozeile.
   - Daemons anderer Projekte bleiben unberührt.
   - Beendet wird erst nach Testskripten, Test-JVMs und Server.
-  - Nach jedem Abbruch: 0 Projektprozesse, Konfiguration `difficulty=easy`, `network-compression-threshold=-1`, `online-mode=false`.
+- Nach jedem Schritt: 0 Projektprozesse, Konfiguration `difficulty=easy`, `network-compression-threshold=-1`, `online-mode=false`.
 
-## 10. Offene Prüfungen
+## 10. Verbleibende Einschränkungen
 
-1. Vollständige Regression M1–M14 bei ausreichend freiem Speicher (Ziel ≥ 5000 MB frei während des Laufs).
-2. Danach Abschlusskennzeichnung und Merge nach `main`.
+1. **Darstellung (aus §5, [E]):**
+   - keine Schatten unter Entities
+   - keine Enderman-Partikel
+   - Animationsphasen (Creeper-Ladung, Feuer) und Wolkenlage nicht zeitgleich mit Vanilla
+   - Bildvergleiche daher nicht pixelgleich
+2. **Zeiteffekt beim Vergleich mit Vanilla (§9.3):** In Posenwechsel-Ticks kann der Vanilla-Referenzclient gelegentlich ein anderes `waterHeight` liefern. Ein einzelner Lauf kann deshalb ohne Clientfehler fehlschlagen; Positionen sind davon nicht betroffen.
+3. **Speicher:** Die Regression braucht zuverlässig ≥ ~6,8 GB freien Speicher, wenn Claude Code sie steuert, und läuft am stabilsten Schritt für Schritt im Vordergrund.
+4. **Nicht Teil von M14:** echte Microsoft-Authentifizierung (letzter Meilenstein; M13 nur mit lokaler Simulation geprüft) und M15.

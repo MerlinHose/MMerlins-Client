@@ -65,7 +65,7 @@ Analyse der Minecraft-26.3-Entwicklungsumgebung in `research/` als Grundlage fü
 | [55-entity-modelle-und-animationen.md](55-entity-modelle-und-animationen.md) | Hierarchisches Modellsystem, Darstellungspläne je Typ (Varianten, Baby-Modelle, Zusatzschichten), Animationen, Renderer-Transformation, Abweichungen |
 | [56-spieler-skins.md](56-spieler-skins.md) | Classic/Slim, zweite Skin-Schicht, SkinManager (lokale/Standard-Skins, sichere Dekodierung, Cache, Altformat), Mannequin-Profile, vorbereitete Online-Skins |
 | [57-fahrzeuge-und-passagiere.md](57-fahrzeuge-und-passagiere.md) | Fahrzeug- und Passagierprotokoll, Sitzpositionen, Boots- und Pferdephysik, Loren, Entity-Kollisionen und Schieben |
-| [58-m14-testbericht.md](58-m14-testbericht.md) | Testbericht M14 (teilweise): Fahrzeug-Tickvergleich 16/16 bitgenau, Diagnose und Determinismus, behobene Darstellungsfehler, Bildvergleich, Grafiktest, Leistung und Dauerbetrieb; Regression offen |
+| [58-m14-testbericht.md](58-m14-testbericht.md) | Testbericht M14 (abgeschlossen): Fahrzeug-Tickvergleich 16/16 bitgenau, Diagnose und Determinismus, behobene Darstellungsfehler, Bildvergleich, Grafiktest, Leistung und Dauerbetrieb; Regression M1–M14 42/42 bestanden |
 
 **Lesepfad für den späteren eigenen Client:** 01 → 02 (Hauptschleife) → 04 (Eingaben) → 05 + 08 (Verbindung) → 07 (IDs) → 03 (Rendering).
 
