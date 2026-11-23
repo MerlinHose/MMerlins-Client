@@ -1,193 +1,173 @@
-# 62 – Testbericht M15 (Stand 2026-11-22): teilweise abgeschlossen
+# 62 – Testbericht M15 (Stand 2026-11-23): teilweise abgeschlossen
 
 **Status: M15 ist teilweise abgeschlossen. Kein Merge nach `main`.**
 
-- **Branch:** `m15-menu-settings`, Basis `main` = `aba97d0` (M14).
-- **Gepushte Zwischenstände:** `8b1a473`, `5088095`; dieser Bericht folgt im nächsten Commit.
+- **Grund:** Die vollständige Regression M1–M14 auf dem M15-Stand ist noch offen. Die Schritte 5 und 11–42 konnten nicht laufen, weil der freie Arbeitsspeicher unter der vorgegebenen Grenze von 6800 MB blieb (§3).
+- **Branch:** `m15-menu-settings`. Code der Regression: `33835af`. `main` = `aba97d0` (M14).
 - **Nicht begonnen:** M16, M17, M18; die echte Microsoft-Authentifizierung bleibt zurückgestellt.
+- **Weitere Dokumentation:** Architektur docs/59, Einstellungen/Eingabe docs/60, Menüs/Sitzungen/MVS/Distribution docs/61.
 
-Kennzeichnung: **[G]** gemessen bzw. automatisch geprüft, **[O]** offen.
+Kennzeichnung: **[G]** gemessen/automatisch geprüft, **[E]** begründete Abweichung, **[O]** offen.
 
 ## 1. Ergebnisübersicht
 
-| Bereich | Ergebnis |
-|---|---|
-| GUI-System, ScreenManager, Hauptmenü, Einstellungen, Input System, Verbindungsverwaltung | umgesetzt (§2–§7) |
-| Neue Unit-Tests (ohne Fenster) | 41 grün: Einstellungen 13, Eingabe 9, Menüs 11, Verbindungen 8 [G] |
-| Darstellungsprüfung ohne Fenster | alle Screens und Reiter × 8 Auflösungen × 5 GUI-Skalierungen: 0 gekürzte Texte, nichts außerhalb, keine Überlappungen [G] |
-| GUI-Integrationstest im echten Fenster mit lokalem Server (`m15-ui2`) | 3 Durchgänge, **399 RESULT OK, 0 FAIL** [G] |
-| 20 Verbinden/Trennen ohne Neustart | 20/20; danach 0 Sitzungs-/Tick-Threads, GL-Objekte stabil 93 [G] |
-| Test mit echten Betriebssystem-Eingaben | **offen** [O] (§9) |
-| Startbare Testdistribution (Phase J) | **nicht umgesetzt** [O] |
-| Vollständige Regression M1–M14 auf dem M15-Stand | **nicht ausgeführt** [O] |
-| Dokumente 59, 60, 61 | **nicht erstellt** [O]; die Inhalte stehen in diesem Bericht kurz (§2–§7) |
-
-## 2. Architektur (Kurzfassung statt docs/59)
-
-Trennung nach der Vorgabe:
-
-| Bereich | Klassen | Teil |
+| Prüfung | Ergebnis | Code |
 |---|---|---|
-| Application Lifecycle | `gl/MerlinApp` | render |
-| Screen Management | `ui/ScreenManager`, `ui/Screen`, `ui/GameScreen` | main (nur JDK) |
-| GUI Components | `ui/*` (Widgets), `ui/Java2DCanvas`, `gl/UiLayer` | main / render |
-| Settings Management | `settings/SettingsManager`, `Settings`, `Setting`, `SettingsMigration` | main |
-| Input Management | `input/InputManager`, `GameAction`, `InputCode`, `KeyBindings`, `InputSource`; `gl/GlfwInputSource` | main / render |
-| Network Connection Management | `app/ConnectionManager`, `ConnectErrors`, `ServerPinger`, `ServerList`, `ServerEntry`, `ProtocolVersions` | main |
-| Game Rendering | `gl/GameScene` (je Verbindung), `gl/ClientResources` (Anwendungslebensdauer) | render |
+| JUnit ohne Server | 509/509 grün, 0 übersprungen [G] | `47566ef` |
+| JUnit mit Integrationstests (Regressionsschritt 1) | 515 Tests, 0 Fehler, 1 übersprungen (§2) [G] | `33835af` |
+| Regression M1–M14 | Schritte 1–4 und 6–10 bestanden; Schritt 5 Testskriptfehler; Schritte 11–42 wegen Speichers nicht gelaufen [O] | `33835af` |
+| GUI-Integrationstest (3 Durchgänge, lokaler Server) | 399 OK / 0 FAIL [G] | `5088095` |
+| Echte Betriebssystem-Eingaben, 15 Abläufe | 52 OK / 0 FAIL, Serverabgleich 4/4 Positionen und 2/2 Inventar [G] | `1f00585` |
+| Leistung M14 gegen M15 | keine Regression; 1 %-Low 59,2–59,4 FPS (§5) [G] | `6321f5b` |
+| Testdistribution aus sauberem Verzeichnis | 18 OK / 0 FAIL, Fehlermeldungen geprüft (§6) [G] | `1f00585` |
+| docs/59–62 | vorhanden | – |
 
-- **Menülogik nicht in GameView:** Die bisherige Schleife ist in `GameScene` verschoben; `GameView` hält nur noch die gemeinsamen Zustände für den Autotest.
-- **Ohne LWJGL testbar:** Menüs, Einstellungen, Eingabe und Verbindungsmodell liegen im `main`-Teil (nur JDK inklusive AWT für Java2D). Der Terminalclient bleibt ohne LWJGL.
-- **Darstellung:** Menüs werden mit Java2D (eigene Gestaltung, Systemschrift, keine Mojang-Grafiken) in ein Bild gezeichnet und nur bei Änderungen als Textur hochgeladen.
-- **Direktmodus unverändert:** `--autotest`, `--direct` und `--login-ui` verbinden wie bisher sofort, ohne Hauptmenü und ohne Nutzereinstellungen. Alle Regressionsskripte laufen in diesem Modus.
+**Gelten die älteren Läufe für den Endstand?**
+- Seit `5088095` (GUI-Test) wurden nur Testwerkzeuge, Distribution, Dokumentation und die Testskript-Klasse `UiAutotest` geändert. Diagnose und Profiler-Ausgabe in `UiAutotest` und `Window` wirken nur im Testmodus. Am Spielcode hat sich nichts geändert.
+- Der Test mit echten Eingaben (`1f00585`) und die Leistungsreihe (`6321f5b`) liefen auf dem Spielcode von `33835af`.
+- Der GUI-Test vom 22.11. (`5088095`) lief auf demselben Spielcode, aber mit einem älteren Stand der Testwerkzeuge. Vor dem Merge soll er auf dem Endstand einmal wiederholt werden (§8).
 
-## 3. Neue GUI-Komponenten
+## 2. JUnit
 
-Button, TextLabel, Checkbox, Slider, Dropdown (gesperrte Einträge „geplant“), TextInput (Filter, Prüfung, Strg+A/C/V/X), ScrollContainer, Tooltip, Dialog, TabNavigation, KeyBindingEditor.
+- **Unit-Tests (`./gradlew test`, `47566ef`):** 509 Tests, 0 Fehler, 0 übersprungen.
+  - 468 aus M1–M14.
+  - 41 neue aus M15: Einstellungen 13, Eingabe 9, Menüs 11, Verbindungen 8. Sie decken Sitzungsverwaltung, Einstellungen, Tastenbelegungen und GUI-Eingaben ab.
+  - Die M13-Authentifizierungssimulation (`EncryptedLoginTest`, `AuthChainTest` u. a.) ist enthalten und grün.
+- **Mit Integrationstests (`-PintegrationTest`, Regressionsschritt 1, `33835af`):** 515 Tests, 0 Fehler, 1 übersprungen.
+  - Übersprungen ist `VehicleIntegrationTest#vehicleCourseMatchesServerAndVanillaReference`. Er braucht Fahrzeugkurs und Vanilla-Fahrzeugreferenz und läuft nur in Regressionsschritt 39 (`m14-vehicle-run.sh`); dieser ist auf M15 noch offen.
 
-**Gemeinsame Mechanismen:**
-- logische GUI-Einheiten mit GUI-Skalierung nach der Vanilla-Regel (automatisch: größte Stufe mit mindestens 320 × 240 Einheiten)
-- Fokusreihenfolge, Hover-, Fokus- und Aktivzustände
-- Popups, modale Dialoge, Tooltips mit Verzögerung
-- Überlaufzähler für gekürzte Texte
+## 3. Regression M1–M14 auf `33835af`
 
-**Screens:** Hauptmenü, Einzelspieler/lokale Testwelt, Mehrspieler, Servereditor, Einstellungen (Grafik, Steuerung, Tastenbelegung, Oberfläche), Konto, Über, Verbinden, Pause, Verbindung getrennt. Inventar/Container und Todesbildschirm bleiben die bewährten Spielklassen und sind über `GameScreen` im ScreenManager eingehängt.
+Ablauf wie in M14: Schritte einzeln, im Vordergrund überwacht, Speicherprüfung vor jedem Schritt mit `MIN_FREE=6800`, Gradle-Daemons nach jedem Schritt beendet. Das Skript hat 42 Schritte (geprüft: 32 `step`-Zeilen, darunter drei Schleifen).
 
-## 4. Einstellungen und Dateiformat (Kurzfassung statt docs/60)
+| Schritt | Gruppe | Ergebnis |
+|---|---|---|
+| 1 | JUnit, M2–M5-Integration, Physik gegen Vanilla (Kompression 256) | 515 Tests, 0 Fehler; 20/20 Szenarien, 896/896 Ticks bitgenau [G] |
+| 2 | M6 vollständig | 125/125 Schritte [G] |
+| 3–4 | M7 Auswahl gegen Vanilla (Überleben/Kreativ) | je 75/75 gleich [G] |
+| 5 | M7 Interaktion | **Abbruch durch das Testskript** (unten) [O] |
+| 6 | M7 Licht | 1729/1729 Zellen gleich [G] |
+| 7 | M7 Grafik | 308/308 [G] |
+| 8–10 | M8 Inventar s1–s3 | 5/25/28 RESULT OK, 0 FAIL [G] |
+| 11–14 | M8 s4–s6, M8 Grafik | kontrolliert nicht gestartet: 6340 MB frei < 6800 [O] |
+| 15–42 | M9–M14, M13-Simulation, Fahrzeuge, Leistung, Bildvergleich | nicht gestartet [O] |
 
-**Datei:** `~/.minecraft-merlin/settings.properties` (UTF-8, Properties, `settings.version=2`), außerhalb des Repositorys. Serverliste: `servers.properties` im selben Ordner.
+**Schritt 5 im Detail:**
+- `m7-interact.sh` meldete „client not ready“ schon 0,08 s nach dem Start des Terminalclients, statt bis zu 120 s auf dessen Bereitschaft zu warten.
+- Die Aufräumroutine schickte 2 s später `stop` an den Server (Serverlog 18:25:41). Der Client verband sich um 18:25:43 und bekam „Connection refused“.
+- Damit liegt der Fehler beim Testablauf, nicht beim Client: Der Terminalclient ist von M15 nicht verändert, und derselbe Schritt bestand in M14 (14/14).
+- Warum die Warteschleife sofort endete, ließ sich aus den Logs nicht klären [O].
+- Ein verwaister `tail`-Prozess dieses Schritts wurde danach beendet.
 
-**Umgesetzte Einstellungen, alle wirken sofort:**
-- **Grafik:** Anzeigemodus (Fenster/Vollbild/randlos), Vollbildauflösung, VSync, max. Bildrate, Sichtweite (dem Server per `client_information` mitgeteilt), Sichtfeld, Helligkeit, Partikel (Vanilla-Stufen), GUI-Skalierung, Wolken, Biomübergang, weiche Beleuchtung
-- **Steuerung:** Mausempfindlichkeit (Vanilla-Formel, 100 % = bisherige 0,15°/px), Maus invertieren, Sprinten und Schleichen als Umschalter, Tastenbelegung
-- **Oberfläche:** HUD, Debug-Anzeige, Tooltips; Barrierefreiheit: kontrastreiche Menüs, Bewegung reduzieren
-- **Konto:** Offline-Spielername
+**Speicher:**
+- Mit dem Arbeitsspeicher-Bedarf eines geöffneten Browsers (DuckDuckGo, etwa 1,9 GB) lag der freie Speicher 8 Minuten lang stabil bei 6,3–6,4 GB.
+- Fremde Programme wurden nicht beendet, Schutzmechanismen nicht verändert.
+- **Fortsetzung:** `bash analysis/tools/m14-regression.sh 5 5`, dann `… 11 11` usw., jeweils bei mindestens 6800 MB frei.
 
-**Als „geplant“ gesperrt:** Wolken „Schnell“, Perspektive (F5), Controller (M17), Ton, Sprache, Microsoft-Konto.
+## 4. Echte Betriebssystem-Eingaben (Phase 3)
 
-**Robustheit, geprüft in Unit- und GUI-Tests:**
-- fehlende Datei → Standardwerte
-- ungültige Werte → Standard mit Hinweis
-- beschädigte Datei → wird als `.broken-<Zeit>` gesichert, der Client startet mit Standardwerten (GUI-Durchgang 3)
-- veraltetes Format 1 → Migration
-- neuere Version und unbekannte Schlüssel bleiben erhalten
-- Speichern atomar; schreibgeschützt oder fehlgeschlagen → Meldung ohne Abbruch
-- Zurücksetzen mit Rückfrage
+Werkzeug: `analysis/tools/m15-realinput.ps1` (`SetCursorPos`, `mouse_event`, `keybd_event`) mit `analysis/tools/m15/ui-4-real.txt`, gestartet über `M15_REALINPUT=1 bash analysis/tools/m15-ui-run.sh …`.
 
-## 5. Merlin Input System, Vorbereitung input4j
+**Problem A – Pfeiltasten (Ursache: Testwerkzeug)**
+- Diagnose mit protokollierten GLFW-Ereignissen (`log-input`): `VK_DOWN` ohne `KEYEVENTF_EXTENDEDKEY` ergibt GLFW-Taste 322 (Ziffernblock 2, Scancode 80), mit Kennzeichen GLFW 264 (Pfeil runter, Scancode 336).
+- Drücken und Loslassen kommen jeweils an. Die Eingabelogik ist korrekt und wurde nicht verändert; das Werkzeug setzt das Kennzeichen jetzt für die Pfeiltasten.
 
-- **Kette:** Gerät (`InputSource`) → Belegung (`KeyBindings`, `InputCode`) → `GameAction` → Spielmechanik.
-- **Aktionen:** Bewegung, Umsehen (analog), Springen, Schleichen, Sprinten, Angreifen, Benutzen, Inventar, Fallenlassen, Zweithand, Schnellzugriff 1–9 sowie nächster und vorheriger Platz, HUD, Bildschirmfoto, Debug, Perspektive (geplant), Vollbild, Pause und die Menüaktionen GUI_*.
-- **Bereiche:**
-  - Spielwelt ohne Screen: alle Aktionen
-  - Screen über der Welt: Spielaktionen losgelassen, Umschalter gelöscht
-  - Hauptmenü: nur Menü- und globale Aktionen
-- **Konflikte:** werden erkannt und rot markiert; Esc und Achsen sind nicht belegbar.
-- **Weitere Quellen:** über `InputManager.register` anschließbar; ein Test zeigt eine zweite Quelle mit Gamepad-Codes. **input4j ist nicht eingebunden.**
-- **Physik unverändert:** Die Physik erhält weiterhin dieselbe `PlayerPhysics.Input`; der Autotest-Weg ist unverändert.
+**Problem B – Fenster verlor den Vordergrund**
+- In drei weiteren Läufen trat der Verlust nicht wieder auf: kein GLFW-Fokuswechsel, kein Vordergrundwechsel.
+- Die Ursache des einen Vorfalls bleibt unbestätigt. Die Vermutung „NVIDIA-Overlay“ ist nicht belegt.
+- **Absicherung:** Vor jeder Eingabe prüft das Werkzeug den Vordergrund. Bei Verlust protokolliert es Fenster, Prozess und Titel und holt das Clientfenster höchstens dreimal zurück. Gelingt das nicht, bricht es ab, ohne blind weiter einzugeben.
 
-## 6. Verbindungsverwaltung und MVS-Vorbereitung (Kurzfassung statt docs/61)
+**Problem C – Skript startete nicht (Ursache gefunden)**
+- PowerShell 5.1 liest BOM-lose Dateien als Windows-1252. Der UTF-8-Gedankenstrich „–“ wurde zu „â€““; das letzte Zeichen wertet PowerShell als Anführungszeichen, was einen Parserfehler auslöste.
+- Das Laufskript hatte die Ausgabe verworfen, deshalb gab es keine Meldung.
+- **Behoben:**
+  - Das Skript ist reines ASCII (geprüft: 0 Parserfehler).
+  - Ausgabe und Exit-Code werden protokolliert (`realinput-ps-<n>.out`, `real-input script exit=…`).
+  - Ein Startprotokoll enthält PowerShell-Version und Vordergrundfenster.
 
-- **Phasen:** Server prüfen (Statusping) → Verbindung → Anmeldung → Konfiguration → Welt laden → verbunden. Sie werden aus dem echten Zustandsautomaten der `ClientSession` gelesen; Abbrechen ist jederzeit möglich.
-- **Verständliche Fehler:**
-  - Server nicht erreichbar
-  - Zeitüberschreitung
-  - Verbindung unterbrochen
-  - nicht unterstützte Serverversion
-  - Server hat abgelehnt
-  - Adresse nicht erlaubt
-- **Keine Geheimnisse in Meldungen:** Tokens und Schlüssel werden aus Servertexten entfernt (Test).
-- **Pausenmenü:** Die Sitzung läuft weiter; Keep-Alive und Tick laufen auf eigenen Threads.
-- **Trennen gibt frei:** Chunk-Meshes, Entity- und Partikelzustand werden gelöscht, Sitzungs- und Tick-Thread beendet. Renderer, Atlas und Shader bleiben für die nächste Verbindung.
-- **MVS:**
-  - Client-Version `0.15.0` getrennt von Minecraft 26.3 und Protokoll 777
-  - `ProtocolVersions` meldet: nativ, ab 1.20.2 „mit MVS geplant“, zu alt, zu neu
-  - Servereinträge speichern die erkannte Serverversion unabhängig vom Client
-  - **keine Protokollübersetzung**
-- **Externe Server bleiben gesperrt:** nur localhost und 127.x; Hostnamen werden ohne DNS-Abfrage abgewiesen, auch für den Statusping. Laut Netzwerkmonitor in allen Läufen **0 externe Verbindungen** [G].
+**Vollständiger Test (`m15-real4`): 52 RESULT OK, 0 FAIL, Eingabeskript Exit 0, 0 Vordergrundverluste**
 
-## 7. Änderungen an bestehendem Code
+| # | Ablauf (echte Eingabe) | Prüfung |
+|---|---|---|
+| 1 | Hauptmenü: Tab, ↓, ↓, Eingabe | Einstellungen öffnen sich; Esc → Hauptmenü |
+| 2–3 | Klick „Einzelspieler / lokale Testwelt“, „Welt betreten“ | Phase CONNECTED |
+| 4 | W 0,8 s, A, S, D | Position geändert; Server bestätigt die Position exakt |
+| 5 | Mauszeiger 300 px waagerecht | Kamera dreht 45° |
+| 6–8 | E, Klick Platz 36 → Platz 9, E | Inventar auf/zu; Client: Platz 36 leer, Platz 9 16 Eichenbretter; Server: `CHECK server inventory.0 planks 16`, `CHECK server hotbar.0 empty` |
+| 9 | Esc | Pausenmenü; Weltsteuerung gesperrt |
+| 10 | Klick „Einstellungen“, Klick VSync | `graphics.vsync=false` |
+| 11 | Reiter „Tastenbelegung“, Klick „Springen“, Taste J | `controls.key.jump=key:74` |
+| 12 | „Fertig“, „Zurück zum Spiel“, Taste J | Spieler springt (max. +1,252 Blöcke = Vanilla-Sprunghöhe) |
+| 13 | Esc, „Zum Hauptmenü“ | Hauptmenü |
+| 14 | lokale Testwelt, „Welt betreten“ | erneut verbunden; Serverposition = Clientposition |
+| 15 | Esc, „Zum Hauptmenü“, „Spiel beenden“ | Prozess endet regulär; 0 GL-Objekte offen |
 
-- **`ClientSession`:** neue Methode `updateClientInformation`. Sie sendet `client_information` im Spielzustand nur bei einer Änderung; im Direktmodus wird sie nie aufgerufen.
-- **`ParticleRenderer`:** Partikelstufe mit eigenem Zufallsgenerator; bei „Alle“ unverändert und ohne zusätzliche Zufallszahlen.
-- **`InventoryScreen`:** Tasten 1–9, F und Q laufen über die Belegung.
-- **`EntityRenderer`:** neue Methode `resetSession()`.
-- **`Window`:** Ereigniswarteschlangen für die Menüs, Anzeigemodi, VSync, Zwischenablage, Mindestgröße 320 × 240 und Test-Einspeisung.
+- **Serverabgleich:** `data get entity … Pos` zu vier Zeitpunkten, Client = Server in 4/4.
+- **Netzwerk:** 0 externe Verbindungen.
+- Wegen `--test-no-grab` fängt das Spiel den Systemzeiger nicht wirklich. Mausbewegungen werden trotzdem wie bei gefangener Maus als Blick ausgewertet.
 
-## 8. GUI-Tests mit Fenster und Server (`analysis/tools/m15-ui-run.sh`, Lauf `m15-ui2`)
+## 5. Leistung (Phase 4)
 
-- **Aufbau:** lokaler Vanilla-Server, Client im Menümodus mit `--ui-test` und `--test-no-grab`, damit die Testmaus nicht die Systemmaus fängt.
-- **Eingaben:** Klicks und Tasten laufen über die Ereigniswarteschlangen des Fensters.
-- **Durchgang 1, 84 OK:**
-  - Start im Hauptmenü
-  - Tastatur- und Mausnavigation
-  - Einstellungen ändern und speichern
-  - Tastenbelegung mit Konflikt
-  - Abbrechen bei einem stummen Dienst und Zeitüberschreitung
-  - Verbinden, Inventar, Pausenmenü (Bewegung, Blick und Interaktion gesperrt; Δpos 0)
-  - Einstellungen im Spiel, Fortsetzen (Spieler bewegt sich)
-  - Trennen, Hauptmenü, erneut verbinden
-  - 1600 × 900, 1920 × 1080 randlos, 854 × 480, GUI-Skalierung 2 und 4: 0 gekürzte Texte
-  - Beenden mit 0 offenen GL-Objekten
+**Protokoll, für alle Läufe gleich** (`analysis/tools/m15/perf-direct.txt`, `perf-menu.txt`):
+- gleiche Welt, Teleport auf (0,5 | 100 | 0,5), Blick 0°/10°
+- 1280 × 720, Sichtweite 6, VSync an, friedlich
+- 20 s Aufwärmen nach dem Laden der Meshes, zwei Messfenster zu je 30 s
+- gemessen mit dem FrameProfiler aus M12
+- M14 als Arbeitskopie von `aba97d0`, abwechselnd mit M15 direkt und M15 Menümodus
+
+| Stand | 1 %-Low FPS | Ø FPS | p99 ms | max ms | CPU/Frame ms |
+|---|---|---|---|---|---|
+| M15 direkt, 2 Läufe × 2 Fenster | 59,2 / 59,2 / 59,3 / 59,3 | 60,0 | 16,86–16,89 | 17,4–18,4 | 1,1–2,1 |
+| M15 Menümodus, 2 × 2 | 59,3 / 59,2 / 59,4 / 59,4 | 60,0 | 16,84–16,89 | 17,0–18,4 | 0,8–1,6 |
+| M14, Reihe 1 | 59,6 / 59,5 | 60,0 | 16,78–16,80 | 17,0 | 1,8 |
+| M14, Reihe 2 (2 × 2) | 45,6 / 46,9 / 46,5 / 45,9 | 60,0 | 21,3–21,9 | 22,9–25,1 | 16,6 |
+
+**Bewertung**
+- **Keine M15-bedingte Regression:** M15 erreicht im Menü- und Direktmodus dieselben Werte wie M14 im besten Lauf; die Differenz von 0,2–0,4 FPS liegt in der Streuung.
+- **Messumgebung streut stark** [E]: Derselbe M14-Code lieferte in Reihe 2 nur etwa 46 FPS beim 1 %-Low; dort maß der Profiler den ganzen Frame als CPU-Zeit. Die Ursache wurde nicht untersucht; sie betrifft den M14-Code.
+- **Störung durch fremdes Programm:** Ein verworfener Lauf (Fenster mit 129 ms) fiel zeitlich mit dem Start eines Browsers zusammen.
+- **Herkunft der früheren 54–55 FPS (docs/62 vom 22.11.):** eine andere Kennzahl (gleitende Bildstatistik über 512 Frames), gemessen 5 s nach dem Verbinden während des Chunk-Ladens und direkt nach Einstellungswechseln. Unter festem Protokoll tritt der Wert nicht auf.
+- **Pro Frame neu in M15:**
+  - ein `InputManager.update` (feste EnumMap, keine Listen)
+  - ScreenManager-Tick nur bei offenem Screen
+  - kein Neuzeichnen der Menüebene ohne Änderung
+- Ohne Screen wird die Menüebene nicht gezeichnet. Eine Codeänderung war nicht nötig.
+
+## 6. Testdistribution (Phase 5)
+
+Bau mit `./gradlew merlinDist`, getestet als Kopie in einem leeren Ordner (`%TEMP%\…\distclean\MerlinClient`), gestartet über `bin\merlin.cmd`.
+
+| Prüfung | Ergebnis |
+|---|---|
+| Inhalt | 4,7 MB: zwei eigene JARs, LWJGL 3.4.3 mit Windows-Natives, Startskripte, LIESMICH; keine Minecraft-Dateien, keine Einstellungen, keine Tokens (JAR-Inhalt geprüft) |
+| Fehlende Minecraft-JAR (`--assets C:\nicht\vorhanden\26.3.jar`) | verständliche Meldung, Exit-Code 2 |
+| Java nicht auffindbar | verständliche Meldung, Exit-Code 2 |
+| 1. Start ohne Einstellungsdatei | Hauptmenü; Ressourcen automatisch aus `%APPDATA%\.minecraft\versions\26.3\26.3.jar` (offizielle JAR), Welt korrekt texturiert |
+| Einstellungen ändern und speichern, Programm schließen | Partikel minimal, Sichtfeld 72, Fallenlassen = G; Datei geschrieben |
+| Erneuter Start | `settings=LOADED`, alle drei Werte wiederhergestellt |
+| Lokalen Server betreten, trennen, beenden | verbunden, getrennt (Sitzungs-Threads 0), regulär beendet, 0 GL-Objekte |
+
+**Gesamt:** 18 RESULT OK, 0 FAIL, 0 externe Verbindungen.
+
+**Gefundene und behobene Fehler im Startskript:**
+- Mit `JAVA_HOME` unter „C:\Program Files“ scheiterte die Versionsabfrage.
+- Eine leere Versionsangabe ergab einen `if`-Syntaxfehler.
+
+**Voraussetzungen:** Java 25, eine lokale Minecraft-26.3-Installation und für die Testwelt ein lokaler Vanilla-26.3-Server (docs/61 §8).
+
+## 7. GUI-Integrationstest (Lauf `m15-ui2`, vom 22.11.)
+
+- **Durchgang 1, 84 OK:** Menüs mit Tastatur und Maus, Einstellungen, Tastenbelegung mit Konflikt, Abbrechen/Zeitüberschreitung, Verbinden, Inventar, Pause, Einstellungen im Spiel, Fortsetzen, Trennen, erneut verbinden, Auflösungen 1600 × 900, 1920 × 1080 (randlos), 854 × 480 und GUI-Skalierung 2/4 ohne gekürzte Texte, Beenden.
 - **Durchgang 2, 308 OK:**
-  - nach Neustart neu geladene Werte
-  - Zurücksetzen
-  - 20 Verbindungszyklen mit Inventar
+  - nach Neustart neu geladene Einstellungen, Zurücksetzen
+  - 20 Verbindungs- und Trennzyklen mit Inventar; danach 0 Sitzungs- und Tick-Threads, GL-Bestand konstant 93
   - 25 schnelle Screenwechsel
-  - Leistung
+  - VSync und Sichtweite im Spiel
 - **Durchgang 3, 7 OK:** Start mit beschädigter Einstellungsdatei.
 
-**Behobene Fehler aus diesen Tests:**
-- Esc öffnete und schloss das Pausenmenü im selben Bild.
-- Die Serverliste war nach der Rückkehr leer.
-- Der Statusping blockierte bei einem stummen Dienst.
-- Ein abgebrochener Verbindungsversuch konnte einen neuen stören.
+## 8. Offene Punkte (kein Merge)
 
-**Leistung** (1280 × 720, RTX 3070):
-
-| Situation | FPS | 1 %-Low | Menübild neu zeichnen |
-|---|---|---|---|
-| Hauptmenü (Begrenzung 60) | 60,0 | 58,7 | 8,5 ms je Änderung |
-| Einstellungen | 60,0 | 59,8 | 7,3 ms |
-| Schneller Screenwechsel | 60,0 | 60,0 | bis 14,3 ms |
-| Spiel, Sichtweite 6, VSync | 60,0 | 54,7 | – |
-| Spiel, VSync aus (Begrenzung 120) | 120,0 | 119,9 | – |
-| Spiel, Sichtweite 2 / 8 | 60,0 / 59,9 | 54,6 / 54,5 | – |
-
-- **1 %-Low im Spiel (54–55):** Ursache nicht untersucht [O]; zu vergleichen mit den M14-Leistungsschritten im Direktmodus.
-- **Speicher:** Heap 140–360 MB; Projekt-JVMs (Server und Client) höchstens 2,3 GB.
-
-## 9. Offene Punkte und Stand des Abbruchs
-
-Auf Wunsch abgebrochen am 2026-11-22 gegen 22:30.
-
-1. **Test mit echten Betriebssystem-Eingaben** (`m15-realinput.ps1`, `ui-4-real.txt`) nicht bestanden:
-   - **Erster Lauf:**
-     - Menünavigation per echter Maus (Über, Zurück, lokale Testwelt, Welt betreten) funktionierte.
-     - Zwei echte Pfeiltasten kamen falsch an. Ursache im Testwerkzeug: fehlendes Kennzeichen „erweiterte Taste“. Korrigiert, aber nicht erneut geprüft.
-     - Nach dem Verbinden verlor das Clientfenster den Vordergrund; die Schutzprüfung brach korrekt ab. Vermutet wird das NVIDIA-Overlay, nicht nachgewiesen.
-   - **Zweiter Lauf:** Das Eingabeskript lief nicht an, und der Lauf wurde vom Zeitlimit beendet. Ursache nicht untersucht.
-2. **Startbare Testdistribution** (Phase J) nicht begonnen.
-3. **Vollständige Regression M1–M14** auf dem M15-Stand nicht ausgeführt.
-   - Bisher nur Unit-Tests der neuen Pakete.
-   - Die Grafikschleife wurde umgebaut (`GameScene`, `MerlinApp`); alle 42 Schritte müssen wiederholt werden, besonders M5/M11-Physik, M8 mit echten Eingaben (Esc), M12-HUD, M14-Fahrzeuge und Leistung.
-4. **Volle JUnit-Suite** auf dem letzten Stand nicht ausgeführt (zuletzt nur `settings.*`, `input.*`, `ui.*`, `app.*`).
-5. **Dokumente** docs/59, 60 und 61 nicht erstellt; Kurzfassungen stehen in §2–§6.
-6. **Restfunktionen nicht umgesetzt:**
-   - Wolken „Schnell“
-   - Perspektivwechsel
-   - Ton, Sprache
-   - Gamepad (M17)
-   - Protokollübersetzung (M18)
-   - eingebauter Einzelspielerserver (nicht vorgesehen)
-7. **Abschlusskriterien:**
-   - **Erfüllt und geprüft:** 1–11 und 13 (Ressourcen nach 20 Verbindungen).
-   - **Offen:** 12 (Stabilität nur in den GUI-Läufen geprüft) und 14 (Regression).
-
-**Wiederaufnahme:**
-1. Volle JUnit-Suite.
-2. `bash analysis/tools/m14-regression.sh` schrittweise bei mindestens 6,8 GB freiem Speicher.
-3. Test mit echten Eingaben wiederholen (`M15_REALINPUT=1 M15_CLIENT_ARGS="--test-no-grab" bash analysis/tools/m15-ui-run.sh real1 analysis/tools/m15/ui-4-real.txt`).
-4. Distribution.
-5. docs/59–61.
-6. Merge.
+1. **Regression M1–M14:** Schritt 5 wiederholen und die Schritte 11–42 auf `33835af` (bzw. dem Endstand) ausführen, jeweils bei mindestens 6800 MB frei. Darin enthalten: M9–M11, M12-HUD/Bildvergleich, M13-Simulation, M14-Grafik, Fahrzeuge (1125 Ticks) und Leistung.
+2. **GUI-Durchgänge 1–3** auf dem Endstand der Testwerkzeuge einmal wiederholen (Phase 7): 20 Zyklen, Threads, GPU-Ressourcen, Menü-Eingabesperre.
+3. **Schritt 5:** Ursache der sofort endenden Warteschleife klären, falls sie erneut auftritt.
+4. **Danach:** Abschlussbericht, Merge nach `main` und Bestätigung des finalen Hashes.
