@@ -457,10 +457,12 @@ final class UiAutotest implements AutoCloseable {
 			case "threads" -> log("THREADS " + s[1] + " " + threads());
 			case "perf-begin" -> {
 				this.perfStart = now;
+				GameView.PROFILER.begin(now); // dieselbe Messung wie der Autotest im Direktmodus (Vergleich M14/M15)
 				this.perfFrames = this.app.frameStats().frames();
 				log("perf-begin " + s[1]);
 			}
 			case "perf-end" -> {
+				log("perf: " + s[1] + " " + GameView.PROFILER.report(now));
 				double secs = (now - this.perfStart) / 1e9;
 				long fr = this.app.frameStats().frames() - this.perfFrames;
 				Runtime rt = Runtime.getRuntime();

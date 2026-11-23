@@ -1,0 +1,26 @@
+# M15 Phase 4: dasselbe Protokoll im Menümodus (Hauptmenü → lokale Testwelt → Messung), gleicher Spielername wie im Direktmodus
+server-console ${CONSOLE}
+wait-screen main-menu
+set account.offlineName ProtoBotGfx
+set graphics.renderDistance 6
+set graphics.maxFps 260
+click local
+wait-screen local-server
+click join
+wait-phase CONNECTED 40
+wait-screen none 10
+console tp ProtoBotGfx 0.5 100 0.5 0 10
+wait 3
+wait 20
+perf-begin w1
+wait 30
+perf-end w1
+perf-begin w2
+wait 30
+perf-end w2
+key ESC
+wait-screen pause
+click main-menu
+wait-screen main-menu 15
+click quit
+wait 10
