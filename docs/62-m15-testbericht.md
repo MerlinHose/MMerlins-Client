@@ -52,16 +52,16 @@ Ablauf wie in M14: Schritte einzeln, im Vordergrund überwacht, Speicherprüfung
 | 11–14 | M8 s4–s6, M8 Grafik | kontrolliert nicht gestartet: 6340 MB frei < 6800 [O] |
 | 15–42 | M9–M14, M13-Simulation, Fahrzeuge, Leistung, Bildvergleich | nicht gestartet [O] |
 
-**Schritt 5 – Ursache nachgewiesen und behoben** (Commit ):
-- **Fehlerbild:**  meldete „client not ready“ 0,08 s nach dem Clientstart, die Aufräumroutine stoppte den Server, der Client bekam „Connection refused“.
+**Schritt 5 – Ursache nachgewiesen und behoben** (Commit `a1db190`):
+- **Fehlerbild:** `m7-interact.sh` meldete „client not ready“ 0,08 s nach dem Clientstart, die Aufräumroutine stoppte den Server, der Client bekam „Connection refused“.
 - **Ursache (Testskript, nicht Client):**
-  - Die Warteschleife ist korrekt. Aber  wurde vor dem Start nicht geleert und enthielt noch „> ready“ vom M14-Lauf mit demselben Label.
-  - Der Client wird im Hintergrund gestartet; die Umleitung  greift erst, wenn die Subshell nach  und Pipe-Aufbau den Befehl startet.
+  - Die Warteschleife ist korrekt. Aber `client.out` wurde vor dem Start nicht geleert und enthielt noch „> ready“ vom M14-Lauf mit demselben Label.
+  - Der Client wird im Hintergrund gestartet; die Umleitung `> client.out` greift erst, wenn die Subshell nach `cd` und Pipe-Aufbau den Befehl startet.
   - Die erste Prüfung sah deshalb den alten Marker und beendete die Schleife sofort. Kurz darauf leerte die Subshell die Datei, und die Kontrollprüfung schlug fehl.
   - Dass derselbe Schritt in M14 bestand, ist Zufall des Wettlaufs.
-- **Geprüft und ausgeschlossen:**  (nicht gesetzt, nur ), Zeitmessung ( korrekt), vorzeitiger Cleanup (läuft erst nach dem Abbruch), Pfade.
-- **Korrektur:**  und  (Schritte 3/4, 17/18) leeren die Ausgabedatei vor dem Start. Die übrigen 9 Skripte mit Bereitschaftsprüfung taten das bereits.
-- **Test** :
+- **Geprüft und ausgeschlossen:** `set -e` (nicht gesetzt, nur `set -u`), Zeitmessung (`T0=$SECONDS` korrekt), vorzeitiger Cleanup (läuft erst nach dem Abbruch), Pfade.
+- **Korrektur:** `m7-interact.sh` und `m7-pick-run.sh` (Schritte 3/4, 17/18) leeren die Ausgabedatei vor dem Start. Die übrigen 9 Skripte mit Bereitschaftsprüfung taten das bereits.
+- **Test** `analysis/tools/tests/ready-marker-test.sh` (Exit 0 = bestanden):
   1. stellt den Wettlauf nach: ohne Leeren endet das Warten nach 82 ms, danach ist die Datei leer, genau das Fehlerbild
   2. zeigt korrektes Warten mit Leeren (≈ 2,1 s bis zur echten Bereitschaft)
   3. prüft alle Testskripte statisch auf das Muster: 11/11 OK
