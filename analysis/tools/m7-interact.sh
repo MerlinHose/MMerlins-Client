@@ -66,6 +66,9 @@ for c in "forceload add -32 -48 47 31" "forceload add 48 -48 63 -16" "fill 46 10
 sleep 3
 
 log "--- own client ($NAME)"
+# Ausgabe synchron leeren: sonst sieht die Bereitschaftsprüfung das "> ready" eines früheren Laufs, bevor die Hintergrund-Subshell
+# die Datei per Umleitung leert (Ursache des Abbruchs in Regressionsschritt 5 der M15-Regression, docs/62 §3)
+: > "$OUT/client.out"
 ( cd "$ROOT/client" && tail -n 0 -f "$OUT/client.in" | ./gradlew -q --console=plain run \
     --args="--interactive --username $NAME --packet-log $(cygpath -w "$OUT/client-packets.log")" > "$OUT/client.out" 2>&1 ) > /dev/null 2>&1 &
 T0=$SECONDS; while [ $((SECONDS - T0)) -lt 120 ]; do grep -q "> ready" "$OUT/client.out" 2>/dev/null && break; sleep 1; done

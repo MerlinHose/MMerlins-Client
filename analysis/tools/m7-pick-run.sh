@@ -58,6 +58,7 @@ cp "$RUN/pickref.txt" "$OUT/vanilla.txt" 2>/dev/null || { log "no vanilla result
 
 # 2) eigener Client (Terminal)
 log "--- own client ($OWN)"
+: > "$OUT/client.out" # Marker eines früheren Laufs entfernen (siehe m7-interact.sh)
 : > "$OUT/client.in"
 ( cd "$ROOT/client" && tail -n 0 -f "$OUT/client.in" | ./gradlew -q --console=plain run \
     --args="--interactive --username $OWN" > "$OUT/client.out" 2>&1 ) > /dev/null 2>&1 &
