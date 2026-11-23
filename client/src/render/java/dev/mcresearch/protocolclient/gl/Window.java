@@ -47,6 +47,12 @@ public final class Window implements AutoCloseable {
 	private int windowedH;
 	private String displayMode = "WINDOWED";
 	private boolean grabAllowed = true;
+	/** Diagnose (GUI-Test log-input): jede GLFW-Taste und jeder Fokuswechsel auf stdout. */
+	private volatile boolean logInput;
+
+	public void setLogInput(final boolean on) {
+		this.logInput = on;
+	}
 
 	/** GUI-Test ({@code --test-no-grab}): Maus nie wirklich fangen; Fensterfokus gilt als gegeben. */
 	public void setGrabAllowed(final boolean allowed) {
@@ -103,7 +109,15 @@ public final class Window implements AutoCloseable {
 			this.height = nh;
 			this.resized = true;
 		});
+		glfwSetWindowFocusCallback(this.handle, (w, focused) -> {
+			if (this.logInput) {
+				System.out.println("[INPUT] " + System.currentTimeMillis() + " focus " + focused);
+			}
+		});
 		glfwSetKeyCallback(this.handle, (w, key, scancode, action, mods) -> {
+			if (this.logInput) {
+				System.out.println("[INPUT] " + System.currentTimeMillis() + " key " + key + " scancode " + scancode + " action " + action + " mods " + mods);
+			}
 			if (action == GLFW_PRESS || action == GLFW_REPEAT) {
 				this.keyEvents.addLast(new KeyEvent(key, action == GLFW_REPEAT, mods));
 				while (this.keyEvents.size() > 64) {

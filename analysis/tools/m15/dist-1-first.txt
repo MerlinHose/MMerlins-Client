@@ -1,0 +1,22 @@
+# M15 Distribution Durchgang 1: erster Start (keine Einstellungsdatei), Hauptmenü, Einstellungen ändern und speichern, beenden.
+wait-screen main-menu 30
+wait 1
+expect-no-overflow
+screenshot ${OUT}/d1-01-main-menu.png
+click settings
+wait-screen settings
+click graphics.particles
+click graphics.particles.opt.MINIMAL
+click graphics.fov
+key RIGHT
+key RIGHT
+expect-setting graphics.particles MINIMAL
+expect-setting graphics.fov 72
+click-tab tabs 2
+click keys.key.drop_item
+key G
+expect-setting controls.key.drop_item key:71
+click done
+wait-screen main-menu
+click quit
+wait 10

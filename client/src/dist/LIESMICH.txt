@@ -1,0 +1,15 @@
+Minecraft Merlin Client – Testdistribution (Entwicklungsversion M15)
+
+Start:   bin\merlin.cmd   (Windows)
+
+Voraussetzungen, die selbst bereitgestellt werden müssen:
+  1. Java 25 (z. B. Microsoft Build of OpenJDK 25), über JAVA_HOME oder im PATH.
+  2. Eine lokal installierte, rechtmäßig erworbene Minecraft-Version 26.3. Der Client liest Texturen, Modelle und
+     Biomdaten zur Laufzeit aus .minecraft\versions\26.3\26.3.jar (einmal mit dem offiziellen Launcher starten).
+     Anderer Ort: bin\merlin.cmd --assets <Pfad zur 26.3.jar> oder Umgebungsvariable MERLIN_MINECRAFT_JAR.
+  3. Für "Einzelspieler / lokale Testwelt": ein lokal laufender Vanilla-26.3-Server auf 127.0.0.1:25565
+     mit online-mode=false. Externe Server sind in dieser Version gesperrt.
+
+Einstellungen und Serverliste: %USERPROFILE%\.minecraft-merlin\ (settings.properties, servers.properties).
+Die Distribution enthält keine Minecraft-/Mojang-Dateien, keine Tokens und keine persönlichen Einstellungen.
+Natives: LWJGL 3.4.3 für Windows x64.

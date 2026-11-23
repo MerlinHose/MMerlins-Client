@@ -1,50 +1,120 @@
 # M15 GUI-Test Durchgang 4 (docs/62 §5.3): echte Betriebssystem-Eingaben über analysis/tools/m15-realinput.ps1.
-# Dieses Skript liefert die Bildschirmlage der Knöpfe (pixels-<n>.txt) und prüft nach jedem Eingabeschritt (stage<n>.flag) das Ergebnis.
+# Je Schritt: Lage der Knöpfe (pixels-<n>.txt) → das Eingabeskript sendet echte Tasten/Klicks → stage<n>.flag → Prüfung.
+server-console ${CONSOLE}
 wait-screen main-menu
 wait 1
+log-input on
 pixel-map ${OUT}/pixels-1.txt
 wait-file ${OUT}/stage1.flag 120
-wait-screen settings 5
-pixel-map ${OUT}/pixels-2.txt
+# (1) Hauptmenü mit der Tastatur: Tab, ↓, ↓, Eingabe → Einstellungen
 wait-file ${OUT}/stage2.flag 60
-wait-screen main-menu 5
+wait-screen settings 5
 pixel-map ${OUT}/pixels-3.txt
 wait-file ${OUT}/stage3.flag 60
-wait-screen about 5
+wait-screen main-menu 5
+# (2) Einzelspieler / lokale Testwelt, (3) lokalen Server betreten
 pixel-map ${OUT}/pixels-4.txt
 wait-file ${OUT}/stage4.flag 60
-wait-screen main-menu 5
-pixel-map ${OUT}/pixels-5.txt
-wait-file ${OUT}/stage5.flag 60
 wait-screen local-server 5
 wait 1.5
-pixel-map ${OUT}/pixels-6.txt
-wait-file ${OUT}/stage6.flag 60
+pixel-map ${OUT}/pixels-5.txt
+wait-file ${OUT}/stage5.flag 60
 wait-phase CONNECTED 40
 wait-screen none 10
 wait 2
+console clear MerlinPlayer
+console give MerlinPlayer oak_planks 16
+wait 1.5
+expect-inv 36 minecraft:oak_planks 16
+mark-pos
+verify start
+wait 1.5
+# (4) WASD
+pixel-map ${OUT}/pixels-6.txt
+wait-file ${OUT}/stage6.flag 60
+wait 1
+expect-pos-changed
+verify after-wasd
+# (5) Maussteuerung
+mark-pos
 pixel-map ${OUT}/pixels-7.txt
 wait-file ${OUT}/stage7.flag 60
-wait-screen pause 5
-mark-pos
+wait 0.5
+expect-look-changed
+# (6) Inventar öffnen, (7) bedienen, (8) schließen
 pixel-map ${OUT}/pixels-8.txt
 wait-file ${OUT}/stage8.flag 60
+wait-screen inventory 5
 wait 0.5
-expect-screen pause
-expect-world-locked
-expect-pos-same
-pixel-map ${OUT}/pixels-9.txt
+export-slots ${OUT}/pixels-9.txt
 wait-file ${OUT}/stage9.flag 60
-wait-screen none 5
-wait 0.5
-mark-pos
+wait 1
+expect-inv 36 empty
+expect-inv 9 minecraft:oak_planks 16
+console execute if items entity MerlinPlayer inventory.0 minecraft:oak_planks[count=16] run say CHECK server inventory.0 planks 16
+console execute unless items entity MerlinPlayer hotbar.0 * run say CHECK server hotbar.0 empty
 pixel-map ${OUT}/pixels-10.txt
 wait-file ${OUT}/stage10.flag 60
+wait-screen none 5
+# (9) Pausenmenü
+pixel-map ${OUT}/pixels-11.txt
+wait-file ${OUT}/stage11.flag 60
+wait-screen pause 5
+expect-world-locked
+# (10) Einstellung ändern (VSync)
+pixel-map ${OUT}/pixels-12.txt
+wait-file ${OUT}/stage12.flag 60
+wait-screen settings 5
+wait 0.3
+pixel-map ${OUT}/pixels-13.txt
+wait-file ${OUT}/stage13.flag 60
+expect-setting graphics.vsync false
+# (11) Tastenbelegung ändern: Springen → J
+pixel-map ${OUT}/pixels-14.txt
+wait-file ${OUT}/stage14.flag 60
+wait 0.3
+pixel-map ${OUT}/pixels-15.txt
+wait-file ${OUT}/stage15.flag 60
+expect-setting controls.key.jump key:74
+pixel-map ${OUT}/pixels-16.txt
+wait-file ${OUT}/stage16.flag 60
+wait-screen pause 5
+pixel-map ${OUT}/pixels-17.txt
+wait-file ${OUT}/stage17.flag 60
+wait-screen none 5
 wait 0.5
-expect-pos-changed
-key ESC
-wait-screen pause
-click main-menu
+# (12) neue Belegung verwenden: J springt
+mark-pos
+pixel-map ${OUT}/pixels-18.txt
+wait-file ${OUT}/stage18.flag 60
+wait 1
+expect-jumped
+verify after-jump
+# (13) zurück zum Hauptmenü
+pixel-map ${OUT}/pixels-19.txt
+wait-file ${OUT}/stage19.flag 60
+wait-screen pause 5
+pixel-map ${OUT}/pixels-20.txt
+wait-file ${OUT}/stage20.flag 60
 wait-screen main-menu 15
-click quit
-wait 10
+# (14) erneut verbinden
+pixel-map ${OUT}/pixels-21.txt
+wait-file ${OUT}/stage21.flag 60
+wait-screen local-server 5
+wait 1.5
+pixel-map ${OUT}/pixels-22.txt
+wait-file ${OUT}/stage22.flag 60
+wait-phase CONNECTED 40
+wait-screen none 10
+wait 2
+verify reconnected
+# (15) Spiel beenden
+pixel-map ${OUT}/pixels-23.txt
+wait-file ${OUT}/stage23.flag 60
+wait-screen pause 5
+pixel-map ${OUT}/pixels-24.txt
+wait-file ${OUT}/stage24.flag 60
+wait-screen main-menu 15
+threads before-quit
+pixel-map ${OUT}/pixels-25.txt
+wait 20

@@ -60,6 +60,8 @@ final class UiAutotest implements AutoCloseable {
 	private int holdKey = -1;
 	private boolean finished;
 	private final long started = System.nanoTime();
+	private Path console;
+	private double maxY = Double.NEGATIVE_INFINITY;
 
 	private UiAutotest(final List<String[]> steps, final Path report, final MerlinApp app) {
 		this.steps = steps;
@@ -149,8 +151,19 @@ final class UiAutotest implements AutoCloseable {
 		};
 	}
 
-	/** Je Bild nach der Eingabeverarbeitung. */
-	void step(final long now) throws IOException {
+	
+	/** Je Bild; ein fehlerhafter Schritt wird als FAIL gewertet und übersprungen, nie beendet er den Client. */
+	void step(final long now) {
+		try {
+			stepUnsafe(now);
+		} catch (IOException | RuntimeException e) {
+			result(false, "step " + (this.index < this.steps.size() ? String.join(" ", this.steps.get(this.index)) : "-") + " failed: " + e);
+			this.index++;
+			this.stepStart = -1;
+		}
+	}
+
+	private void stepUnsafe(final long now) throws IOException {
 		if (this.finished) {
 			return;
 		}
@@ -168,6 +181,9 @@ final class UiAutotest implements AutoCloseable {
 		ScreenManager ui = this.app.screens();
 		Window w = this.app.window();
 		boolean done = true;
+		if (this.markedPos != null && this.app.scene() != null) {
+			this.maxY = Math.max(this.maxY, this.app.scene().session.movement().renderState().y());
+		}
 		switch (s[0]) {
 			case "wait" -> done = elapsed >= Double.parseDouble(s[1]);
 			case "wait-screen" -> {
@@ -274,6 +290,7 @@ final class UiAutotest implements AutoCloseable {
 				GameScene sc = this.app.scene();
 				if (sc != null) {
 					MovementController.RenderState rs = sc.session.movement().renderState();
+					this.maxY = rs.y();
 					this.markedPos = new double[]{rs.x(), rs.y(), rs.z(), rs.yaw(), rs.pitch(), sc.session.interaction().status().sequence()};
 					log(String.format(Locale.ROOT, "mark-pos %.4f %.4f %.4f yaw %.2f pitch %.2f seq %d", rs.x(), rs.y(), rs.z(), rs.yaw(), rs.pitch(),
 						(long) this.markedPos[5]));
@@ -292,6 +309,70 @@ final class UiAutotest implements AutoCloseable {
 					desc = String.format(Locale.ROOT, "Δpos %.4f Δlook %.3f sequence %d→%d", d, look, (long) this.markedPos[5], seq);
 				}
 				result(same, "no movement/look/interaction while menu open: " + desc);
+			}
+			case "server-console" -> this.console = Path.of(s[1]);
+			case "console" -> {
+				if (this.console != null) {
+					Files.writeString(this.console, s[1] + System.lineSeparator(), StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.APPEND);
+				}
+				log("console " + s[1]);
+			}
+			case "verify" -> {
+				// Clientposition protokollieren und den Server dieselbe Position melden lassen (Abgleich im Laufskript)
+				GameScene sc = this.app.scene();
+				if (sc != null) {
+					MovementController.RenderState rs = sc.session.movement().renderState();
+					log(String.format(Locale.ROOT, "verify:%s pos=(%.4f, %.4f, %.4f) corrections=%d", s[1], rs.x(), rs.y(), rs.z(),
+						sc.session.movement().corrections()));
+					if (this.console != null) {
+						Files.writeString(this.console, "data get entity " + this.app.settings().get(Settings.OFFLINE_NAME) + " Pos" + System.lineSeparator(),
+							StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.APPEND);
+					}
+				}
+			}
+			case "log-input" -> {
+				w.setLogInput(!s[1].equals("off"));
+				log("log-input " + s[1]);
+			}
+			case "expect-look-changed" -> {
+				GameScene sc = this.app.scene();
+				double d = 0;
+				if (sc != null && this.markedPos != null) {
+					MovementController.RenderState rs = sc.session.movement().renderState();
+					d = Math.abs(rs.yaw() - this.markedPos[3]) + Math.abs(rs.pitch() - this.markedPos[4]);
+				}
+				result(d > 1.0, String.format(Locale.ROOT, "mouse look changed the camera: %.2f degrees", d));
+			}
+			case "expect-jumped" -> {
+				double rise = this.markedPos == null ? 0 : this.maxY - this.markedPos[1];
+				result(rise > 0.5, String.format(Locale.ROOT, "player jumped: max rise %.3f blocks", rise));
+			}
+			case "expect-inv" -> {
+				String[] a = s[1].split(" ");
+				GameScene sc = this.app.scene();
+				String is = "-";
+				if (sc != null) {
+					var st = sc.session.inventory().slot(Integer.parseInt(a[0]));
+					is = st.isEmpty() ? "empty" : dev.mcresearch.protocolclient.world.ItemRegistry.get().name(st.itemId()) + " " + st.count();
+				}
+				String want = a.length > 2 ? a[1] + " " + a[2] : a[1];
+				result(is.equals(want), "inventory menu slot " + a[0] + " = " + want + (is.equals(want) ? "" : " (is " + is + ")"));
+			}
+			case "export-slots" -> {
+				int[] sr = w.screenRect();
+				StringBuilder sb = new StringBuilder();
+				InventoryScreen inv = this.app.resources().invScreen;
+				for (int slot = 0; slot < 46; slot++) {
+					double[] c = inv.slotCenter(slot);
+					if (c != null) {
+						sb.append("PIXEL slot.").append(slot).append(' ').append(Math.round(sr[0] + c[0] * sr[2] / (double) sr[4])).append(' ')
+							.append(Math.round(sr[1] + c[1] * sr[3] / (double) sr[5])).append('\n');
+					}
+				}
+				Path tmp = Path.of(s[1] + ".tmp");
+				Files.writeString(tmp, sb.toString(), StandardCharsets.UTF_8);
+				Files.move(tmp, Path.of(s[1]), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+				log("export-slots " + s[1]);
 			}
 			case "expect-pos-changed" -> {
 				GameScene sc = this.app.scene();
@@ -332,13 +413,21 @@ final class UiAutotest implements AutoCloseable {
 					long sx = Math.round(sr[0] + p[0] * sr[2] / Math.max(1, sr[4]));
 					long sy = Math.round(sr[1] + p[1] * sr[3] / Math.max(1, sr[5]));
 					sb.append("PIXEL ").append(wd.id()).append(' ').append(sx).append(' ').append(sy).append('\n');
+					if (wd instanceof TabNavigation tn) {
+						for (int t = 0; t < tn.tabs().size(); t++) {
+							var tr = tn.tabRect(t);
+							sb.append("PIXEL ").append(wd.id()).append('.').append(t).append(' ')
+								.append(Math.round(sr[0] + tr.centerX() * ui.scale() * sr[2] / Math.max(1, sr[4]))).append(' ')
+								.append(Math.round(sr[1] + tr.centerY() * ui.scale() * sr[3] / Math.max(1, sr[5]))).append('\n');
+						}
+					}
 				}
 				sb.append(String.format(Locale.ROOT, "CENTER %d %d%n", sr[0] + sr[2] / 2, sr[1] + sr[3] / 2));
 				sb.append(String.format(Locale.ROOT, "EMPTY %d %d%n", sr[0] + sr[2] * 3 / 100, sr[1] + sr[3] * 97 / 100)); // freie Ecke unten links
 				Path tmp = Path.of(s[1] + ".tmp");
 				Files.writeString(tmp, sb.toString(), StandardCharsets.UTF_8);
 				Files.move(tmp, Path.of(s[1]), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-				log("pixel-map " + s[1] + " (" + ui.current().name() + ", window " + sr[0] + "," + sr[1] + " " + sr[2] + "x" + sr[3] + ")");
+				log("pixel-map " + s[1] + " (" + (ui.current() == null ? "game" : ui.current().name()) + ", window " + sr[0] + "," + sr[1] + " " + sr[2] + "x" + sr[3] + ")");
 			}
 			case "resize" -> {
 				String[] a = s[1].split(" ");

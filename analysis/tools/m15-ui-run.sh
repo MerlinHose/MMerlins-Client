@@ -4,6 +4,7 @@
 # Jedes Skript ist ein eigener Clientstart mit DERSELBEN Einstellungs- und Serverliste (Speichern → Neu laden über Neustarts).
 # Vor einem Skript namens *broken* wird die Einstellungsdatei absichtlich beschädigt (Robustheit beim Start).
 # Zusätzlich lauscht auf 127.0.0.1:25599 ein stummer TCP-Dienst (nimmt an, antwortet nie): Abbrechen/Zeitüberschreitung.
+# Optional M15_DIST=<Ordner>: Client aus der Testdistribution starten (bin/merlin.cmd) statt über Gradle.
 # Optional M15_REALINPUT=1: echte Betriebssystem-Eingaben (analysis/tools/m15-realinput.ps1) parallel zum Skript.
 set -u
 LABEL="$1"; shift
@@ -51,22 +52,37 @@ for SCRIPT in "$@"; do
     log "pass $PASS: settings file deliberately corrupted"
   fi
   rm -f "$OUT"/stage*.flag "$OUT"/pixels-*.txt
-  sed -e "s|\${OUT}|$(w "$OUT")|g" "$SCRIPT" > "$OUT/ui-$PASS-$NAME.txt"
+  sed -e "s|\${OUT}|$(w "$OUT")|g" -e "s|\${CONSOLE}|$(w "$SERVER/console.in")|g" "$SCRIPT" > "$OUT/ui-$PASS-$NAME.txt"
   log "--- pass $PASS: $NAME"
   if [ "${M15_REALINPUT:-0}" = "1" ] && [[ "$NAME" == *real* ]]; then
     powershell -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$ROOT/analysis/tools/m15-realinput.ps1")" -OutDir "$(cygpath -w "$OUT")" \
-      -Report "$(cygpath -w "$OUT/report-$PASS.txt")" > /dev/null 2>&1 &
+      -Report "$(cygpath -w "$OUT/report-$PASS.txt")" > "$OUT/realinput-ps-$PASS.out" 2>&1 &
+    PS_PID=$!
   fi
-  ( cd "$ROOT/client" && ./gradlew -q --console=plain runGraphical -Pgargs="--settings $(w "$SETTINGS") --servers $(w "$SERVERS") --ui-test $(w "$OUT/ui-$PASS-$NAME.txt") --report $(w "$OUT/report-$PASS.txt") ${M15_CLIENT_ARGS:-}" ) > "$OUT/client-$PASS.out" 2>&1
+  CARGS="--settings $(w "$SETTINGS") --servers $(w "$SERVERS") --ui-test $(w "$OUT/ui-$PASS-$NAME.txt") --report $(w "$OUT/report-$PASS.txt") ${M15_CLIENT_ARGS:-}"
+  if [ -n "${M15_DIST:-}" ]; then
+    # Testdistribution aus einem sauberen Verzeichnis (binmerlin.cmd), nicht über Gradle
+    ( cd "$M15_DIST" && MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*' cmd /c "bin\\merlin.cmd $CARGS" ) > "$OUT/client-$PASS.out" 2>&1
+  else
+    ( cd "$ROOT/client" && ./gradlew -q --console=plain runGraphical -Pgargs="$CARGS" ) > "$OUT/client-$PASS.out" 2>&1
+  fi
   log "client exit=$?"
   grep -E "^\[APP\]|^\[GL\] live|^\[GL\] session|RESULT FAIL|uitest (done|end)|Exception|SCHWERWIEGEND" "$OUT/client-$PASS.out" | cut -c1-260 | tee -a "$OUT/run.txt"
   cp "$SETTINGS" "$OUT/settings-after-$PASS.properties" 2>/dev/null
+  if [ -n "${PS_PID:-}" ]; then
+    wait "$PS_PID"; log "real-input script exit=$? (output: $(head -c 300 "$OUT/realinput-ps-$PASS.out" | tr '\r\n' '  '))"; PS_PID=""
+  fi
 done
 
 echo "stop" >> "$SERVER/console.in"
 T0=$SECONDS; while [ $((SECONDS - T0)) -lt 60 ]; do grep -q "Stopping server" "$SERVER/logs/stdout.txt" && break; sleep 1; done
 sleep 4; echo "" >> "$SERVER/console.in"
 tail -n +$((SERVER_LOG_START + 1)) "$SERVER/logs/latest.log" > "$OUT/server-session.log"
+log "--- server checks (CHECK, Positionsabgleich)"
+grep -E '\[Server\] CHECK|Test passed|Test failed' "$OUT/server-session.log" | sed 's/^\[[^]]*\] \[[^]]*\]: //' | tee -a "$OUT/run.txt"
+grep -ho 'verify:[^ ]* pos=([^)]*)' "$OUT"/report-*.txt > "$OUT/verify-client.txt" 2>/dev/null
+grep -o 'has the following entity data: \[[^]]*\]' "$OUT/server-session.log" | sed 's/.*data: //' > "$OUT/verify-server.txt"
+paste -d"|" "$OUT/verify-client.txt" "$OUT/verify-server.txt" | tee "$OUT/verify.txt" | tee -a "$OUT/run.txt"
 log "--- server: joins/leaves"
 log "joins $(grep -c 'logged in with entity id' "$OUT/server-session.log"), leaves $(grep -c 'lost connection' "$OUT/server-session.log")"
 grep -E "ERROR|Exception|moved too quickly|kicked" "$OUT/server-session.log" | grep -v Discovery | head -20 | tee -a "$OUT/run.txt"

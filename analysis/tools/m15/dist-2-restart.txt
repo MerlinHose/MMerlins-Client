@@ -1,0 +1,25 @@
+# M15 Distribution Durchgang 2: erneuter Start, Einstellungen wiederhergestellt, lokalen Server betreten, trennen, beenden.
+wait-screen main-menu 30
+wait 1
+expect-setting graphics.particles MINIMAL
+expect-setting graphics.fov 72
+expect-setting controls.key.drop_item key:71
+click local
+wait-screen local-server
+wait 1.5
+expect local-status Erreichbar
+click join
+wait-phase CONNECTED 40
+wait-screen none 10
+wait 3
+screenshot ${OUT}/d2-01-in-game.png
+threads in-game
+key ESC
+wait-screen pause
+click disconnect
+wait-screen disconnected 10
+threads after-disconnect
+click main-menu
+wait-screen main-menu
+click quit
+wait 10
