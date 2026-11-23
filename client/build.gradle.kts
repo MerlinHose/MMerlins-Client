@@ -108,3 +108,22 @@ tasks.named<JavaExec>("run") {
 	workingDir = layout.projectDirectory.asFile
 	standardInput = System.`in`
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// M15 Phase J: startbare Testdistribution (docs/61 §8). build/merlin-dist/MerlinClient: lib/ (eigene JARs + LWJGL mit
+// Windows-Natives), bin/merlin.cmd|merlin.sh, LIESMICH.txt. Enthält keine Minecraft-Dateien, keine Einstellungen/Tokens.
+// ---------------------------------------------------------------------------------------------------------------------
+val renderJar = tasks.register<Jar>("renderJar") {
+	archiveBaseName.set("merlin-client-render")
+	from(sourceSets["render"].output)
+}
+
+tasks.register<Sync>("merlinDist") {
+	group = "distribution"
+	description = "Startbare Testdistribution des grafischen Clients (bin/merlin.cmd)"
+	into(layout.buildDirectory.dir("merlin-dist/MerlinClient"))
+	from(tasks.jar) { into("lib") }
+	from(renderJar) { into("lib") }
+	from(sourceSets["render"].runtimeClasspath.filter { it.isFile && it.name.endsWith(".jar") }) { into("lib") }
+	from("src/dist")
+}
