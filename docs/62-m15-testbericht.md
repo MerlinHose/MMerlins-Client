@@ -52,17 +52,27 @@ Ablauf wie in M14: Schritte einzeln, im Vordergrund überwacht, Speicherprüfung
 | 11–14 | M8 s4–s6, M8 Grafik | kontrolliert nicht gestartet: 6340 MB frei < 6800 [O] |
 | 15–42 | M9–M14, M13-Simulation, Fahrzeuge, Leistung, Bildvergleich | nicht gestartet [O] |
 
-**Schritt 5 im Detail:**
-- `m7-interact.sh` meldete „client not ready“ schon 0,08 s nach dem Start des Terminalclients, statt bis zu 120 s auf dessen Bereitschaft zu warten.
-- Die Aufräumroutine schickte 2 s später `stop` an den Server (Serverlog 18:25:41). Der Client verband sich um 18:25:43 und bekam „Connection refused“.
-- Damit liegt der Fehler beim Testablauf, nicht beim Client: Der Terminalclient ist von M15 nicht verändert, und derselbe Schritt bestand in M14 (14/14).
-- Warum die Warteschleife sofort endete, ließ sich aus den Logs nicht klären [O].
-- Ein verwaister `tail`-Prozess dieses Schritts wurde danach beendet.
+**Schritt 5 – Ursache nachgewiesen und behoben** (Commit ):
+- **Fehlerbild:**  meldete „client not ready“ 0,08 s nach dem Clientstart, die Aufräumroutine stoppte den Server, der Client bekam „Connection refused“.
+- **Ursache (Testskript, nicht Client):**
+  - Die Warteschleife ist korrekt. Aber  wurde vor dem Start nicht geleert und enthielt noch „> ready“ vom M14-Lauf mit demselben Label.
+  - Der Client wird im Hintergrund gestartet; die Umleitung  greift erst, wenn die Subshell nach  und Pipe-Aufbau den Befehl startet.
+  - Die erste Prüfung sah deshalb den alten Marker und beendete die Schleife sofort. Kurz darauf leerte die Subshell die Datei, und die Kontrollprüfung schlug fehl.
+  - Dass derselbe Schritt in M14 bestand, ist Zufall des Wettlaufs.
+- **Geprüft und ausgeschlossen:**  (nicht gesetzt, nur ), Zeitmessung ( korrekt), vorzeitiger Cleanup (läuft erst nach dem Abbruch), Pfade.
+- **Korrektur:**  und  (Schritte 3/4, 17/18) leeren die Ausgabedatei vor dem Start. Die übrigen 9 Skripte mit Bereitschaftsprüfung taten das bereits.
+- **Test** :
+  1. stellt den Wettlauf nach: ohne Leeren endet das Warten nach 82 ms, danach ist die Datei leer, genau das Fehlerbild
+  2. zeigt korrektes Warten mit Leeren (≈ 2,1 s bis zur echten Bereitschaft)
+  3. prüft alle Testskripte statisch auf das Muster: 11/11 OK
+- **Wiederholung von Schritt 5:** noch nicht ausgeführt, weil der Speicher nicht reichte (unten).
 
 **Speicher:**
 - Mit dem Arbeitsspeicher-Bedarf eines geöffneten Browsers (DuckDuckGo, etwa 1,9 GB) lag der freie Speicher 8 Minuten lang stabil bei 6,3–6,4 GB.
 - Fremde Programme wurden nicht beendet, Schutzmechanismen nicht verändert.
-- **Fortsetzung:** `bash analysis/tools/m14-regression.sh 5 5`, dann `… 11 11` usw., jeweils bei mindestens 6800 MB frei.
+- **Zweiter Versuch (2026-11-23, 18:50–19:08):** 18 Minuten Wartezeit, der freie Speicher lag zwischen 4,9 und 6,5 GB (Browser und weitere Programme offen) und erreichte die 6800 MB nicht. Kontrolliert gestoppt; kein Projektprozess lief.
+- **Seit den bestandenen Schritten 1–4 und 6–10 (`33835af`)** wurden nur Dokumentation und Testskripte geändert (`git diff 33835af..a1db190`: docs, m7-interact.sh, m7-pick-run.sh, Test). Die Ergebnisse gelten weiter; `m7-pick-run.sh` (Schritte 3/4) wurde nur um das Leeren der Ausgabedatei ergänzt.
+- **Nächster Schritt:** `bash analysis/tools/m14-regression.sh 5 5`, dann einzeln 11 bis 42, jeweils bei mindestens 6800 MB frei.
 
 ## 4. Echte Betriebssystem-Eingaben (Phase 3)
 
