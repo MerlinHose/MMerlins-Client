@@ -69,7 +69,7 @@ Analyse der Minecraft-26.3-Entwicklungsumgebung in `research/` als Grundlage fü
 | [59-m15-gui-architektur.md](59-m15-gui-architektur.md) | M15: ScreenManager, GUI-Komponenten, Screen-Lebenszyklus, Ressourcen, Anwendungsschleife |
 | [60-einstellungen-und-input-system.md](60-einstellungen-und-input-system.md) | M15: SettingsManager, Dateiformat, Robustheit, Merlin Input System, geplante input4j-Anbindung |
 | [61-menues-und-sitzungsverwaltung.md](61-menues-und-sitzungsverwaltung.md) | M15: Hauptmenü, Serverliste, Verbinden, Pause, Trennen, MVS-Vorbereitung, Testdistribution |
-| [62-m15-testbericht.md](62-m15-testbericht.md) | Testbericht M15 (teilweise): JUnit 515/0, GUI 399/0, echte Eingaben 52/0, Leistung ohne Regression, Distribution 18/0; Regression ab Schritt 11 offen (Speicher) |
+| [62-m15-testbericht.md](62-m15-testbericht.md) | Testbericht M15 (abgeschlossen): Regression M1–M14 42/42, GUI 399/0, echte Eingaben 52/0, Leistung ohne Regression, Distribution 18/0; Merge nach main freigegeben |
 
 **Lesepfad für den späteren eigenen Client:** 01 → 02 (Hauptschleife) → 04 (Eingaben) → 05 + 08 (Verbindung) → 07 (IDs) → 03 (Rendering).
 

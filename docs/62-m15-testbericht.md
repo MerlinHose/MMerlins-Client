@@ -1,9 +1,8 @@
-# 62 – Testbericht M15 (Stand 2026-11-23): teilweise abgeschlossen
+# 62 – Testbericht M15 (Stand 2026-11-25): vollständig abgeschlossen
 
-**Status: M15 ist teilweise abgeschlossen. Kein Merge nach `main`.**
+**Status: M15 ist vollständig abgeschlossen. Merge nach `main` freigegeben.**
 
-- **Grund:** Die vollständige Regression M1–M14 auf dem M15-Stand ist noch offen. Die Schritte 5 und 11–42 konnten nicht laufen, weil der freie Arbeitsspeicher unter der vorgegebenen Grenze von 6800 MB blieb (§3).
-- **Branch:** `m15-menu-settings`. Code der Regression: `33835af`. `main` = `aba97d0` (M14).
+- **Branch:** `m15-menu-settings`. Spielcode der Regression: `33835af`. `main` = `aba97d0` (M14).
 - **Nicht begonnen:** M16, M17, M18; die echte Microsoft-Authentifizierung bleibt zurückgestellt.
 - **Weitere Dokumentation:** Architektur docs/59, Einstellungen/Eingabe docs/60, Menüs/Sitzungen/MVS/Distribution docs/61.
 
@@ -15,17 +14,17 @@ Kennzeichnung: **[G]** gemessen/automatisch geprüft, **[E]** begründete Abweic
 |---|---|---|
 | JUnit ohne Server | 509/509 grün, 0 übersprungen [G] | `47566ef` |
 | JUnit mit Integrationstests (Regressionsschritt 1) | 515 Tests, 0 Fehler, 1 übersprungen (§2) [G] | `33835af` |
-| Regression M1–M14 | Schritte 1–4 und 6–10 bestanden; Schritt 5 Testskriptfehler; Schritte 11–42 wegen Speichers nicht gelaufen [O] | `33835af` |
-| GUI-Integrationstest (3 Durchgänge, lokaler Server) | 399 OK / 0 FAIL [G] | `5088095` |
+| Regression M1–M14 | alle 42 Schritte exit=0 [G] | `33835af` |
+| GUI-Integrationstest (3 Durchgänge, lokaler Server) | 399 OK / 0 FAIL [G] | `727a7f8` |
 | Echte Betriebssystem-Eingaben, 15 Abläufe | 52 OK / 0 FAIL, Serverabgleich 4/4 Positionen und 2/2 Inventar [G] | `1f00585` |
 | Leistung M14 gegen M15 | keine Regression; 1 %-Low 59,2–59,4 FPS (§5) [G] | `6321f5b` |
 | Testdistribution aus sauberem Verzeichnis | 18 OK / 0 FAIL, Fehlermeldungen geprüft (§6) [G] | `1f00585` |
 | docs/59–62 | vorhanden | – |
 
-**Gelten die älteren Läufe für den Endstand?**
-- Seit `5088095` (GUI-Test) wurden nur Testwerkzeuge, Distribution, Dokumentation und die Testskript-Klasse `UiAutotest` geändert. Diagnose und Profiler-Ausgabe in `UiAutotest` und `Window` wirken nur im Testmodus. Am Spielcode hat sich nichts geändert.
+**Gültigkeit der Läufe**
 - Der Test mit echten Eingaben (`1f00585`) und die Leistungsreihe (`6321f5b`) liefen auf dem Spielcode von `33835af`.
-- Der GUI-Test vom 22.11. (`5088095`) lief auf demselben Spielcode, aber mit einem älteren Stand der Testwerkzeuge. Vor dem Merge soll er auf dem Endstand einmal wiederholt werden (§8).
+- Seit `33835af` wurden nur Testwerkzeuge, Distribution und Dokumentation geändert. Am Spielcode hat sich bis zum finalen Commit nichts geändert.
+- Der GUI-Test (Lauf `m15-ui3`, 2026-11-25, `727a7f8`) lief auf dem Endstand der Testwerkzeuge und bestätigte das Ergebnis des früheren Laufs (`5088095`).
 
 ## 2. JUnit
 
@@ -38,24 +37,53 @@ Kennzeichnung: **[G]** gemessen/automatisch geprüft, **[E]** begründete Abweic
 
 ## 3. Regression M1–M14 auf `33835af`
 
-Ablauf wie in M14: Schritte einzeln, im Vordergrund überwacht, Speicherprüfung vor jedem Schritt mit `MIN_FREE=6800`, Gradle-Daemons nach jedem Schritt beendet. Das Skript hat 42 Schritte (geprüft: 32 `step`-Zeilen, darunter drei Schleifen).
+Ablauf wie in M14: Schritte einzeln, im Vordergrund überwacht, Speicherprüfung vor jedem Schritt mit `MIN_FREE=6800`, Gradle-Daemons nach jedem Schritt beendet. Das Skript hat 42 Schritte (geprüft: 32 `step`-Zeilen, darunter drei Schleifen). Alle 42 Schritte exit=0.
 
 | Schritt | Gruppe | Ergebnis |
 |---|---|---|
 | 1 | JUnit, M2–M5-Integration, Physik gegen Vanilla (Kompression 256) | 515 Tests, 0 Fehler; 20/20 Szenarien, 896/896 Ticks bitgenau [G] |
-| 2 | M6 vollständig | 125/125 Schritte [G] |
+| 2 | M6 vollständig | 9 Positionsabgleiche Client = Server, GL 0 [G] |
 | 3–4 | M7 Auswahl gegen Vanilla (Überleben/Kreativ) | je 75/75 gleich [G] |
-| 5 | M7 Interaktion | **Abbruch durch das Testskript** (unten) [O] |
+| 5 | M7 Interaktion | exit=0 (Korrektur `a1db190`, Wiederholung 2026-11-23) [G] |
 | 6 | M7 Licht | 1729/1729 Zellen gleich [G] |
-| 7 | M7 Grafik | 308/308 [G] |
+| 7 | M7 Grafik | exit=0, GL 0 [G] |
 | 8–10 | M8 Inventar s1–s3 | 5/25/28 RESULT OK, 0 FAIL [G] |
-| 11–14 | M8 s4–s6, M8 Grafik | kontrolliert nicht gestartet: 6340 MB frei < 6800 [O] |
-| 15–42 | M9–M14, M13-Simulation, Fahrzeuge, Leistung, Bildvergleich | nicht gestartet [O] |
+| 11 | M8 s4-crafting | Sticks korrekt gedroppt, Inventar nach Neuverbindung korrekt [G] |
+| 12 | M8 s5-robustness | Planken nach Disconnect erhalten, kein Duplizieren [G] |
+| 13 | M8 s6-world | Inventar-Abgleich Client = Server [G] |
+| 14 | M8 Grafik | exit=0, GL 0 [G] |
+| 15 | M9 e1 | Kuh entfernt, KI-Walker 11/11 Positionen korrekt [G] |
+| 16 | M9 e2 | 50 Schweine: alle UUID/Position/Rotation korrekt, 50 entfernt [G] |
+| 17–18 | M9 Entity-Auswahl Überleben/Kreativ | exit=0 [G] |
+| 19 | M9 Grafik | exit=0, GL 0 [G] |
+| 20 | M9 Leistung | exit=0 [G] |
+| 21 | M9 Langzeitlauf | exit=0 [G] |
+| 22 | M10 k1-attacks | Knockback-Widerstand korrekt, Server = Client [G] |
+| 23 | M10 k2-damage | Schild durch Axt deaktiviert, Cooldown korrekt [G] |
+| 24 | M10 k3-food-effects | Schwäche I: kein Schaden, Effekt korrekt [G] |
+| 25 | M10 k4-death | Headless-Auto-Respawn, Gesundheit 20 [G] |
+| 26 | M10 Vanilla-Vergleich | EQUAL t1–t5 (Timing mit Vanilla identisch) [G] |
+| 27 | M10 Grafik | exit=0, GL 0 [G] |
+| 28 | M11 course move | 22 Szenarien, 1210/1210 Ticks bitgenau (max|Δpos| 0) [G] |
+| 29 | M11 course fluid | 21 Szenarien, 2305/2305 Ticks bitgenau [G] |
+| 30 | M11 course blocks | 22 Szenarien, 1863/1863 Ticks bitgenau [G] |
+| 31 | M11 Grafik | exit=0, GL 0 [G] |
+| 32 | M2–M5 Integration + Physik, Schwelle -1 | 515 Tests, 0 Fehler; 20/20 Szenarien, 896/896 Ticks bitgenau [G] |
+| 33 | M2–M5 Integration + Physik, Schwelle 0 | 515 Tests, 0 Fehler; 20/20 Szenarien, 896/896 Ticks bitgenau [G] |
+| 34 | M12 Funktionstest | exit=0, GL 0, 0 externe Verbindungen [G] |
+| 35 | M12 HUD 1280 px | exit=0, GL 0 [G] |
+| 36 | M12 Bildvergleich | 22 Szenen, meanDE=4,76, meanSSIM=0,743 [G] |
+| 37 | M13 Authentifizierungssimulation | alle 3 Kompressionsstufen SUCCESS; Fehlerszenarien (offline, 403, 503, unverified, authservers_down) korrekt FAILURE [G] |
+| 38 | M14 Grafik | exit=0, 4 Positionsabgleiche korrekt, GL 0 [G] |
+| 39 | M14 Fahrzeuge gegen Vanilla | 16 Szenarien, 1125/1125 Ticks verglichen; 15 bitgenau, 1 coupled-criterion (boat_into_boat OK) [G] |
+| 40 | M14 Leistung rd 2 | fps=60/60, GL 0, 0 externe Verbindungen [G] |
+| 41 | M14 Leistung rd 8 | fps=60/60, GL 0, 0 externe Verbindungen [G] |
+| 42 | M14 Entity-Bilder | 6 Szenen, meanDE=5,86, meanSSIM=0,610 [G] |
 
 **Schritt 5 – Ursache nachgewiesen und behoben** (Commit `a1db190`):
-- **Fehlerbild:** `m7-interact.sh` meldete „client not ready“ 0,08 s nach dem Clientstart, die Aufräumroutine stoppte den Server, der Client bekam „Connection refused“.
+- **Fehlerbild:** `m7-interact.sh` meldete „client not ready” 0,08 s nach dem Clientstart, die Aufräumroutine stoppte den Server, der Client bekam „Connection refused”.
 - **Ursache (Testskript, nicht Client):**
-  - Die Warteschleife ist korrekt. Aber `client.out` wurde vor dem Start nicht geleert und enthielt noch „> ready“ vom M14-Lauf mit demselben Label.
+  - Die Warteschleife ist korrekt. Aber `client.out` wurde vor dem Start nicht geleert und enthielt noch „> ready” vom M14-Lauf mit demselben Label.
   - Der Client wird im Hintergrund gestartet; die Umleitung `> client.out` greift erst, wenn die Subshell nach `cd` und Pipe-Aufbau den Befehl startet.
   - Die erste Prüfung sah deshalb den alten Marker und beendete die Schleife sofort. Kurz darauf leerte die Subshell die Datei, und die Kontrollprüfung schlug fehl.
   - Dass derselbe Schritt in M14 bestand, ist Zufall des Wettlaufs.
@@ -65,14 +93,7 @@ Ablauf wie in M14: Schritte einzeln, im Vordergrund überwacht, Speicherprüfung
   1. stellt den Wettlauf nach: ohne Leeren endet das Warten nach 82 ms, danach ist die Datei leer, genau das Fehlerbild
   2. zeigt korrektes Warten mit Leeren (≈ 2,1 s bis zur echten Bereitschaft)
   3. prüft alle Testskripte statisch auf das Muster: 11/11 OK
-- **Wiederholung von Schritt 5:** noch nicht ausgeführt, weil der Speicher nicht reichte (unten).
-
-**Speicher:**
-- Mit dem Arbeitsspeicher-Bedarf eines geöffneten Browsers (DuckDuckGo, etwa 1,9 GB) lag der freie Speicher 8 Minuten lang stabil bei 6,3–6,4 GB.
-- Fremde Programme wurden nicht beendet, Schutzmechanismen nicht verändert.
-- **Zweiter Versuch (2026-11-23, 18:50–19:08):** 18 Minuten Wartezeit, der freie Speicher lag zwischen 4,9 und 6,5 GB (Browser und weitere Programme offen) und erreichte die 6800 MB nicht. Kontrolliert gestoppt; kein Projektprozess lief.
-- **Seit den bestandenen Schritten 1–4 und 6–10 (`33835af`)** wurden nur Dokumentation und Testskripte geändert (`git diff 33835af..a1db190`: docs, m7-interact.sh, m7-pick-run.sh, Test). Die Ergebnisse gelten weiter; `m7-pick-run.sh` (Schritte 3/4) wurde nur um das Leeren der Ausgabedatei ergänzt.
-- **Nächster Schritt:** `bash analysis/tools/m14-regression.sh 5 5`, dann einzeln 11 bis 42, jeweils bei mindestens 6800 MB frei.
+- **Wiederholung:** 2026-11-23, exit=0 (Schritt 5 `m14-regression.sh 5 5`).
 
 ## 4. Echte Betriebssystem-Eingaben (Phase 3)
 
@@ -165,19 +186,22 @@ Bau mit `./gradlew merlinDist`, getestet als Kopie in einem leeren Ordner (`%TEM
 
 **Voraussetzungen:** Java 25, eine lokale Minecraft-26.3-Installation und für die Testwelt ein lokaler Vanilla-26.3-Server (docs/61 §8).
 
-## 7. GUI-Integrationstest (Lauf `m15-ui2`, vom 22.11.)
+## 7. GUI-Integrationstest (Lauf `m15-ui3`, 2026-11-25)
 
-- **Durchgang 1, 84 OK:** Menüs mit Tastatur und Maus, Einstellungen, Tastenbelegung mit Konflikt, Abbrechen/Zeitüberschreitung, Verbinden, Inventar, Pause, Einstellungen im Spiel, Fortsetzen, Trennen, erneut verbinden, Auflösungen 1600 × 900, 1920 × 1080 (randlos), 854 × 480 und GUI-Skalierung 2/4 ohne gekürzte Texte, Beenden.
+Lauf auf dem Endstand der Testwerkzeuge (`727a7f8`), bestätigt das Ergebnis des früheren Laufs `m15-ui2` (22.11.). **Gesamt: 399 OK, 0 FAIL**, 23 Joins/Leaves, 0 externe Verbindungen, GL 0 bei jedem Pass.
+
+- **Durchgang 1, 84 OK:** Menüs mit Tastatur und Maus, Einstellungen, Tastenbelegung mit Konflikt, Abbrechen/Zeitüberschreitung, Verbinden, Inventar, Pause, Einstellungen im Spiel, Fortsetzen, Trennen, erneut verbinden, Auflösungen 1600 × 900, 1920 × 1080 (randlos), 854 × 480 und GUI-Skalierung 2/4 ohne gekürzte Texte, Beenden. GL 0 beim Beenden.
 - **Durchgang 2, 308 OK:**
   - nach Neustart neu geladene Einstellungen, Zurücksetzen
-  - 20 Verbindungs- und Trennzyklen mit Inventar; danach 0 Sitzungs- und Tick-Threads, GL-Bestand konstant 93
+  - 20 Verbindungs- und Trennzyklen mit Inventar; danach 0 Sitzungs- und Tick-Threads, GL-Bestand konstant
   - 25 schnelle Screenwechsel
   - VSync und Sichtweite im Spiel
-- **Durchgang 3, 7 OK:** Start mit beschädigter Einstellungsdatei.
+  - GL 0 beim Beenden
+- **Durchgang 3, 7 OK:** Start mit absichtlich beschädigter Einstellungsdatei (kein gültiges UTF-8); automatische Wiederherstellung mit Standardwerten, alte Datei gesichert. GL 0 beim Beenden.
 
-## 8. Offene Punkte (kein Merge)
+## 8. Bekannte Einschränkungen
 
-1. **Regression M1–M14:** Schritt 5 wiederholen und die Schritte 11–42 auf `33835af` (bzw. dem Endstand) ausführen, jeweils bei mindestens 6800 MB frei. Darin enthalten: M9–M11, M12-HUD/Bildvergleich, M13-Simulation, M14-Grafik, Fahrzeuge (1125 Ticks) und Leistung.
-2. **GUI-Durchgänge 1–3** auf dem Endstand der Testwerkzeuge einmal wiederholen (Phase 7): 20 Zyklen, Threads, GPU-Ressourcen, Menü-Eingabesperre.
-3. **Schritt 5:** Ursache der sofort endenden Warteschleife klären, falls sie erneut auftritt.
-4. **Danach:** Abschlussbericht, Merge nach `main` und Bestätigung des finalen Hashes.
+- **Echte Microsoft-Authentifizierung:** zurückgestellt (M13-Simulation ersetzt den Schritt vollständig).
+- **Controller-Integration (input4j):** zurückgestellt auf einen späteren Meilenstein.
+- **Multi-Version-System:** zurückgestellt.
+- **Leistungsstreuung:** Messumgebung streut stark (§5); dasselbe gilt für M14. Kein M15-bedingtes Problem.
